@@ -37,8 +37,9 @@ window.PharosMap = (function () {
   const ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright" style="color:#545d72">OSM</a> &copy; <a href="https://carto.com/" style="color:#545d72">CARTO</a>';
 
   const SITES = [
-    { lat: 29.34013, lon: 30.94513, label: 'NILDU', sub: 'Centrale · Médinet El-Fayoum', ref: 'NILDU-REF-001', status: 'En construction', color: '#1bbd8a' },
-    { lat: 30.21796, lon: 31.25895, label: 'MEMPHIS', sub: 'Pile atomique · Le Caire', ref: 'MEMPHIS-PILE-001', status: 'En service', color: '#8b6fd4' }
+    { lat: 29.34013, lon: 30.94513, label: 'NILDU', sub: 'Centrale nucléaire · Médinet El-Fayoum', ref: 'NILDU-REF-001', status: 'En construction', color: '#1bbd8a' },
+    { lat: 30.21796, lon: 31.25895, label: 'MEMPHIS', sub: 'Pile atomique · Le Caire', ref: 'MEMPHIS-PILE-001', status: 'En service', color: '#8b6fd4' },
+    { lat: 23.96694, lon: 32.87972, label: 'Barrage d'Assouan', sub: 'Centrale hydroélectrique · Nil', ref: 'ASSOUAN-HDA-001', status: 'En service', color: '#3b82f6' }
   ];
 
   function makeIcon(color, active) {
@@ -60,8 +61,8 @@ window.PharosMap = (function () {
     const tileUrl = opts.theme === 'light' ? LIGHT_TILE : DARK_TILE;
     let tileLayer = L.tileLayer(tileUrl, { attribution: ATTR, maxZoom: 18 }).addTo(map);
 
-    // Polygone territoire
-    L.polygon(TERRITORY, { color: '#1bbd8a', weight: 1.8, opacity: 0.75, fillColor: '#1bbd8a', fillOpacity: 0.13 }).addTo(map);
+    // Territoire désactivé (frontières masquées)
+    // L.polygon(TERRITORY, ...).addTo(map);
 
     // Marqueurs
     SITES.forEach(site => {
