@@ -1,0 +1,13 @@
+# ── PHAROS ENERGY · POLITIQUE DE DIVULGATION RESPONSABLE ──────────
+# Ce fichier respecte le standard RFC 9116 (security.txt)
+
+Contact: mailto:security@pharos-energy.nil
+Preferred-Languages: fr, en, ar
+Encryption: none
+Policy: https://pharos-energy.nil/security-policy
+Acknowledgments: https://pharos-energy.nil/thanks
+Expires: 2027-01-01T00:00:00.000Z
+
+# En cas de découverte d'une vulnérabilité sur ce site,
+# merci de contacter l'adresse ci-dessus avant toute divulgation publique.
+# Nous nous engageons à répondre sous 72 heures.

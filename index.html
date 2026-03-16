@@ -268,7 +268,11 @@
     gap:8px;
     flex-wrap:wrap;
   }
-  .proj-loc { display:flex; align-items:center; gap:5px; }
+  .toggle-icon[data-mode="dark"] .icon-sun  { display:block; }
+  .toggle-icon[data-mode="dark"] .icon-moon { display:none;  }
+  .toggle-icon[data-mode="light"] .icon-sun  { display:none;  }
+  .toggle-icon[data-mode="light"] .icon-moon { display:block; }
+  .proj-loc { display:flex; align-items:center; }
   .proj-arrow { color:var(--text3); font-size:14px; transition:transform .15s, color .15s; }
   .proj-card.active-link:hover .proj-arrow { transform:translateX(4px); color:var(--text2); }
   .proj-locked { font-size:11px; opacity:0.5; }
@@ -337,8 +341,25 @@
   </div>
   <div class="nav-right">
     <div class="theme-toggle" onclick="toggleTheme()" title="Basculer jour / nuit">
-      <span class="toggle-icon">☀</span>
-      <span class="toggle-label" id="toggle-lbl">NUIT</span>
+      <svg class="toggle-icon" data-mode="dark" width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;transition:transform .3s">
+        <!-- Soleil (mode nuit = montrer soleil pour basculer en jour) -->
+        <g class="icon-sun">
+          <circle cx="12" cy="12" r="4.5" fill="currentColor"/>
+          <line x1="12" y1="2" x2="12" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="2" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="4.22" y1="4.22" x2="6.34" y2="6.34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="17.66" y1="17.66" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="19.78" y1="4.22" x2="17.66" y2="6.34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="6.34" y1="17.66" x2="4.22" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </g>
+        <!-- Lune (mode jour = montrer lune pour basculer en nuit) -->
+        <g class="icon-moon" style="display:none">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+        </g>
+      </svg>
+      <span id="toggle-lbl" style="font-size:10px;letter-spacing:0.06em">NUIT</span>
     </div>
   </div>
 </nav>
@@ -412,7 +433,7 @@
           </div>
         </div>
         <div class="proj-card-footer">
-          <span class="proj-loc">📍 Médinet El-Fayoum · 29.34013, 30.94513</span>
+          <span class="proj-loc"><svg width="11" height="14" viewBox="0 0 12 16" fill="none" style="flex-shrink:0;margin-right:4px;vertical-align:-2px"><path d="M6 0C3.24 0 1 2.24 1 5c0 3.75 5 11 5 11s5-7.25 5-11c0-2.76-2.24-5-5-5z" fill="currentColor" opacity="0.7"/><circle cx="6" cy="5" r="2" fill="var(--bg2)"/></svg>Médinet El-Fayoum · 29.34013, 30.94513</span>
           <span class="proj-arrow">→</span>
         </div>
       </a>
@@ -436,7 +457,7 @@
           </div>
         </div>
         <div class="proj-card-footer">
-          <span class="proj-loc">📍 Assouan · 24.12212, 32.91429</span>
+          <span class="proj-loc"><svg width="11" height="14" viewBox="0 0 12 16" fill="none" style="flex-shrink:0;margin-right:4px;vertical-align:-2px"><path d="M6 0C3.24 0 1 2.24 1 5c0 3.75 5 11 5 11s5-7.25 5-11c0-2.76-2.24-5-5-5z" fill="currentColor" opacity="0.7"/><circle cx="6" cy="5" r="2" fill="var(--bg2)"/></svg>Assouan · 24.12212, 32.91429</span>
           <span class="proj-locked">Dossier non disponible</span>
         </div>
       </div>
@@ -459,7 +480,7 @@
           </div>
         </div>
         <div class="proj-card-footer">
-          <span class="proj-loc">📍 Localisation non définie</span>
+          <span class="proj-loc"><svg width="11" height="14" viewBox="0 0 12 16" fill="none" style="flex-shrink:0;margin-right:4px;vertical-align:-2px"><path d="M6 0C3.24 0 1 2.24 1 5c0 3.75 5 11 5 11s5-7.25 5-11c0-2.76-2.24-5-5-5z" fill="currentColor" opacity="0.5"/><circle cx="6" cy="5" r="2" fill="var(--bg2)"/></svg>Localisation non définie</span>
           <span class="proj-locked">Dossier non disponible</span>
         </div>
       </div>
@@ -511,22 +532,28 @@
 </div>
 
 <script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const lbl = document.getElementById('toggle-lbl');
+    const icon = document.querySelector('.toggle-icon');
+    if (lbl) lbl.textContent = theme === 'dark' ? 'NUIT' : 'JOUR';
+    if (icon) icon.setAttribute('data-mode', theme);
+    localStorage.setItem('pharos-theme', theme);
+  }
+
   function toggleTheme() {
-    const html = document.documentElement;
-    const isDark = html.getAttribute('data-theme') === 'dark';
-    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    document.getElementById('toggle-lbl').textContent = isDark ? 'JOUR' : 'NUIT';
-    document.querySelector('.toggle-icon').textContent = isDark ? '☽' : '☀';
-    localStorage.setItem('pharos-theme', isDark ? 'light' : 'dark');
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
   }
 
   (function() {
     const saved = localStorage.getItem('pharos-theme');
-    const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const theme = saved || (preferDark ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', theme);
-    document.getElementById('toggle-lbl').textContent = theme === 'dark' ? 'NUIT' : 'JOUR';
-    document.querySelector('.toggle-icon').textContent = theme === 'dark' ? '☀' : '☽';
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    applyTheme(saved || (mq.matches ? 'dark' : 'light'));
+    // Suit automatiquement les changements système si l'utilisateur n'a pas de préférence sauvegardée
+    mq.addEventListener('change', e => {
+      if (!localStorage.getItem('pharos-theme')) applyTheme(e.matches ? 'dark' : 'light');
+    });
   })();
 </script>
 </body>

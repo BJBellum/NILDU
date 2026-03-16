@@ -147,6 +147,11 @@
   .footer-right { font-family:'Noto Kufi Arabic',sans-serif; font-size:13px; color:#f0a030; direction:rtl; }
   .footer-credit { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text3); opacity:0.55; margin-top:5px; }
 
+  .toggle-icon[data-mode="dark"] .icon-sun  { display:block; }
+  .toggle-icon[data-mode="dark"] .icon-moon { display:none;  }
+  .toggle-icon[data-mode="light"] .icon-sun  { display:none;  }
+  .toggle-icon[data-mode="light"] .icon-moon { display:block; }
+
   .scroll-hint { display:none; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); text-align:right; padding:4px 18px 5px; }
   @media(max-width:1020px){ .scroll-hint{display:block} }
   @media(max-width:600px){ .reactor-name{font-size:32px} .header{grid-template-columns:1fr} .company-block{text-align:left} .nav-ref{display:none} }
@@ -170,7 +175,22 @@
   <div class="nav-right">
     <span class="nav-ref"><span class="nav-dot"></span>NILDU-REF-001</span>
     <div class="theme-toggle" onclick="toggleTheme()" title="Basculer jour / nuit">
-      <span class="toggle-icon">☀</span>
+      <svg class="toggle-icon" data-mode="dark" width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;transition:transform .3s">
+        <g class="icon-sun">
+          <circle cx="12" cy="12" r="4.5" fill="currentColor"/>
+          <line x1="12" y1="2" x2="12" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="2" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="4.22" y1="4.22" x2="6.34" y2="6.34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="17.66" y1="17.66" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="19.78" y1="4.22" x2="17.66" y2="6.34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="6.34" y1="17.66" x2="4.22" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </g>
+        <g class="icon-moon" style="display:none">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+        </g>
+      </svg>
       <span id="toggle-lbl" style="font-size:10px;letter-spacing:0.06em">NUIT</span>
     </div>
   </div>
@@ -210,7 +230,7 @@
 
   <!-- LOCALISATION -->
   <div class="location-strip">
-    <span class="loc-pin">📍</span>
+    <span class="loc-pin"><svg width="13" height="16" viewBox="0 0 12 16" fill="none"><path d="M6 0C3.24 0 1 2.24 1 5c0 3.75 5 11 5 11s5-7.25 5-11c0-2.76-2.24-5-5-5z" fill="#e84848" opacity="0.85"/><circle cx="6" cy="5" r="2.2" fill="var(--bg2)"/></svg></span>
     <div>
       <div class="loc-main">Site nucléaire de Médinet El-Fayoum</div>
       <div class="loc-sub">Oasis du Fayoum · Bassin du Nil occidental</div>
@@ -591,21 +611,27 @@
 </div>
 
 <script>
-  function toggleTheme() {
-    const html = document.documentElement;
-    const isDark = html.getAttribute('data-theme') === 'dark';
-    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    document.getElementById('toggle-lbl').textContent = isDark ? 'JOUR' : 'NUIT';
-    document.querySelector('.toggle-icon').textContent = isDark ? '☽' : '☀';
-    localStorage.setItem('pharos-theme', isDark ? 'light' : 'dark');
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const lbl = document.getElementById('toggle-lbl');
+    const icon = document.querySelector('.toggle-icon');
+    if (lbl) lbl.textContent = theme === 'dark' ? 'NUIT' : 'JOUR';
+    if (icon) icon.setAttribute('data-mode', theme);
+    localStorage.setItem('pharos-theme', theme);
   }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  }
+
   (function() {
     const saved = localStorage.getItem('pharos-theme');
-    const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const theme = saved || (preferDark ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', theme);
-    document.getElementById('toggle-lbl').textContent = theme === 'dark' ? 'NUIT' : 'JOUR';
-    document.querySelector('.toggle-icon').textContent = theme === 'dark' ? '☀' : '☽';
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    applyTheme(saved || (mq.matches ? 'dark' : 'light'));
+    mq.addEventListener('change', e => {
+      if (!localStorage.getItem('pharos-theme')) applyTheme(e.matches ? 'dark' : 'light');
+    });
   })();
 </script>
 </body>
