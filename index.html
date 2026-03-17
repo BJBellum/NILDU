@@ -35,7 +35,6 @@
     --card-bg:     #111520;
     --card-hover:  #161b28;
     --toggle-bg:   #1c2232;
-    --toggle-icon: "☀";
   }
   :root[data-theme="light"] {
     --bg:          #f4f5f7;
@@ -51,7 +50,6 @@
     --card-bg:     #ffffff;
     --card-hover:  #f0f3fa;
     --toggle-bg:   #e4e7ef;
-    --toggle-icon: "☽";
   }
 
   *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -113,9 +111,11 @@
     user-select:none;
   }
   .theme-toggle:hover { border-color:var(--border3); color:var(--text); }
-  .theme-toggle .toggle-icon { font-size:13px; transition:transform .3s; }
-  [data-theme="light"] .toggle-icon { transform:rotate(180deg); }
-  .theme-toggle .toggle-label { letter-spacing:0.06em; }
+  .theme-toggle .toggle-icon { flex-shrink:0; transition:transform .3s; }
+  .toggle-icon[data-mode="dark"]  .icon-sun  { display:block; }
+  .toggle-icon[data-mode="dark"]  .icon-moon { display:none;  }
+  .toggle-icon[data-mode="light"] .icon-sun  { display:none;  }
+  .toggle-icon[data-mode="light"] .icon-moon { display:block; }
 
   /* ── HERO ── */
   .hero {
