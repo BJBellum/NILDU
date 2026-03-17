@@ -25,9 +25,9 @@
 <div class="err" id="err"></div>
 
 <script>
-// ══ CONFIGURATION — à remplir ══
-const WORKER_URL   = 'https://nileworker.kaffirbj.workers.dev';
-const ALLOWED_IDS  = [
+// ══ CONFIGURATION ══
+const WORKER_URL    = 'https://nileworker.kaffirbj.workers.dev';
+const ALLOWED_IDS   = [
   '772821169664426025',
   '1014832884764393523',
   '293869524091142144',
@@ -36,10 +36,10 @@ const ALLOWED_IDS  = [
   '660762879741526026',
   '172750036982038529',
   '1113422056525144104'
-  '1461755356618166436'
-];                                                         // IDs Discord autorisés
-const REDIRECT_HOME = '../../';                            // Retour accueil après auth
-// ═══════════════════════════════
+];
+// URL absolue pour éviter toute boucle de redirection
+const REDIRECT_HOME = 'https://BJBellum.github.io/PharosEnergy/';
+// ═══════════════════
 
 async function handleCallback() {
   const msg = document.getElementById('msg');
@@ -49,9 +49,9 @@ async function handleCallback() {
   const code  = params.get('code');
   const state = params.get('state');
 
-  // Pas de code = arrivée directe sur la page, rediriger vers l'accueil
+  // Garde anti-boucle : si on est sur la page callback sans code, on renvoie vers l'accueil absolu
   if (!code) {
-    window.location.href = REDIRECT_HOME;
+    window.location.replace(REDIRECT_HOME);
     return;
   }
 
@@ -61,7 +61,7 @@ async function handleCallback() {
   if (savedState && state !== savedState) {
     err.textContent = 'État invalide (CSRF). Réessaie de te connecter.';
     msg.textContent = 'Échec.';
-    setTimeout(() => { window.location.href = REDIRECT_HOME; }, 2500);
+    setTimeout(() => { window.location.replace(REDIRECT_HOME); }, 2500);
     return;
   }
   sessionStorage.removeItem('discord_oauth_state');
@@ -80,6 +80,7 @@ async function handleCallback() {
     if (!tokenData.access_token) {
       err.textContent = 'Erreur token : ' + (tokenData.error_description || tokenData.error || 'inconnue');
       msg.textContent = 'Échec.';
+      // On ne redirige pas automatiquement sur erreur token, pour que l'erreur soit lisible
       return;
     }
 
@@ -117,11 +118,16 @@ async function handleCallback() {
       msg.textContent = `Connecté en tant que ${user.username} — accès standard.`;
     }
 
-    // 5. Rediriger
+    // 5. Rediriger — utilise pharos_return si disponible, sinon accueil absolu
     setTimeout(() => {
       const returnTo = localStorage.getItem('pharos_return') || REDIRECT_HOME;
       localStorage.removeItem('pharos_return');
-      window.location.href = returnTo;
+      // Sécurité : si returnTo pointe vers le callback lui-même, forcer l'accueil
+      if (returnTo.includes('/auth/callback')) {
+        window.location.replace(REDIRECT_HOME);
+      } else {
+        window.location.replace(returnTo);
+      }
     }, 1200);
 
   } catch(e) {
