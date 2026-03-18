@@ -39,7 +39,6 @@
       if (s.expires && Date.now() > s.expires) { localStorage.removeItem('pharos_session'); return null; }
 
       // Re-vérifier l'autorisation en direct contre la liste ALLOWED_IDS à jour.
-      // Corrige les sessions en cache créées avec une ancienne liste d'IDs.
       const shouldBeAuthorized = ALLOWED_IDS.includes(String(s.id));
       if (s.authorized !== shouldBeAuthorized) {
         s.authorized = shouldBeAuthorized;
@@ -141,34 +140,6 @@
     else navRight.appendChild(btn);
   }
 
-  /* ── Injecter le lien "Nucléaire" dans le nav-center si autorisé ── */
-  function injectNuclearNavLink() {
-    if (!isAuthorized()) return;
-    const navCenter = document.querySelector('.nav-center');
-    if (!navCenter) return;
-
-    // Ne pas injecter deux fois
-    if (document.getElementById('pharos-nav-nuclear')) return;
-
-    const link = document.createElement('a');
-    link.id = 'pharos-nav-nuclear';
-    link.href = '#projets';
-    link.className = 'nav-link nav-link-nuclear';
-    link.style.cssText = 'color:#8b6fd4;position:relative;';
-    link.innerHTML = `<svg width="12" height="12" viewBox="0 0 20 20" fill="none" style="vertical-align:-1px;margin-right:4px;opacity:0.85"><circle cx="10" cy="10" r="3" fill="#8b6fd4"/><circle cx="10" cy="10" r="7" stroke="#8b6fd4" stroke-width="1" fill="none" stroke-dasharray="2 1.5"/><circle cx="10" cy="10" r="9.5" stroke="#8b6fd4" stroke-width="0.5" fill="none" opacity="0.4"/></svg>Nucléaire`;
-
-    // Insérer après "Hydroélectrique" (avant "À propos")
-    const links = navCenter.querySelectorAll('a.nav-link');
-    let inserted = false;
-    links.forEach(l => {
-      if (l.textContent.includes('Hydroélectrique') && !inserted) {
-        l.insertAdjacentElement('afterend', link);
-        inserted = true;
-      }
-    });
-    if (!inserted) navCenter.appendChild(link);
-  }
-
   /* ── Contrôle d'accès aux sections réservées ── */
   function applyAccessControl() {
     // Éléments avec data-auth="required" masqués si non autorisé
@@ -214,8 +185,8 @@
       <div class="about-card-body">
         Pharos Energy conduit le <strong>programme nucléaire civil du Royaume-Uni du Nil</strong>,
         articulé autour de la filière <strong>NILDU</strong> (eau lourde D₂O, uranium naturel) et de la pile de recherche
-        <strong>MEMPHIS</strong> (procédé Girdler, production de D₂O). Objectif : atteindre
-        <strong>2 400 000 MWh/an</strong> à horizon 2310, en complément de la production hydroélectrique,
+        <strong>MEMPHIS</strong> (procédé Girdler, production de D₂O).
+        Programme fondé en <strong>2305</strong>, en complément de la production hydroélectrique,
         pour assurer l'indépendance énergétique du Nil.
       </div>`;
     aboutStrip.appendChild(card);
@@ -231,12 +202,10 @@
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
       injectAuthButton();
-      injectNuclearNavLink();
       applyAccessControl();
     });
   } else {
     injectAuthButton();
-    injectNuclearNavLink();
     applyAccessControl();
   }
 
