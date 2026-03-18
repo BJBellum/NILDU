@@ -356,12 +356,24 @@
     <a href="#apropos" class="nav-link">À propos</a>
   </div>
   <div class="nav-right">
-    <div class="theme-toggle" onclick="toggleTheme()">
-      <span class="toggle-icon" data-mode="dark">
-        <span class="icon-sun" style="display:block">☀</span>
-        <span class="icon-moon" style="display:none">☽</span>
-      </span>
-      <span class="toggle-label" id="toggle-lbl">NUIT</span>
+    <div class="theme-toggle" onclick="toggleTheme()" title="Basculer jour / nuit">
+      <svg class="toggle-icon" data-mode="dark" width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;transition:transform .3s">
+        <g class="icon-sun">
+          <circle cx="12" cy="12" r="4.5" fill="currentColor"/>
+          <line x1="12" y1="2" x2="12" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="2" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="4.22" y1="4.22" x2="6.34" y2="6.34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="17.66" y1="17.66" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="19.78" y1="4.22" x2="17.66" y2="6.34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="6.34" y1="17.66" x2="4.22" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </g>
+        <g class="icon-moon">
+          <path d="M21 12.79A9 9 0 0 1 12 21a9 9 0 0 1 0-18 7 7 0 0 0 9 9.79z" fill="currentColor"/>
+        </g>
+      </svg>
+      <span id="toggle-lbl" style="font-size:10px;letter-spacing:0.06em">NUIT</span>
     </div>
   </div>
 </nav>
@@ -379,16 +391,14 @@
     <div class="hero-tags">
       <span class="htag htag-blue">Hydroélectricité</span>
       <span class="htag htag-amber">Royaume-Uni du Nil</span>
-      <span class="htag htag-teal">Fleuve Nil</span>
-      <span class="htag htag-gray">En service depuis 2304</span>
+      <span class="htag htag-gray">En service depuis 2303</span>
       <span class="htag htag-orange">Géothermie</span>
     </div>
     <div class="hero-stats">
-      <div class="hstat"><div class="hstat-val">1</div><div class="hstat-lbl">Barrage en service</div></div>
+      <div class="hstat"><div class="hstat-val">4</div><div class="hstat-lbl">Installations électriques</div></div>
       <div class="hstat"><div class="hstat-val">2 100 MWe</div><div class="hstat-lbl">Puissance installée</div></div>
       <div class="hstat"><div class="hstat-val">2,945M MWh</div><div class="hstat-lbl">Production annuelle</div></div>
-      <div class="hstat"><div class="hstat-val">Nil</div><div class="hstat-lbl">Fleuve · Assouan</div></div>
-      <div class="hstat"><div class="hstat-val">2304</div><div class="hstat-lbl">En service depuis</div></div>
+      <div class="hstat"><div class="hstat-val" style="color:#1bbd8a">2303</div><div class="hstat-lbl">En service depuis</div></div>
     </div>
   </div>
 </section>
@@ -579,7 +589,7 @@
   <!-- ══════════════════════════════════════════
        BILAN ÉNERGÉTIQUE — lien vers page dédiée
   ══════════════════════════════════════════ -->
-  <section id="bilan">
+  <section id="bilan" style="margin-bottom:56px;">
     <div class="section-header">
       <span class="section-title">Bilan Énergétique National</span>
       <div class="section-line"></div>
@@ -598,7 +608,6 @@
           <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;padding:3px 10px;border-radius:3px;border:1px solid rgba(27,189,138,0.5);color:#1bbd8a;background:rgba(27,189,138,0.07);white-space:nowrap;flex-shrink:0;">Données publiques</span>
         </div>
 
-        <!-- Mini stats row -->
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--border);border:1px solid var(--border2);border-radius:8px;overflow:hidden;margin-bottom:20px;">
           <div style="background:var(--bg3);padding:12px 16px;">
             <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Production 2305</div>
@@ -637,7 +646,7 @@
   </section>
 
   <!-- À PROPOS -->
-  <section id="apropos">
+  <section id="apropos" style="margin-top:72px;">
     <div class="section-header">
       <span class="section-title">À propos</span>
       <div class="section-line"></div>
