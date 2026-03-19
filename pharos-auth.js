@@ -49,12 +49,15 @@
 
   /* ── DISCORD OAUTH ─────────────────────────────────────────── */
   function discordLoginURL() {
+    // Encode current URL as state so callback can return here
+    let state = 'base';
+    try { state = btoa(encodeURIComponent(window.location.href)); } catch(e) { state = btoa(CFG.BASE_URL); }
     const p = new URLSearchParams({
       client_id    : CFG.DISCORD_CLIENT_ID,
       redirect_uri : CFG.REDIRECT_URI,
       response_type: 'token',
       scope        : CFG.DISCORD_SCOPE,
-      state        : btoa(window.location.href).replace(/=+$/, ''), // retour à la page courante
+      state,
     });
     return 'https://discord.com/oauth2/authorize?' + p;
   }
