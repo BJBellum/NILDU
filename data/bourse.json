@@ -372,6 +372,18 @@
       "inn": 6,
       "ec": 3,
       "fi": 7
+    },
+    {
+      "id": 31,
+      "nom": "Pharos Energy",
+      "nat": "Royaume-Uni du Nil",
+      "cat": "Énergie",
+      "eq": 8,
+      "sa": 8,
+      "tr": 10,
+      "inn": 9,
+      "ec": 8,
+      "fi": 10
     }
   ]
 }
