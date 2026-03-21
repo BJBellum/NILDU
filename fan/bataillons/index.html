@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculateur de Bataillons · FAN</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&family=Noto+Kufi+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/dune.css">
+<style>
+*{box-sizing:border-box;}
+.calc-layout{display:grid;grid-template-columns:380px 1fr;gap:0;min-height:calc(100vh - 60px);margin-top:60px;}
+@media(max-width:900px){.calc-layout{grid-template-columns:1fr;}}
+/* LEFT PANEL */
+.bat-panel{background:var(--bg2);border-right:1px solid var(--border2);overflow-y:auto;height:calc(100vh - 60px);position:sticky;top:60px;}
+[data-theme="light"] .bat-panel{background:rgba(220,200,165,.3);}
+.panel-hdr{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:10;}
+[data-theme="light"] .panel-hdr{background:rgba(220,200,165,.6);}
+.panel-ttl{font-family:'Dune Rise',serif;font-size:9px;letter-spacing:.2em;color:var(--spice);}
+.panel-search{background:var(--bg);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:10px;padding:5px 10px;border-radius:2px;outline:none;width:140px;transition:border-color .2s;}
+.panel-search:focus{border-color:var(--spice);}
+.bat-item{padding:10px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;transition:background .15s;}
+.bat-item:hover{background:rgba(232,92,13,.04);}
+.bat-item.active{background:rgba(232,92,13,.07);border-left:2px solid var(--spice);}
+.bat-name{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);letter-spacing:.04em;flex:1;line-height:1.35;}
+.qty-ctrl{display:flex;align-items:center;gap:0;flex-shrink:0;}
+.qty-btn{background:transparent;border:1px solid var(--border2);color:var(--text3);width:22px;height:22px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1;}
+.qty-btn:hover{border-color:var(--spice);color:var(--spice);}
+.qty-val{width:36px;height:22px;background:var(--bg);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);border-left:none;border-right:none;text-align:center;font-family:'Dune Rise',serif;font-size:11px;color:var(--spice);outline:none;}
+.qty-val::-webkit-inner-spin-button{display:none;}
+
+/* RIGHT PANEL */
+.bilan-panel{padding:28px 32px;overflow-y:auto;}
+@media(max-width:900px){.bilan-panel{padding:18px;}}
+.bilan-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px;}
+.bilan-title{font-family:'Dune Rise',serif;font-size:10px;letter-spacing:.22em;color:var(--spice);text-transform:uppercase;}
+.bilan-actions{display:flex;gap:8px;}
+.btn-sm{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;padding:6px 12px;border-radius:2px;cursor:pointer;border:1px solid;transition:all .2s;display:inline-flex;align-items:center;gap:5px;}
+.btn-reset{background:transparent;border-color:var(--border2);color:var(--text3);}
+.btn-reset:hover{border-color:var(--spice);color:var(--spice);}
+.btn-sync{background:rgba(232,92,13,.1);border-color:rgba(232,92,13,.4);color:var(--spice);}
+.btn-sync:hover{background:rgba(232,92,13,.2);}
+
+/* STATS STRIP */
+.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:24px;}
+@media(max-width:700px){.stats-strip{grid-template-columns:repeat(2,1fr);}}
+.stat-box{background:var(--card-bg);border:1px solid var(--border);border-top:2px solid;padding:14px 12px;text-align:center;}
+.stat-val{font-family:'Dune Rise',serif;font-size:22px;letter-spacing:.04em;margin-bottom:3px;}
+.stat-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;}
+
+/* EQUIP GRID */
+.equip-section{margin-bottom:24px;}
+.equip-sec-ttl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;color:var(--text3);text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--border);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.equip-sec-ttl::before{content:'';width:3px;height:10px;background:var(--spice);border-radius:1px;}
+.equip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;}
+.equip-card{background:var(--card-bg);border:1px solid var(--border);padding:12px 14px;}
+.equip-name{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.08em;margin-bottom:4px;line-height:1.4;}
+.equip-val{font-family:'Dune Rise',serif;font-size:18px;color:var(--text);letter-spacing:.04em;}
+.equip-val.zero{color:var(--border2);}
+.equip-bar{height:2px;background:var(--border);margin-top:6px;border-radius:1px;overflow:hidden;}
+.equip-bar-fill{height:100%;border-radius:1px;background:var(--spice);transition:width .5s ease-out;}
+
+/* DETAIL TABLE */
+.detail-tbl{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:10px;margin-bottom:24px;}
+.detail-tbl th{padding:7px 10px;text-align:left;color:var(--text3);font-weight:400;letter-spacing:.1em;font-size:8px;border-bottom:1px solid var(--border2);background:var(--card-bg);}
+.detail-tbl td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text2);}
+.detail-tbl tr:hover td{background:rgba(232,92,13,.03);}
+.detail-tbl tr:last-child td{border-bottom:none;}
+.td-bat{color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:11px;}
+.td-qty{color:var(--spice);font-family:'Dune Rise',serif;font-size:12px;text-align:center;}
+.td-num{text-align:right;color:var(--text2);}
+.td-num.hl{color:var(--gold-mid);}
+
+/* NAV */
+.topnav-fixed{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:rgba(10,6,0,.96);border-bottom:1px solid rgba(232,92,13,.2);backdrop-filter:blur(12px);}
+[data-theme="light"] .topnav-fixed{background:rgba(224,200,160,.96);}
+
+/* ACCES WALL */
+.access-wall{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;}
+.access-inner{text-align:center;padding:48px 36px;border:1px solid rgba(232,92,13,.4);background:var(--card-bg);max-width:400px;width:90%;position:relative;}
+.access-inner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--spice),transparent);}
+</style>
+</head>
+<body>
+
+<div id="access-wall" class="access-wall">
+  <div class="access-inner">
+    <div style="width:44px;height:44px;border:1px solid rgba(232,92,13,.4);border-radius:2px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;background:rgba(232,92,13,.06);">
+      <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><rect x="5" y="11" width="14" height="10" rx="1" stroke="#E85C0D" stroke-width="1.2" fill="none"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#E85C0D" stroke-width="1.2" fill="none" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="#E85C0D"/></svg>
+    </div>
+    <div style="font-family:'Dune Rise',serif;font-size:14px;color:var(--gold-pale);letter-spacing:.08em;margin-bottom:4px;">Acces Restreint</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.12em;margin-bottom:18px;">CALC-BAT-001 · FORCES ARMEES DU NIL</div>
+    <a id="auth-btn" href="#" style="display:inline-flex;align-items:center;gap:10px;background:transparent;border:1px solid rgba(232,92,13,.5);color:var(--spice);padding:10px 24px;font-family:'Dune Rise',serif;font-size:10px;letter-spacing:.14em;text-decoration:none;border-radius:2px;width:100%;justify-content:center;">
+      <svg viewBox="0 0 24 24" fill="none" width="13" height="13"><path d="M20.3 4.4C18.8 3.7 17.2 3.2 15.5 3c-.2.3-.4.8-.6 1.1a16 16 0 0 0-4.8 0C9.9 3.8 9.7 3.3 9.5 3 7.8 3.2 6.2 3.7 4.7 4.4A19.8 19.8 0 0 0 1.5 17.8a20.2 20.2 0 0 0 6.2 3.2c.5-.7.9-1.5 1.3-2.2-.7-.3-1.4-.6-2-1 .2-.1.4-.3.5-.4a14.4 14.4 0 0 0 12.5 0c.2.1.4.3.5.4-.6.4-1.3.7-2 1 .4.8.8 1.5 1.3 2.2a20 20 0 0 0 6.2-3.2A19.7 19.7 0 0 0 20.3 4.4z" fill="#E85C0D"/></svg>
+      Se connecter avec Discord
+    </a>
+    <div style="margin-top:12px;"><a href="../" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);text-decoration:none;">← Forces Armées du Nil</a></div>
+  </div>
+</div>
+
+<div id="main-content" style="display:none;">
+<nav class="topnav-fixed">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div style="width:32px;height:32px;border:1px solid rgba(232,92,13,.4);border-radius:2px;display:flex;align-items:center;justify-content:center;background:rgba(232,92,13,.06);">
+      <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><circle cx="6" cy="6" r="2.5" stroke="#E85C0D" stroke-width="1.2" fill="none"/><circle cx="14" cy="6" r="2.5" stroke="#E85C0D" stroke-width="1.2" fill="none"/><circle cx="10" cy="13" r="2.5" stroke="#E85C0D" stroke-width="1.2" fill="none"/><line x1="8.5" y1="6" x2="11.5" y2="6" stroke="#E85C0D" stroke-width=".8"/><line x1="8" y1="8" x2="10" y2="11" stroke="#E85C0D" stroke-width=".8"/><line x1="12" y1="8" x2="10" y2="11" stroke="#E85C0D" stroke-width=".8"/></svg>
+    </div>
+    <span style="font-family:'Dune Rise',serif;font-size:10px;letter-spacing:.18em;color:var(--spice);">Calculateur de Bataillons</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:.1em;border:1px solid rgba(232,92,13,.2);padding:2px 7px;border-radius:2px;">CALC-BAT-001</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);" id="nav-user">—</span>
+    <a href="../" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.1em;border:1px solid var(--border);padding:5px 10px;border-radius:2px;text-decoration:none;">← FAN</a>
+    <button onclick="toggleTheme()" style="background:transparent;border:1px solid var(--border);color:var(--text3);padding:5px 10px;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;border-radius:2px;">
+      <span id="toggle-lbl">NUIT</span>
+    </button>
+  </div>
+</nav>
+
+<div class="calc-layout">
+  <!-- LEFT: Battalion list -->
+  <div class="bat-panel">
+    <div class="panel-hdr">
+      <div class="panel-ttl">Bataillons · FAN</div>
+      <input type="text" class="panel-search" id="bat-search" placeholder="Filtrer…" oninput="filterBat()">
+    </div>
+    <div id="bat-list"></div>
+  </div>
+
+  <!-- RIGHT: Bilan -->
+  <div class="bilan-panel">
+    <div class="bilan-topbar">
+      <div>
+        <div class="bilan-title">Bilan Global des Effectifs</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.08em;margin-top:4px;">Synthèse de déploiement · Exercice 2305</div>
+      </div>
+      <div class="bilan-actions">
+        <button class="btn-sm btn-sync" onclick="syncFromGH()">↺ Sync GitHub</button>
+        <button class="btn-sm btn-reset" onclick="resetAll()">✕ Réinitialiser</button>
+      </div>
+    </div>
+
+    <!-- STATS STRIP -->
+    <div class="stats-strip">
+      <div class="stat-box" style="border-top-color:var(--spice);"><div class="stat-val" style="color:var(--spice);" id="s-bat">0</div><div class="stat-lbl">Bataillons déployés</div></div>
+      <div class="stat-box" style="border-top-color:var(--gold);"><div class="stat-val" style="color:var(--gold);" id="s-hommes">0</div><div class="stat-lbl">Hommes</div></div>
+      <div class="stat-box" style="border-top-color:var(--teal);"><div class="stat-val" style="color:var(--teal-bright);" id="s-fusils">0</div><div class="stat-lbl">Fusils</div></div>
+      <div class="stat-box" style="border-top-color:var(--amber);"><div class="stat-val" style="color:var(--amber);" id="s-vehicules">0</div><div class="stat-lbl">Véhicules</div></div>
+    </div>
+
+    <!-- EQUIPMENT BY CATEGORY -->
+    <div id="bilan-equip"></div>
+
+    <!-- DETAIL TABLE -->
+    <div class="section-header" style="margin:20px 0 12px;">
+      <span class="section-eyebrow">Detail par bataillon</span>
+      <div class="section-line"></div>
+    </div>
+    <div style="overflow-x:auto;border:1px solid var(--border2);border-radius:2px;">
+      <table class="detail-tbl" id="detail-tbl">
+        <thead><tr>
+          <th>Bataillon</th><th style="text-align:center;">Qté</th>
+          <th style="text-align:right;">Hommes</th>
+          <th style="text-align:right;">Fusils</th>
+          <th style="text-align:right;">Pistolets</th>
+          <th style="text-align:right;">Mit. Moy.</th>
+          <th style="text-align:right;">Mit. Lourdes</th>
+          <th style="text-align:right;">Gr. Frag.</th>
+          <th style="text-align:right;">Gr. Fum.</th>
+          <th style="text-align:right;">Véhicules</th>
+          <th style="text-align:right;">Canons</th>
+        </tr></thead>
+        <tbody id="detail-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div><!-- /main-content -->
+
+<script>
+// ── FAN IDs ──
+const FAN_IDS=['772821169664426025','928291843958014014','1014832884764393523','1113422056525144104','293869524091142144','1302403450566610944'];
+
+// ── DEFAULT BATTALION DATA ──
+const DEFAULT_BATS=[
+  {id:'bat_01',nom:'Bataillon de Fusiliers',quantite:0,equip:{'Hommes':900,'Fusils':900,'Fusils (Rechange)':450,'Pistolets':900,'Pistolets (Rechange)':450,'Mit. Moyennes':500,'Mit. Moy. (Rechange)':250,'Mit. Lourdes':250,'Mit. Lourdes (Rechange)':125,'Grenades Fragmentation':1800,'Grenades Fumigène':1800,'Véh. Blindés':25,'Camions (Transport)':50}},
+  {id:'bat_02',nom:'Compagnie Blindée',quantite:0,equip:{'Hommes':250,'Fusils':250,'Fusils (Rechange)':125,'Pistolets':250,'Pistolets (Rechange)':125,'Mit. Lourdes':50,'Mit. Lourdes (Rechange)':25,'Grenades Fragmentation':500,'Grenades Fumigène':500,'Chars Légers':12,'Camions (Transport)':20}},
+  {id:'bat_03',nom:'Bataillon de Logistique',quantite:0,equip:{'Hommes':500,'Fusils':500,'Fusils (Rechange)':250,'Pistolets':500,'Pistolets (Rechange)':250,'Camions (Transport)':30,'Camions (Logistique)':100}},
+  {id:'bat_04',nom:'Bataillon de Reconnaissance',quantite:0,equip:{'Hommes':500,'Fusils':500,'Fusils (Rechange)':250,'Pistolets':500,'Pistolets (Rechange)':250,'Mit. Moyennes':100,'Mit. Moy. (Rechange)':50,'Grenades Fragmentation':500,'Grenades Fumigène':500,'Motos':100,'Camions (Transport)':30}},
+  {id:'bat_05',nom:'Bataillon de Fusiliers Alpins',quantite:0,equip:{'Hommes':1200,'Fusils':1200,'Fusils (Rechange)':600,'Pistolets':1200,'Pistolets (Rechange)':600,'Mit. Moyennes':600,'Mit. Moy. (Rechange)':300,'Mit. Lourdes':300,'Mit. Lourdes (Rechange)':150,'Grenades Fragmentation':2400,'Grenades Fumigène':2400,'Camions (Transport)':70}},
+  {id:'bat_06',nom:'Bataillon de Reconnaissance Alpine',quantite:0,equip:{'Hommes':500,'Fusils':500,'Fusils (Rechange)':250,'Pistolets':500,'Pistolets (Rechange)':250,'Mit. Moyennes':100,'Mit. Moy. (Rechange)':50,'Grenades Fragmentation':500,'Grenades Fumigène':500,'Camions (Transport)':30}},
+  {id:'bat_07',nom:'Bataillon de Logistique Alpin',quantite:0,equip:{'Hommes':500,'Fusils':500,'Fusils (Rechange)':250,'Pistolets':500,'Pistolets (Rechange)':250,'Camions (Transport)':30,'Camions (Logistique)':100}},
+  {id:'bat_08',nom:'Bataillon du Génie Alpin',quantite:0,equip:{'Hommes':525,'Fusils':525,'Fusils (Rechange)':263,'Pistolets':525,'Pistolets (Rechange)':263,'Camions (Transport)':30}},
+  {id:'bat_09',nom:"Bataillon d'Artillerie",quantite:0,equip:{'Hommes':600,'Fusils':600,'Fusils (Rechange)':300,'Pistolets':600,'Pistolets (Rechange)':300,'Camions (Transport)':35,'Camions (Utilitaires)':32,'Canons (Campagne)':32}},
+  {id:'bat_10',nom:"Bataillon d'Obusier",quantite:0,equip:{'Hommes':550,'Fusils':550,'Fusils (Rechange)':275,'Pistolets':550,'Pistolets (Rechange)':275,'Camions (Transport)':35,'Camions (Utilitaires)':24,'Canons (Obusier)':24}},
+  {id:'bat_11',nom:'Bataillon Antiaérien',quantite:0,equip:{'Hommes':450,'Fusils':450,'Fusils (Rechange)':225,'Pistolets':450,'Pistolets (Rechange)':225,'Camions (Transport)':30,'Camions (Utilitaires)':24,'Canons (AA)':24}},
+  {id:'bat_12',nom:'Compagnie de Transmission',quantite:0,equip:{'Hommes':200,'Pistolets':200,'Camions (Transport)':10}},
+  {id:'bat_13',nom:'Bataillon Médical',quantite:0,equip:{'Hommes':1000,'Camions (Transport)':100}},
+  {id:'bat_14',nom:'Bataillon de Fusiliers Marins',quantite:0,equip:{'Hommes':1200,'Fusils':1200,'Fusils (Rechange)':600,'Pistolets':1200,'Pistolets (Rechange)':600,'Mit. Moyennes':700,'Mit. Moy. (Rechange)':350,'Mit. Lourdes':350,'Mit. Lourdes (Rechange)':175,'Grenades Fragmentation':2400,'Grenades Fumigène':2400,'Camions (Transport)':70}},
+  {id:'bat_15',nom:'Bataillon du Génie',quantite:0,equip:{'Hommes':525,'Fusils':525,'Fusils (Rechange)':263,'Pistolets':525,'Pistolets (Rechange)':263,'Camions (Transport)':30}},
+  {id:'bat_16',nom:'Bataillon Antichar',quantite:0,equip:{'Hommes':500,'Fusils':500,'Fusils (Rechange)':250,'Pistolets':500,'Pistolets (Rechange)':250,'Camions (Transport)':30,'Camions (Utilitaires)':32,'Canons Antichar':32}},
+  {id:'bat_17',nom:'Bataillon de Fusiliers Légers',quantite:0,equip:{'Hommes':600,'Fusils':600,'Fusils (Rechange)':300,'Pistolets':600,'Pistolets (Rechange)':300,'Mit. Moyennes':50,'Mit. Moy. (Rechange)':25,'Grenades Fragmentation':600,'Grenades Fumigène':600,'Camions (Transport)':30}},
+];
+
+// Equipment categories for display
+const EQUIP_CATS=[
+  {label:'Personnel',color:'#E85C0D',fields:['Hommes']},
+  {label:'Armement léger',color:'#D4A843',fields:['Fusils','Fusils (Rechange)','Pistolets','Pistolets (Rechange)']},
+  {label:'Mitrailleuses',color:'#F0A030',fields:['Mit. Moyennes','Mit. Moy. (Rechange)','Mit. Lourdes','Mit. Lourdes (Rechange)']},
+  {label:'Grenades',color:'#22B89A',fields:['Grenades Fragmentation','Grenades Fumigène']},
+  {label:'Véhicules',color:'#C8960C',fields:['Véh. Blindés','Chars Légers','Motos','Camions (Transport)','Camions (Logistique)','Camions (Utilitaires)']},
+  {label:'Artillerie',color:'#8B5A20',fields:['Canons (Campagne)','Canons (Obusier)','Canons (AA)','Canons Antichar']},
+];
+
+// ── STATE ──
+let battalions=[];
+
+function loadState(){
+  try{
+    const s=localStorage.getItem('fan_battalions');
+    if(s)battalions=JSON.parse(s);
+    else battalions=DEFAULT_BATS.map(b=>({...b,equip:{...b.equip}}));
+  }catch(_){battalions=DEFAULT_BATS.map(b=>({...b,equip:{...b.equip}}));}
+}
+function saveState(){localStorage.setItem('fan_battalions',JSON.stringify(battalions));}
+
+// ── RENDER LEFT PANEL ──
+function renderBatList(){
+  const q=(document.getElementById('bat-search')?.value||'').toLowerCase();
+  const list=document.getElementById('bat-list');
+  if(!list)return;
+  list.innerHTML=battalions.filter(b=>b.nom.toLowerCase().includes(q)).map(b=>`
+    <div class="bat-item" data-id="${b.id}">
+      <div class="bat-name">${b.nom}</div>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty('${b.id}',-1)">−</button>
+        <input type="number" class="qty-val" value="${b.quantite}" min="0"
+          onchange="setQty('${b.id}',this.value)" onblur="setQty('${b.id}',this.value)">
+        <button class="qty-btn" onclick="changeQty('${b.id}',+1)">+</button>
+      </div>
+    </div>
+  `).join('');
+}
+function filterBat(){renderBatList();}
+
+function changeQty(id,delta){
+  const b=battalions.find(x=>x.id===id);
+  if(!b)return;
+  b.quantite=Math.max(0,(b.quantite||0)+delta);
+  saveState();renderBatList();renderBilan();
+}
+function setQty(id,val){
+  const b=battalions.find(x=>x.id===id);
+  if(!b)return;
+  b.quantite=Math.max(0,parseInt(val)||0);
+  saveState();renderBatList();renderBilan();
+}
+
+// ── COMPUTE TOTALS ──
+function computeTotals(){
+  const totals={};
+  for(const b of battalions){
+    if(!b.quantite)continue;
+    for(const[k,v]of Object.entries(b.equip)){
+      totals[k]=(totals[k]||0)+v*b.quantite;
+    }
+  }
+  return totals;
+}
+
+function getMaxVal(totals){return Math.max(1,...Object.values(totals));}
+
+// ── RENDER RIGHT PANEL ──
+function renderBilan(){
+  const totals=computeTotals();
+  const maxV=getMaxVal(totals);
+  const deployed=battalions.filter(b=>b.quantite>0);
+  const totalBat=deployed.reduce((s,b)=>s+b.quantite,0);
+
+  // Stats strip
+  const setEl=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=typeof v==='number'?v.toLocaleString('fr'):v;};
+  setEl('s-bat',totalBat);
+  setEl('s-hommes',totals['Hommes']||0);
+  setEl('s-fusils',(totals['Fusils']||0)+(totals['Pistolets']||0));
+  const veh=(totals['Véh. Blindés']||0)+(totals['Chars Légers']||0)+(totals['Motos']||0)+(totals['Camions (Transport)']||0)+(totals['Camions (Logistique)']||0)+(totals['Camions (Utilitaires)']||0);
+  setEl('s-vehicules',veh);
+
+  // Equipment by category
+  const bilanDiv=document.getElementById('bilan-equip');
+  if(!bilanDiv)return;
+  bilanDiv.innerHTML=EQUIP_CATS.map(cat=>{
+    const items=cat.fields.filter(f=>totals[f]!==undefined||true);
+    if(!items.some(f=>totals[f]>0))return'';
+    return`<div class="equip-section">
+      <div class="equip-sec-ttl" style="--spice:${cat.color};">${cat.label.toUpperCase()}</div>
+      <div class="equip-grid">
+        ${items.map(f=>{
+          const v=totals[f]||0;
+          const pct=v?Math.round(v/maxV*100):0;
+          return`<div class="equip-card">
+            <div class="equip-name">${f}</div>
+            <div class="equip-val${v?'':' zero'}">${v.toLocaleString('fr')}</div>
+            <div class="equip-bar"><div class="equip-bar-fill" style="width:${pct}%;background:${cat.color};"></div></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Detail table
+  const tbody=document.getElementById('detail-tbody');
+  if(!tbody)return;
+  const active=battalions.filter(b=>b.quantite>0);
+  if(!active.length){tbody.innerHTML=`<tr><td colspan="11" style="text-align:center;padding:20px;color:var(--text3);font-size:10px;letter-spacing:.1em;">Aucun bataillon déployé</td></tr>`;return;}
+  tbody.innerHTML=active.map(b=>{
+    const e=b.equip,q=b.quantite;
+    const mitMoy=((e['Mit. Moyennes']||0)+(e['Mit. Moy. (Rechange)']||0))*q;
+    const mitLd=((e['Mit. Lourdes']||0)+(e['Mit. Lourdes (Rechange)']||0))*q;
+    const vhTot=((e['Véh. Blindés']||0)+(e['Chars Légers']||0)+(e['Motos']||0)+(e['Camions (Transport)']||0)+(e['Camions (Logistique)']||0)+(e['Camions (Utilitaires)']||0))*q;
+    const canTot=((e['Canons (Campagne)']||0)+(e['Canons (Obusier)']||0)+(e['Canons (AA)']||0)+(e['Canons Antichar']||0))*q;
+    return`<tr>
+      <td class="td-bat">${b.nom}</td>
+      <td class="td-qty">${q}</td>
+      <td class="td-num hl">${((e['Hommes']||0)*q).toLocaleString('fr')}</td>
+      <td class="td-num">${((e['Fusils']||0)*q).toLocaleString('fr')}</td>
+      <td class="td-num">${((e['Pistolets']||0)*q).toLocaleString('fr')}</td>
+      <td class="td-num">${mitMoy.toLocaleString('fr')}</td>
+      <td class="td-num">${mitLd.toLocaleString('fr')}</td>
+      <td class="td-num">${((e['Grenades Fragmentation']||0)*q).toLocaleString('fr')}</td>
+      <td class="td-num">${((e['Grenades Fumigène']||0)*q).toLocaleString('fr')}</td>
+      <td class="td-num">${vhTot.toLocaleString('fr')}</td>
+      <td class="td-num">${canTot.toLocaleString('fr')}</td>
+    </tr>`;
+  }).join('');
+}
+
+function resetAll(){if(!confirm('Remettre toutes les quantités à 0 ?'))return;battalions.forEach(b=>b.quantite=0);saveState();renderBatList();renderBilan();}
+
+async function syncFromGH(){
+  try{
+    const r=await fetch('https://api.github.com/repos/BJBellum/UKN/contents/data/fan.json',{headers:{'Accept':'application/vnd.github.v3.raw'},cache:'no-store'});
+    if(!r.ok)return;
+    const d=await r.json();
+    if(d.bataillons?.length){
+      // Merge quantities from GitHub into local battalion list
+      d.bataillons.forEach(gb=>{
+        const local=battalions.find(x=>x.id===gb.id||x.nom===gb.nom);
+        if(local)local.quantite=gb.quantite||0;
+      });
+      // Add new types from GitHub not in local
+      d.bataillons.forEach(gb=>{
+        if(!battalions.find(x=>x.id===gb.id)){
+          battalions.push(gb);
+        }
+      });
+      saveState();renderBatList();renderBilan();
+    }
+  }catch(_){}
+}
+
+// ── THEME ──
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const lbl=document.getElementById('toggle-lbl');if(lbl)lbl.textContent=t==='dark'?'NUIT':'JOUR';localStorage.setItem('run-theme',t);}
+function toggleTheme(){applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');}
+(function(){const s=localStorage.getItem('run-theme'),mq=window.matchMedia('(prefers-color-scheme: dark)');applyTheme(s||(mq.matches?'dark':'light'));})();
+
+// ── AUTH ──
+(function(){const STATE=btoa(encodeURIComponent(window.location.href));const url=`https://discord.com/oauth2/authorize?client_id=1483200078092042300&redirect_uri=${encodeURIComponent('https://BJBellum.github.io/UKN/auth/callback/')}&response_type=token&scope=identify&state=${STATE}`;const btn=document.getElementById('auth-btn');if(btn)btn.href=url;})();
+window.addEventListener('DOMContentLoaded',()=>{
+  const pa=window.PharosAuth,user=pa?.getUser();
+  if(user&&FAN_IDS.includes(user.id)){
+    document.getElementById('access-wall').style.display='none';
+    document.getElementById('main-content').style.display='block';
+    const nu=document.getElementById('nav-user');if(nu)nu.textContent=user.global_name||user.username||'—';
+    loadState();
+    syncFromGH().finally(()=>{renderBatList();renderBilan();});
+  }
+});
+</script>
+<script src="../../pharos-auth.js"></script>
+</body>
+</html>

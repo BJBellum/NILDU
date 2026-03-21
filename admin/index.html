@@ -3,360 +3,516 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin · Bourse du Caire</title>
+<title>Admin · Portail UKN</title>
 <meta name="robots" content="noindex,nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&family=Noto+Kufi+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/dune.css">
 <style>
-/* ── ADMIN TOPNAV ── */
-.topnav-admin{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;background:rgba(10,6,0,.96);border-bottom:1px solid rgba(232,92,13,.25);backdrop-filter:blur(12px);gap:16px;}
-[data-theme="light"] .topnav-admin{background:rgba(224,200,160,.96);}
-.admin-badge{font-family:'Dune Rise',serif;font-size:9px;letter-spacing:.22em;color:var(--spice);text-transform:uppercase;border:1px solid rgba(232,92,13,.4);padding:3px 10px;border-radius:2px;background:rgba(232,92,13,.06);}
-
-/* ── ACCESS WALL ── */
-.access-wall{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;}
-.access-wall::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0px,transparent 3px,rgba(200,150,12,.012) 3px,rgba(200,150,12,.012) 4px);pointer-events:none;}
-.access-inner{position:relative;z-index:1;text-align:center;padding:52px 40px;border:1px solid var(--border2);background:var(--card-bg);max-width:420px;width:90%;}
-.access-inner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--spice),transparent);}
-.access-icon{width:52px;height:52px;border:1px solid rgba(232,92,13,.4);border-radius:2px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;background:rgba(232,92,13,.06);}
-.access-title{font-family:'Dune Rise',serif;font-size:17px;color:var(--gold-pale);letter-spacing:.08em;margin-bottom:4px;}
-.access-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.1em;margin-bottom:24px;}
-.access-desc{font-size:12px;color:var(--text2);line-height:1.75;margin-bottom:24px;}
-.discord-btn{display:inline-flex;align-items:center;gap:10px;background:transparent;border:1px solid rgba(232,92,13,.5);color:var(--spice);padding:11px 28px;font-family:'Dune Rise',serif;font-size:11px;letter-spacing:.14em;cursor:pointer;text-decoration:none;border-radius:2px;transition:all .25s;width:100%;justify-content:center;}
-.discord-btn:hover{background:rgba(232,92,13,.12);box-shadow:0 0 20px rgba(232,92,13,.15);}
-
-/* ── USER PILL ── */
-.user-pill{display:flex;align-items:center;gap:8px;background:rgba(200,150,12,.08);border:1px solid var(--border2);padding:4px 12px 4px 4px;border-radius:2px;}
-.user-avatar{width:26px;height:26px;border-radius:2px;border:1px solid var(--border2);object-fit:cover;}
-.user-name{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);letter-spacing:.06em;}
-.disc-btn{background:transparent;border:1px solid var(--border);color:var(--text3);padding:5px 12px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;cursor:pointer;border-radius:2px;transition:all .2s;}
-.disc-btn:hover{border-color:var(--spice);color:var(--spice);}
-
-/* ── LAYOUT ── */
-.admin-layout{max-width:1280px;margin:0 auto;padding:36px 32px 80px;}
-.dash-header{margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border);}
-.dash-title{font-family:'Dune Rise',serif;font-size:10px;letter-spacing:.22em;color:var(--spice);text-transform:uppercase;margin-bottom:4px;}
-.dash-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.08em;line-height:1.8;}
-
-/* ── STATS ── */
-.stats-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:24px;}
-@media(max-width:900px){.stats-strip{grid-template-columns:repeat(4,1fr);}}
-.stat-tile{background:var(--card-bg);border:1px solid var(--border);border-top:2px solid var(--border2);padding:14px 12px;text-align:center;}
-.stat-val{font-family:'Dune Rise',serif;font-size:22px;letter-spacing:.04em;margin-bottom:4px;line-height:1;}
-.stat-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;}
-
-/* ── PAT ── */
-.pat-bar{background:var(--card-bg);border:1px solid var(--border);border-left:2px solid rgba(232,92,13,.5);padding:14px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
-.pat-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--text3);text-transform:uppercase;white-space:nowrap;}
-.pat-in{flex:1;min-width:200px;background:var(--bg);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:7px 10px;border-radius:2px;outline:none;transition:border-color .2s;}
-.pat-in:focus{border-color:var(--gold-mid);}
-.pat-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
-.pat-dot.ok{background:var(--teal-bright);box-shadow:0 0 6px var(--teal-bright);}
-.pat-dot.no{background:var(--spice);}
-.pat-status{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;display:flex;align-items:center;gap:6px;}
-
-/* ── BUTTONS ── */
-.btn{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;padding:8px 16px;border-radius:2px;cursor:pointer;border:1px solid;transition:all .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
-.btn-sm{font-size:9px;padding:5px 10px;letter-spacing:.08em;}
+*{box-sizing:border-box;}
+/* ═══════════ LAYOUT ═══════════ */
+.admin-shell{display:flex;min-height:100vh;}
+.sidebar{width:224px;flex-shrink:0;background:rgba(6,4,0,.99);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:50;display:flex;flex-direction:column;}
+[data-theme="light"] .sidebar{background:rgba(195,170,120,.99);}
+.sb-brand{padding:16px 16px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.sb-brand-ico{width:34px;height:34px;border:1px solid rgba(200,150,12,.4);border-radius:2px;display:flex;align-items:center;justify-content:center;background:rgba(200,150,12,.06);flex-shrink:0;}
+.sb-brand-name{font-family:'Dune Rise',serif;font-size:10px;letter-spacing:.16em;color:var(--gold-mid);}
+.sb-brand-sub{font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--text3);letter-spacing:.1em;}
+.sb-sec{padding:10px 14px 3px;font-family:'IBM Plex Mono',monospace;font-size:7px;letter-spacing:.2em;color:var(--text3);text-transform:uppercase;}
+.sb-item{display:flex;align-items:center;gap:8px;padding:8px 16px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.04em;cursor:pointer;transition:all .15s;border-left:2px solid transparent;text-decoration:none;line-height:1.2;}
+.sb-item:hover{background:rgba(200,150,12,.06);color:var(--text2);}
+.sb-item.active{background:rgba(200,150,12,.1);color:var(--gold-mid);border-left-color:var(--gold-mid);}
+.sb-item.active.spice{background:rgba(232,92,13,.1);color:var(--spice);border-left-color:var(--spice);}
+.sb-item svg{flex-shrink:0;opacity:.65;}
+.sb-item.active svg, .sb-item:hover svg{opacity:1;}
+.sb-sep{height:1px;background:var(--border);margin:6px 0;}
+.sb-bottom{margin-top:auto;padding:12px 14px;border-top:1px solid var(--border);}
+.sb-user{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.sb-avatar{width:30px;height:30px;border-radius:2px;border:1px solid var(--border2);object-fit:cover;}
+.sb-uname{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text2);letter-spacing:.04em;line-height:1.3;}
+.sb-logout{width:100%;background:transparent;border:1px solid var(--border);color:var(--text3);padding:5px 8px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;cursor:pointer;border-radius:2px;transition:all .2s;}
+.sb-logout:hover{border-color:var(--spice);color:var(--spice);}
+/* ═══════════ MAIN ═══════════ */
+.admin-main{margin-left:224px;flex:1;}
+.admin-topbar{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(8,5,0,.96);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:40;backdrop-filter:blur(8px);}
+[data-theme="light"] .admin-topbar{background:rgba(220,195,150,.96);}
+.tb-title{font-family:'Dune Rise',serif;font-size:9px;letter-spacing:.22em;color:var(--gold-mid);}
+.tb-right{display:flex;align-items:center;gap:10px;}
+/* ═══════════ SECTIONS ═══════════ */
+.sec-pane{display:none;padding:28px 32px 64px;}
+.sec-pane.active{display:block;}
+@media(max-width:860px){.sec-pane{padding:16px 14px;}.admin-main{margin-left:0;}}
+/* ═══════════ SHARED ═══════════ */
+.dash-hdr{margin-bottom:18px;}
+.dash-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--spice);text-transform:uppercase;margin-bottom:3px;}
+.dash-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.06em;line-height:1.9;}
+.stats-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:18px;}
+@media(max-width:1000px){.stats-grid{grid-template-columns:repeat(4,1fr);}}
+.stat-t{background:var(--card-bg);border:1px solid var(--border);border-top:2px solid var(--border2);padding:12px 10px;text-align:center;}
+.stat-v{font-family:'Dune Rise',serif;font-size:19px;letter-spacing:.04em;margin-bottom:4px;line-height:1;}
+.stat-l{font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;}
+/* BUTTONS */
+.btn{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;padding:7px 14px;border-radius:2px;cursor:pointer;border:1px solid;transition:all .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+.btn-sm{font-size:9px;padding:5px 10px;}
+.btn-xs{font-size:8px;padding:4px 8px;}
 .btn-primary{background:rgba(200,150,12,.15);border-color:var(--gold-mid);color:var(--gold);}
 .btn-primary:hover{background:rgba(200,150,12,.28);}
 .btn-ghost{background:transparent;border-color:var(--border2);color:var(--text3);}
-.btn-ghost:hover{border-color:var(--border3);color:var(--text2);}
+.btn-ghost:hover{border-color:var(--text3);color:var(--text2);}
 .btn-danger{background:rgba(232,92,13,.1);border-color:rgba(232,92,13,.35);color:var(--spice);}
 .btn-danger:hover{background:rgba(232,92,13,.2);}
 .btn-gh{background:rgba(200,150,12,.08);border-color:var(--gold-dim);color:var(--gold-mid);}
-.btn-gh:hover{background:rgba(200,150,12,.2);border-color:var(--gold-mid);}
-.action-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
-
-/* ── TABLE ── */
-.admin-tbl-wrap{overflow-x:auto;border:1px solid var(--border2);border-radius:2px;margin-bottom:20px;}
-.admin-tbl{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:11px;}
-.admin-tbl thead tr{background:rgba(30,24,16,.8);border-bottom:1px solid var(--border2);}
-[data-theme="light"] .admin-tbl thead tr{background:rgba(200,170,110,.4);}
-.admin-tbl th{padding:9px 11px;text-align:left;color:var(--text3);font-weight:400;letter-spacing:.1em;font-size:8px;text-transform:uppercase;white-space:nowrap;}
-.admin-tbl td{padding:7px 11px;border-bottom:1px solid var(--border);color:var(--text2);white-space:nowrap;vertical-align:middle;}
-.admin-tbl tr:last-child td{border-bottom:none;}
-.admin-tbl tr:hover td{background:rgba(200,150,12,.03);}
+.btn-gh:hover{background:rgba(200,150,12,.2);}
+.btn-fan{background:rgba(232,92,13,.1);border-color:rgba(232,92,13,.4);color:var(--spice);}
+.btn-fan:hover{background:rgba(232,92,13,.22);}
+.action-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+/* PAT BAR */
+.pat-bar{background:var(--card-bg);border:1px solid var(--border);border-left:2px solid rgba(232,92,13,.4);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.pat-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;color:var(--text3);text-transform:uppercase;white-space:nowrap;}
+.pat-in{flex:1;min-width:180px;background:var(--bg);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:5px 10px;border-radius:2px;outline:none;transition:border-color .2s;}
+.pat-in:focus{border-color:var(--gold-mid);}
+.pat-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.pat-dot.ok{background:var(--teal-bright);box-shadow:0 0 6px var(--teal-bright);}
+.pat-dot.no{background:var(--spice);}
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border2);border-radius:2px;margin-bottom:14px;}
+.a-tbl{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:11px;}
+.a-tbl thead tr{background:rgba(25,18,8,.7);border-bottom:1px solid var(--border2);}
+[data-theme="light"] .a-tbl thead tr{background:rgba(190,160,100,.35);}
+.a-tbl th{padding:7px 10px;text-align:left;color:var(--text3);font-weight:400;letter-spacing:.1em;font-size:8px;text-transform:uppercase;white-space:nowrap;}
+.a-tbl td{padding:6px 10px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle;}
+.a-tbl tr:last-child td{border-bottom:none;}
+.a-tbl tr:hover td{background:rgba(200,150,12,.03);}
 .nat-b{display:inline-flex;align-items:center;font-size:8px;padding:2px 6px;border-radius:2px;border:1px solid;letter-spacing:.08em;}
-.nat-run-b{background:rgba(26,143,122,.1);border-color:rgba(26,143,122,.3);color:#22B89A;}
-.nat-uda-b{background:rgba(240,160,48,.1);border-color:rgba(240,160,48,.3);color:var(--amber);}
+.nat-run{background:rgba(26,143,122,.1);border-color:rgba(26,143,122,.3);color:#22B89A;}
+.nat-uda{background:rgba(240,160,48,.1);border-color:rgba(240,160,48,.3);color:var(--amber);}
 .cls-dot{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;font-family:'Dune Rise',serif;font-size:11px;border-radius:2px;border:1px solid;}
 .cd-A{background:rgba(34,184,154,.12);border-color:rgba(34,184,154,.3);color:#22B89A;}
 .cd-B{background:rgba(212,168,67,.1);border-color:rgba(212,168,67,.3);color:#D4A843;}
 .cd-C{background:rgba(240,160,48,.1);border-color:rgba(240,160,48,.3);color:#F0A030;}
 .cd-D{background:rgba(200,112,32,.1);border-color:rgba(200,112,32,.3);color:#C87020;}
-.cd-E{background:rgba(232,72,72,.1);border-color:rgba(232,72,72,.3);color:#E84848;}
-.cd-F{background:rgba(139,26,26,.1);border-color:rgba(139,26,26,.3);color:#B02020;}
-
-/* ── TOAST ── */
-.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--card-bg);border:1px solid var(--border2);border-left:3px solid var(--gold-mid);padding:12px 18px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:.06em;border-radius:2px;box-shadow:0 8px 32px rgba(0,0,0,.4);transform:translateY(20px);opacity:0;transition:all .3s ease;pointer-events:none;max-width:340px;}
+.cd-E{background:rgba(232,92,13,.1);border-color:rgba(232,92,13,.3);color:var(--spice);}
+.cd-F{background:rgba(200,40,40,.12);border-color:rgba(200,40,40,.3);color:#E84848;}
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;z-index:999;background:var(--card-bg);border:1px solid var(--border2);border-left:3px solid var(--gold-mid);padding:11px 16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:.06em;border-radius:2px;box-shadow:0 8px 32px rgba(0,0,0,.5);transform:translateY(16px);opacity:0;transition:all .28s;pointer-events:none;max-width:320px;}
 .toast.show{transform:translateY(0);opacity:1;}
 .toast.ok{border-left-color:var(--teal-bright);}
 .toast.err{border-left-color:var(--spice);}
-
-/* ── MODAL ── */
-.modal-ov{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;}
+/* MODALS */
+.modal-ov{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;}
 .modal-ov.open{display:flex;}
-.modal-box{background:var(--bg2);border:1px solid var(--border2);width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;}
-.modal-box::before{content:'';display:block;height:2px;background:linear-gradient(90deg,transparent,var(--gold-mid),transparent);}
-.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid var(--border);}
-.modal-ttl{font-family:'Dune Rise',serif;font-size:12px;letter-spacing:.16em;color:var(--gold-pale);}
-.modal-cls{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:4px 8px;transition:color .2s;}
+.modal-box{background:var(--bg2);border:1px solid var(--border2);border-top:2px solid var(--gold-mid);width:520px;max-width:94vw;max-height:90vh;overflow-y:auto;}
+.modal-box.fan{border-top-color:var(--spice);}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px;border-bottom:1px solid var(--border);}
+.modal-ttl{font-family:'Dune Rise',serif;font-size:11px;letter-spacing:.14em;color:var(--gold-pale);}
+.modal-ttl.spice{color:var(--spice);}
+.modal-cls{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:18px;padding:2px 6px;line-height:1;}
 .modal-cls:hover{color:var(--text);}
-.modal-body{padding:22px;}
-.modal-ftr{display:flex;gap:10px;justify-content:flex-end;padding:14px 22px;border-top:1px solid var(--border);}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.form-grp{display:flex;flex-direction:column;gap:4px;}
-.form-grp.full{grid-column:1/-1;}
-.form-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;color:var(--text3);text-transform:uppercase;}
-.form-in,.form-sel{background:var(--bg);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:7px 10px;border-radius:2px;outline:none;transition:border-color .2s;appearance:none;}
-.form-in:focus,.form-sel:focus{border-color:var(--gold-mid);}
-.form-sel option{background:#1E1810;color:var(--text);}
-.score-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px;}
-.score-fld{display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;}
-.form-in.sc-in{width:100%;text-align:center;font-size:14px;padding:7px 4px;}
-.computed{background:var(--bg);border:1px solid var(--border2);padding:10px 14px;display:flex;align-items:center;gap:14px;margin-bottom:12px;border-left:2px solid var(--gold-dim);}
+.modal-body{padding:18px 20px;}
+.modal-ftr{display:flex;gap:8px;justify-content:flex-end;padding:10px 20px;border-top:1px solid var(--border);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.fg-full{grid-column:1/-1;}
+.fg{display:flex;flex-direction:column;gap:3px;}
+.fl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;color:var(--text3);text-transform:uppercase;}
+.fi,.fs{background:var(--bg);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:6px 10px;border-radius:2px;outline:none;transition:border-color .2s;appearance:none;}
+.fi:focus,.fs:focus{border-color:var(--gold-mid);}
+.fi.fan:focus{border-color:var(--spice);}
+.score-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:10px;}
+.score-fld{display:flex;flex-direction:column;gap:3px;align-items:center;text-align:center;}
+.sc-in{text-align:center;font-size:14px;padding:6px 4px;}
+.computed-box{background:var(--bg);border:1px solid var(--border2);border-left:2px solid var(--gold-dim);padding:8px 12px;display:flex;align-items:center;gap:14px;margin-bottom:10px;}
 .cs-val{font-family:'Dune Rise',serif;font-size:22px;color:var(--gold);letter-spacing:.04em;}
-.cs-cls{font-family:'Dune Rise',serif;font-size:18px;margin-left:auto;}
+.cs-cls{font-family:'Dune Rise',serif;font-size:17px;margin-left:auto;}
 .cs-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);}
-
-/* ── CONFIRM ── */
-.confirm-box{background:var(--bg2);border:1px solid rgba(232,92,13,.4);width:380px;max-width:90vw;padding:26px;text-align:center;}
-.confirm-box::before{content:'';display:block;height:2px;margin-bottom:18px;background:linear-gradient(90deg,transparent,var(--spice),transparent);}
-.confirm-ttl{font-family:'Dune Rise',serif;font-size:13px;color:var(--gold-pale);letter-spacing:.08em;margin-bottom:8px;}
-.confirm-msg{font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:20px;}
+.confirm-box{background:var(--bg2);border:1px solid rgba(232,92,13,.4);border-top:2px solid var(--spice);width:360px;max-width:90vw;padding:24px;text-align:center;}
+.confirm-ttl{font-family:'Dune Rise',serif;font-size:12px;color:var(--gold-pale);letter-spacing:.08em;margin-bottom:8px;}
+.confirm-msg{font-size:12px;color:var(--text2);line-height:1.75;margin-bottom:18px;}
 .confirm-act{display:flex;gap:10px;justify-content:center;}
-
-/* ── GITHUB LOG ── */
-.github-box{background:var(--bg2);border:1px solid var(--border2);width:460px;max-width:90vw;max-height:80vh;overflow-y:auto;}
-.github-box::before{content:'';display:block;height:2px;background:linear-gradient(90deg,transparent,var(--teal),transparent);}
-.gh-log{background:var(--bg);border:1px solid var(--border);margin:10px 0;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.06em;line-height:1.8;max-height:200px;overflow-y:auto;}
-.log-ok{color:var(--teal-bright);}
-.log-err{color:var(--spice);}
-.log-info{color:var(--gold-mid);}
+.gh-box{background:var(--bg2);border:1px solid var(--border2);border-top:2px solid var(--teal);width:460px;max-width:90vw;max-height:82vh;overflow-y:auto;}
+.gh-log{background:var(--bg);border:1px solid var(--border);margin:10px 0;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.06em;line-height:1.9;max-height:200px;overflow-y:auto;white-space:pre-wrap;}
+.log-ok{color:var(--teal-bright);}.log-err{color:var(--spice);}.log-info{color:var(--gold-mid);}
+/* ═══════════ ACCESS WALL ═══════════ */
+.access-wall{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;}
+.aw-inner{text-align:center;padding:52px 40px;border:1px solid var(--border2);border-top:2px solid var(--spice);background:var(--card-bg);max-width:420px;width:90%;}
+/* ═══════════ FAN STYLES ═══════════ */
+.bat-list{display:flex;flex-direction:column;gap:6px;}
+.bat-item{background:var(--card-bg);border:1px solid var(--border);border-left:2px solid transparent;transition:border-color .2s;}
+.bat-item:hover{border-left-color:rgba(232,92,13,.4);}
+.bat-hdr{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;}
+.bat-id{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--spice);letter-spacing:.1em;width:52px;flex-shrink:0;}
+.bat-name{font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:var(--text);flex:1;line-height:1.3;}
+.qty-ctrl{display:flex;align-items:center;gap:0;flex-shrink:0;}
+.qb{background:transparent;border:1px solid var(--border2);color:var(--text3);width:22px;height:22px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1;}
+.qb:hover{border-color:var(--spice);color:var(--spice);}
+.qi{width:40px;height:22px;background:var(--bg);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);border-left:none;border-right:none;text-align:center;font-family:'Dune Rise',serif;font-size:11px;color:var(--spice);outline:none;}
+.expand-btn{background:transparent;border:1px solid var(--border);color:var(--text3);cursor:pointer;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;transition:all .2s;border-radius:2px;}
+.expand-btn:hover{border-color:var(--spice);color:var(--spice);}
+.expand-btn.open{background:rgba(232,92,13,.1);border-color:rgba(232,92,13,.4);color:var(--spice);transform:rotate(90deg);}
+.equip-panel{display:none;padding:10px 14px 14px;border-top:1px solid var(--border);background:rgba(0,0,0,.12);}
+[data-theme="light"] .equip-panel{background:rgba(0,0,0,.04);}
+.equip-panel.open{display:block;}
+.equip-grid-edit{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;}
+.ef{display:flex;align-items:center;gap:6px;}
+.ef-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);flex:1;letter-spacing:.04em;line-height:1.3;}
+.ef-in{width:72px;background:var(--bg);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 7px;border-radius:2px;outline:none;text-align:right;transition:border-color .2s;}
+.ef-in:focus{border-color:var(--spice);}
+.bulk-bar{background:var(--card-bg);border:1px solid rgba(232,92,13,.25);border-left:2px solid var(--spice);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.bulk-ttl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;color:var(--spice);text-transform:uppercase;white-space:nowrap;}
+/* FAN PROD */
+.fact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+@media(max-width:700px){.fact-grid{grid-template-columns:1fr;}}
+.fact-card{background:var(--card-bg);border:1px solid var(--border);border-top:2px solid;padding:14px;}
+.fact-name{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+.fact-row{display:flex;align-items:center;gap:8px;}
+.fact-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text3);flex:1;}
+.fact-sel{background:var(--bg);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 8px;border-radius:2px;outline:none;cursor:pointer;width:58px;}
+.fact-slots{font-family:'Dune Rise',serif;font-size:14px;letter-spacing:.04em;text-align:right;flex:1;}
+.cat-b{display:inline-flex;font-size:8px;padding:2px 6px;border-radius:2px;border:1px solid;letter-spacing:.08em;}
+.cat-T{background:rgba(34,184,154,.1);border-color:rgba(34,184,154,.3);color:#22B89A;}
+.cat-M{background:rgba(74,158,255,.1);border-color:rgba(74,158,255,.3);color:#4A9EFF;}
+.cat-A{background:rgba(232,92,13,.1);border-color:rgba(232,92,13,.3);color:var(--spice);}
+/* NEW BAT */
+.nb-equip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;margin-bottom:18px;}
+/* SYNC PANEL */
+.sync-card{background:var(--bg2);border:1px solid var(--border2);border-top:2px solid var(--teal);max-width:500px;}
 </style>
 </head>
 <body>
 
-<!-- ACCESS WALL -->
+<!-- ═══════════ ACCESS WALL ═══════════ -->
 <div id="access-wall" class="access-wall">
-  <div class="access-inner">
-    <div class="access-icon">
-      <svg viewBox="0 0 24 24" fill="none" width="26" height="26">
-        <rect x="5" y="11" width="14" height="10" rx="1" stroke="#E85C0D" stroke-width="1.2" fill="none"/>
-        <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#E85C0D" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-        <circle cx="12" cy="16" r="1.5" fill="#E85C0D"/>
-      </svg>
+  <div class="aw-inner">
+    <div style="width:48px;height:48px;border:1px solid rgba(232,92,13,.4);border-radius:2px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:rgba(232,92,13,.06);">
+      <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="5" y="11" width="14" height="10" rx="1" stroke="#E85C0D" stroke-width="1.2" fill="none"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#E85C0D" stroke-width="1.2" fill="none" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="#E85C0D"/></svg>
     </div>
-    <div class="access-title">Acces Restreint</div>
-    <div class="access-sub">ADMIN · BOURSE DU CAIRE</div>
-    <p class="access-desc">Interface réservée aux administrateurs du <strong>Royaume-Uni du Nil</strong>. Connectez-vous via Discord.</p>
-    <a id="discord-btn" href="#" class="discord-btn">
-      <svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M20.3 4.4C18.8 3.7 17.2 3.2 15.5 3c-.2.3-.4.8-.6 1.1a16 16 0 0 0-4.8 0C9.9 3.8 9.7 3.3 9.5 3 7.8 3.2 6.2 3.7 4.7 4.4A19.8 19.8 0 0 0 1.5 17.8a20.2 20.2 0 0 0 6.2 3.2c.5-.7.9-1.5 1.3-2.2-.7-.3-1.4-.6-2-1 .2-.1.4-.3.5-.4a14.4 14.4 0 0 0 12.5 0c.2.1.4.3.5.4-.6.4-1.3.7-2 1 .4.8.8 1.5 1.3 2.2a20 20 0 0 0 6.2-3.2A19.7 19.7 0 0 0 20.3 4.4z" fill="#E85C0D"/></svg>
+    <div style="font-family:'Dune Rise',serif;font-size:14px;color:var(--gold-pale);letter-spacing:.08em;margin-bottom:4px;">Acces Restreint</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.12em;margin-bottom:18px;">ADMIN · PORTAIL UKN</div>
+    <p style="font-size:12px;color:var(--text2);line-height:1.75;margin-bottom:22px;">Interface réservée aux administrateurs du Royaume-Uni du Nil.</p>
+    <a id="discord-btn" href="#" style="display:inline-flex;align-items:center;gap:10px;background:transparent;border:1px solid rgba(232,92,13,.5);color:var(--spice);padding:10px 24px;font-family:'Dune Rise',serif;font-size:10px;letter-spacing:.14em;text-decoration:none;border-radius:2px;width:100%;justify-content:center;transition:background .2s;">
+      <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M20.3 4.4C18.8 3.7 17.2 3.2 15.5 3c-.2.3-.4.8-.6 1.1a16 16 0 0 0-4.8 0C9.9 3.8 9.7 3.3 9.5 3 7.8 3.2 6.2 3.7 4.7 4.4A19.8 19.8 0 0 0 1.5 17.8a20.2 20.2 0 0 0 6.2 3.2c.5-.7.9-1.5 1.3-2.2-.7-.3-1.4-.6-2-1 .2-.1.4-.3.5-.4a14.4 14.4 0 0 0 12.5 0c.2.1.4.3.5.4-.6.4-1.3.7-2 1 .4.8.8 1.5 1.3 2.2a20 20 0 0 0 6.2-3.2A19.7 19.7 0 0 0 20.3 4.4z" fill="#E85C0D"/></svg>
       Se connecter avec Discord
     </a>
   </div>
 </div>
 
-<!-- TOPNAV (hidden until auth) -->
-<nav class="topnav-admin" id="admin-nav" style="display:none;">
-  <div class="nav-left" style="display:flex;align-items:center;gap:14px;">
-    <div class="nav-logo" style="border-color:rgba(232,92,13,.5);background:rgba(232,92,13,.06);">
-      <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="5" width="14" height="10" rx="1" stroke="#E85C0D" stroke-width="1" fill="none"/><line x1="3" y1="9" x2="17" y2="9" stroke="#E85C0D" stroke-width=".8" opacity=".5"/></svg>
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside class="sidebar" id="sidebar" style="display:none;">
+  <div class="sb-brand">
+    <div class="sb-brand-ico">
+      <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><path d="M10 2L3 5.5V10C3 14 6.5 17.5 10 18.5C13.5 17.5 17 14 17 10V5.5L10 2Z" stroke="#C8960C" stroke-width="1.2" fill="none"/></svg>
     </div>
-    <span class="nav-brand" style="color:var(--spice);">Admin</span>
-    <span class="admin-badge">Bourse du Caire</span>
-    <a href="../" class="nav-back" style="border-color:rgba(232,92,13,.2);">← Portail</a>
+    <div><div class="sb-brand-name">Admin UKN</div><div class="sb-brand-sub">Portail · 2305</div></div>
   </div>
-  <div style="display:flex;align-items:center;gap:10px;">
-    <div class="user-pill">
-      <img id="user-avatar" src="" alt="" class="user-avatar" style="display:none;">
-      <span style="color:var(--gold-mid);font-size:10px;">★</span>
-      <span class="user-name" id="user-name">—</span>
+
+  <div class="sb-sec">★ Bourse</div>
+  <a class="sb-item active" id="nav-bourse" onclick="showSection('bourse')">
+    <svg viewBox="0 0 14 14" fill="none" width="13" height="13"><rect x="1" y="3" width="12" height="9" rx="1" stroke="currentColor" stroke-width="1" fill="none"/><line x1="1" y1="6.5" x2="13" y2="6.5" stroke="currentColor" stroke-width=".7"/><line x1="4" y1="9" x2="6" y2="9" stroke="currentColor" stroke-width=".8"/></svg>
+    Bourse du Caire
+  </a>
+
+  <div class="sb-sep"></div>
+  <div class="sb-sec">⚔ Forces Armées du Nil</div>
+
+  <a class="sb-item" id="nav-fan-bat" onclick="showSection('fan-bat')">
+    <svg viewBox="0 0 14 14" fill="none" width="13" height="13"><circle cx="3.5" cy="3.5" r="2" stroke="currentColor" stroke-width="1" fill="none"/><circle cx="10.5" cy="3.5" r="2" stroke="currentColor" stroke-width="1" fill="none"/><circle cx="7" cy="10" r="2" stroke="currentColor" stroke-width="1" fill="none"/><line x1="5.5" y1="3.5" x2="8.5" y2="3.5" stroke="currentColor" stroke-width=".8"/><line x1="5" y1="8" x2="6.5" y2="6" stroke="currentColor" stroke-width=".8"/><line x1="9" y1="8" x2="7.5" y2="6" stroke="currentColor" stroke-width=".8"/></svg>
+    Gestion Bataillons
+  </a>
+  <a class="sb-item" id="nav-fan-prod" onclick="showSection('fan-prod')">
+    <svg viewBox="0 0 14 14" fill="none" width="13" height="13"><rect x="1" y="9" width="3" height="4" stroke="currentColor" stroke-width="1" fill="none"/><rect x="5.5" y="6" width="3" height="7" stroke="currentColor" stroke-width="1" fill="none"/><rect x="10" y="2" width="3" height="11" stroke="currentColor" stroke-width="1" fill="none"/><line x1="0" y1="13" x2="14" y2="13" stroke="currentColor" stroke-width=".7"/></svg>
+    Système de Production
+  </a>
+  <a class="sb-item" id="nav-fan-new" onclick="showSection('fan-new')">
+    <svg viewBox="0 0 14 14" fill="none" width="13" height="13"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1" fill="none"/><line x1="7" y1="4.5" x2="7" y2="9.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="4.5" y1="7" x2="9.5" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    Nouveau Bataillon
+  </a>
+
+  <div class="sb-sep"></div>
+  <div class="sb-sec">GitHub</div>
+  <a class="sb-item" id="nav-fan-sync" onclick="showSection('fan-sync')">
+    <svg viewBox="0 0 14 14" fill="none" width="13" height="13"><path d="M1.5 7A5.5 5.5 0 0 1 12.5 7" stroke="currentColor" stroke-width="1" stroke-linecap="round"/><path d="M12.5 7A5.5 5.5 0 0 1 1.5 7" stroke="currentColor" stroke-width="1" stroke-linecap="round"/><polyline points="10,4.5 12.5,7 10,9.5" stroke="currentColor" stroke-width="1" fill="none"/></svg>
+    Sync FAN · GitHub
+  </a>
+
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <img id="sb-avatar" src="" alt="" class="sb-avatar" style="display:none;">
+      <div class="sb-uname" id="sb-uname">—</div>
     </div>
-    <button class="disc-btn" onclick="logout()">Déconnexion</button>
-    <button class="theme-toggle" onclick="toggleTheme()">
-      <svg id="toggle-icon" width="12" height="12" viewBox="0 0 24 24" fill="none"><path id="icon-path" d="M21 12.79A9 9 0 0 1 12 21a9 9 0 0 1 0-18 7 7 0 0 0 9 9.79z" fill="currentColor"/></svg>
-      <span id="toggle-lbl">NUIT</span>
-    </button>
+    <button class="sb-logout" onclick="logout()">Déconnexion</button>
   </div>
-</nav>
+</aside>
 
-<!-- ADMIN BODY (hidden until auth) -->
-<div id="admin-body" style="display:none;">
-<div class="admin-layout">
-
-  <div class="dash-header">
-    <div class="dash-title">★ Dashboard Admin · Bourse du Caire</div>
-    <div class="dash-sub">Gestion des sociétés — Ajouter, modifier, supprimer.<br>Les données sont sauvegardées sur GitHub et visibles en temps réel.</div>
-  </div>
-
-  <div class="stats-strip">
-    <div class="stat-tile" style="border-top-color:var(--gold-mid);"><div class="stat-val" id="s-total" style="color:var(--gold)">—</div><div class="stat-lbl">Total</div></div>
-    <div class="stat-tile" style="border-top-color:#22B89A;"><div class="stat-val" id="s-a" style="color:#22B89A">—</div><div class="stat-lbl">Classe A</div></div>
-    <div class="stat-tile" style="border-top-color:#D4A843;"><div class="stat-val" id="s-b" style="color:#D4A843">—</div><div class="stat-lbl">Classe B</div></div>
-    <div class="stat-tile" style="border-top-color:#F0A030;"><div class="stat-val" id="s-c" style="color:#F0A030">—</div><div class="stat-lbl">Classe C</div></div>
-    <div class="stat-tile" style="border-top-color:var(--teal);"><div class="stat-val" id="s-nat" style="color:var(--teal-bright)">—</div><div class="stat-lbl">Nationales</div></div>
-    <div class="stat-tile" style="border-top-color:var(--amber);"><div class="stat-val" id="s-for" style="color:var(--amber)">—</div><div class="stat-lbl">Etrangères</div></div>
-    <div class="stat-tile" style="border-top-color:var(--text3);"><div class="stat-val" id="s-date" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);letter-spacing:.04em;">—</div><div class="stat-lbl">Mise à jour</div></div>
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="admin-main" id="admin-main" style="display:none;">
+  <div class="admin-topbar">
+    <div class="tb-title" id="tb-title">★ BOURSE DU CAIRE</div>
+    <div class="tb-right">
+      <button class="theme-toggle" onclick="toggleTheme()">
+        <svg id="toggle-icon" width="12" height="12" viewBox="0 0 24 24" fill="none"><path id="icon-path" d="M21 12.79A9 9 0 0 1 12 21a9 9 0 0 1 0-18 7 7 0 0 0 9 9.79z" fill="currentColor"/></svg>
+        <span id="toggle-lbl">NUIT</span>
+      </button>
+      <a href="../" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);text-decoration:none;border:1px solid var(--border);padding:5px 10px;border-radius:2px;letter-spacing:.08em;">← Portail</a>
+    </div>
   </div>
 
-  <div class="pat-bar">
-    <span class="pat-lbl">GitHub PAT</span>
-    <input type="password" class="pat-in" id="pat-in" placeholder="github_pat_…" oninput="savePat()">
-    <button class="btn btn-ghost btn-sm" onclick="savePat()">Enregistrer</button>
-    <div class="pat-status" id="pat-status"><div class="pat-dot no" id="pat-dot"></div><span id="pat-txt" style="color:var(--text3);font-size:9px;letter-spacing:.1em;">Non configuré</span></div>
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);opacity:.7;flex-basis:100%;margin-top:2px;">(github.com → Settings → Developer settings → Tokens → Fine-grained → Contents: Write)</div>
+  <!-- ══════════════════════════════════
+       SECTION: BOURSE
+  ══════════════════════════════════ -->
+  <div class="sec-pane active" id="sec-bourse">
+    <div class="dash-hdr">
+      <div class="dash-title">★ Dashboard · Bourse du Caire</div>
+      <div class="dash-sub">Gestion des sociétés cotées — ajouter, modifier, supprimer.</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-t" style="border-top-color:var(--gold-mid);"><div class="stat-v" id="s-total" style="color:var(--gold)">—</div><div class="stat-l">Total</div></div>
+      <div class="stat-t" style="border-top-color:#22B89A;"><div class="stat-v" id="s-a" style="color:#22B89A">—</div><div class="stat-l">Classe A</div></div>
+      <div class="stat-t" style="border-top-color:#D4A843;"><div class="stat-v" id="s-b" style="color:#D4A843">—</div><div class="stat-l">Classe B</div></div>
+      <div class="stat-t" style="border-top-color:#F0A030;"><div class="stat-v" id="s-c" style="color:#F0A030">—</div><div class="stat-l">Classe C</div></div>
+      <div class="stat-t" style="border-top-color:var(--teal);"><div class="stat-v" id="s-nat" style="color:var(--teal-bright)">—</div><div class="stat-l">Nationales</div></div>
+      <div class="stat-t" style="border-top-color:var(--amber);"><div class="stat-v" id="s-for" style="color:var(--amber)">—</div><div class="stat-l">Étrangères</div></div>
+      <div class="stat-t" style="border-top-color:var(--text3);"><div class="stat-v" id="s-date" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3)">—</div><div class="stat-l">M.à.j.</div></div>
+    </div>
+    <div class="pat-bar">
+      <span class="pat-lbl">GitHub PAT</span>
+      <input type="password" class="pat-in" id="pat-in" placeholder="github_pat_…" oninput="savePat()">
+      <button class="btn btn-ghost btn-sm" onclick="savePat()">Enregistrer</button>
+      <div style="display:flex;align-items:center;gap:6px;"><div class="pat-dot no" id="pat-dot"></div><span id="pat-txt" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);">Non configuré</span></div>
+    </div>
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="openModal()">+ Ajouter une société</button>
+      <button class="btn btn-ghost" onclick="loadFromGH()">↺ Actualiser</button>
+      <button class="btn btn-gh" onclick="openGhModal()">⬆ Sauvegarder sur GitHub</button>
+      <div style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);" id="ccount">—</div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="a-tbl">
+        <thead><tr><th>#</th><th>Société</th><th>Nat.</th><th>Secteur</th><th>Eq.</th><th>Sa.</th><th>Tr.</th><th>In.</th><th>Ec.</th><th>Fi.</th><th>Score</th><th>Cl.</th><th>Actions</th></tr></thead>
+        <tbody id="admin-tbody"></tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="action-bar">
-    <button class="btn btn-primary" onclick="openModal()">+ Ajouter une société</button>
-    <button class="btn btn-ghost" onclick="loadFromGH()">↺ Actualiser</button>
-    <button class="btn btn-gh" onclick="openGhModal()">⬆ Sauvegarder sur GitHub</button>
-    <div style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.08em;" id="ccount">—</div>
+  <!-- ══════════════════════════════════
+       SECTION: FAN — BATAILLONS
+  ══════════════════════════════════ -->
+  <div class="sec-pane" id="sec-fan-bat">
+    <div class="dash-hdr">
+      <div class="dash-title">⚔ Gestion des Bataillons</div>
+      <div class="dash-sub">Modifier l'équipement et les effectifs. Cliquer sur ▶ pour déplier l'équipement de base.</div>
+    </div>
+    <div class="bulk-bar">
+      <span class="bulk-ttl">Edition en masse</span>
+      <select id="bulk-sel" class="fi" style="width:auto;font-size:10px;padding:4px 8px;">
+        <option value="">Sélectionner…</option>
+        <option value="all">Tous les bataillons</option>
+        <option value="fusiliers">Bataillons de Fusiliers</option>
+        <option value="alpine">Bataillons Alpins</option>
+        <option value="support">Bataillons de Support (Log./Med./Trans./Gén.)</option>
+        <option value="artillerie">Bataillons d'Artillerie</option>
+      </select>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);">Qté :</span>
+      <input type="number" id="bulk-qty" min="0" class="fi" value="0" style="width:64px;">
+      <button class="btn btn-fan btn-sm" onclick="applyBulk()">Appliquer</button>
+    </div>
+    <div class="action-bar">
+      <button class="btn btn-fan btn-sm" onclick="fanSaveToGH()">⬆ Sauvegarder FAN</button>
+      <button class="btn btn-ghost btn-sm" onclick="fanLoadFromGH()">↺ Sync GitHub</button>
+    </div>
+    <div class="bat-list" id="bat-admin-list"></div>
   </div>
 
-  <div class="admin-tbl-wrap">
-    <table class="admin-tbl">
-      <thead><tr>
-        <th>#</th><th>Société</th><th>Nat.</th><th>Secteur</th>
-        <th title="Equite ×5">Eq.</th><th title="Sante ×4">Sa.</th><th title="Transp. ×7">Tr.</th>
-        <th title="Innov. ×8">In.</th><th title="Ecologie ×6">Ec.</th><th title="Fiabilite ×8">Fi.</th>
-        <th>Score</th><th>Cl.</th><th>Actions</th>
-      </tr></thead>
-      <tbody id="admin-tbody"></tbody>
-    </table>
+  <!-- ══════════════════════════════════
+       SECTION: FAN — PRODUCTION
+  ══════════════════════════════════ -->
+  <div class="sec-pane" id="sec-fan-prod">
+    <div class="dash-hdr">
+      <div class="dash-title">⚔ Système de Production</div>
+      <div class="dash-sub">Gérer les niveaux d'usine et la base de données des équipements militaires.</div>
+    </div>
+    <div class="fact-grid" id="fact-grid"></div>
+    <div class="action-bar">
+      <button class="btn btn-fan btn-sm" onclick="openEquipModal()">+ Ajouter un équipement</button>
+      <button class="btn btn-fan btn-sm" onclick="fanSaveToGH()">⬆ Sauvegarder sur GitHub</button>
+      <button class="btn btn-ghost btn-sm" onclick="fanLoadFromGH()">↺ Sync</button>
+    </div>
+    <div class="tbl-wrap">
+      <table class="a-tbl">
+        <thead><tr><th>Équipement</th><th>Cat.</th><th>NIV. req.</th><th style="text-align:right">Slots unit.</th><th style="text-align:right">Coût prod.</th><th style="text-align:right">Coût vente</th><th style="text-align:right">Profit</th><th>Actions</th></tr></thead>
+        <tbody id="equip-tbody"></tbody>
+      </table>
+    </div>
   </div>
 
-</div>
-</div>
+  <!-- ══════════════════════════════════
+       SECTION: FAN — NOUVEAU BATAILLON
+  ══════════════════════════════════ -->
+  <div class="sec-pane" id="sec-fan-new">
+    <div class="dash-hdr">
+      <div class="dash-title">⚔ Nouveau Type de Bataillon</div>
+      <div class="dash-sub">Créer un nouveau type de bataillon avec son équipement de base par unité.</div>
+    </div>
+    <div style="max-width:660px;">
+      <div class="form-grid" style="margin-bottom:16px;">
+        <div class="fg fg-full"><label class="fl">Nom du bataillon</label><input type="text" class="fi fan" id="nb-nom" placeholder="Ex : Bataillon de Fusiliers Spéciaux…"></div>
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;color:var(--spice);text-transform:uppercase;margin-bottom:10px;">Équipement de base par unité</div>
+      <div class="nb-equip-grid" id="nb-equip-grid"></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-fan" onclick="createNewBat()">✓ Créer</button>
+        <button class="btn btn-ghost" onclick="clearNewBat()">✕ Effacer</button>
+      </div>
+    </div>
+  </div>
 
-<!-- MODAL SOCIÉTÉ -->
+  <!-- ══════════════════════════════════
+       SECTION: FAN — SYNC
+  ══════════════════════════════════ -->
+  <div class="sec-pane" id="sec-fan-sync">
+    <div class="dash-hdr">
+      <div class="dash-title">⚔ Synchronisation FAN · GitHub</div>
+      <div class="dash-sub">Pousser ou récupérer les données FAN (data/fan.json) sur le dépôt GitHub.</div>
+    </div>
+    <div class="pat-bar" style="max-width:560px;">
+      <span class="pat-lbl">GitHub PAT</span>
+      <input type="password" class="pat-in" id="pat-fan" placeholder="github_pat_…" oninput="saveFanPat()">
+      <div style="display:flex;align-items:center;gap:6px;"><div class="pat-dot no" id="fan-pat-dot"></div><span id="fan-pat-txt" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);">Non configuré</span></div>
+    </div>
+    <div class="sync-card" style="max-width:500px;">
+      <div class="modal-hdr" style="border-top:none;"><div class="modal-ttl" style="color:var(--teal-bright);">Synchronisation fan.json</div><button class="modal-cls" onclick="document.getElementById('fan-log').textContent=''">✕</button></div>
+      <div style="padding:12px 18px;">
+        <div class="gh-log" id="fan-log">En attente…</div>
+      </div>
+      <div class="modal-ftr">
+        <button class="btn btn-ghost btn-sm" onclick="fanLoadFromGH()">↺ Charger depuis GitHub</button>
+        <button class="btn btn-fan btn-sm" onclick="fanSaveToGH()">⬆ Pousser vers GitHub</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /admin-main -->
+
+<!-- ═══════════ MODALS ═══════════ -->
+<!-- BOURSE EDIT -->
 <div class="modal-ov" id="modal-ov">
   <div class="modal-box">
     <div class="modal-hdr"><div class="modal-ttl" id="modal-ttl">Ajouter une societe</div><button class="modal-cls" onclick="closeModal()">✕</button></div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="form-grp full"><label class="form-lbl">Nom de la société</label><input type="text" class="form-in" id="f-nom" placeholder="Nom officiel…"></div>
-        <div class="form-grp"><label class="form-lbl">Nationalité</label>
-          <select class="form-sel" id="f-nat">
-            <option value="Royaume-Uni du Nil">Royaume-Uni du Nil</option>
-            <option value="Union Démocratique d'Asie">Union Démocratique d'Asie</option>
-          </select>
-        </div>
-        <div class="form-grp"><label class="form-lbl">Secteur</label>
-          <select class="form-sel" id="f-cat">
-            <option>Agriculture &amp; Agroalimentaire</option><option>BTP &amp; Infrastructures</option>
-            <option>Commerce</option><option>Énergie</option><option>Finance</option>
-            <option>Industrie Aéronautique</option><option>Industrie Automobile</option>
-            <option>Industrie de Défense</option><option>Industrie lourde</option>
-            <option>Industrie Naval &amp; Portuaire</option><option>Médias</option>
-            <option>Santé &amp; Pharmacie</option><option>Secteur Minier</option>
-            <option>Services d'Eau</option><option>Télécommunications</option>
-            <option>Textile</option><option>Transport &amp; Logistique</option>
-            <option>Transport aérien &amp; Tourisme</option>
-          </select>
-        </div>
+        <div class="fg fg-full"><label class="fl">Nom</label><input type="text" class="fi" id="f-nom" placeholder="Nom officiel…"></div>
+        <div class="fg"><label class="fl">Nationalité</label><select class="fs" id="f-nat"><option value="Royaume-Uni du Nil">Royaume-Uni du Nil</option><option value="Union Démocratique d'Asie">Union Démocratique d'Asie</option></select></div>
+        <div class="fg"><label class="fl">Secteur</label><select class="fs" id="f-cat"><option>Agriculture &amp; Agroalimentaire</option><option>BTP &amp; Infrastructures</option><option>Commerce</option><option>Énergie</option><option>Finance</option><option>Industrie Aéronautique</option><option>Industrie Automobile</option><option>Industrie de Défense</option><option>Industrie lourde</option><option>Industrie Naval &amp; Portuaire</option><option>Médias</option><option>Santé &amp; Pharmacie</option><option>Secteur Minier</option><option>Services d'Eau</option><option>Télécommunications</option><option>Textile</option><option>Transport &amp; Logistique</option><option>Transport aérien &amp; Tourisme</option></select></div>
       </div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">Notation ESS (0–10 par critère)</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.12em;color:var(--text3);text-transform:uppercase;margin-bottom:8px;">Notation ESS (0–10)</div>
       <div class="score-grid">
-        <div class="score-fld"><label class="form-lbl">Equite<br><span style="color:var(--gold-mid)">×5</span></label><input type="number" class="form-in sc-in" id="f-eq" min="0" max="10" value="5" oninput="calcScore()"></div>
-        <div class="score-fld"><label class="form-lbl">Sante<br><span style="color:var(--gold-mid)">×4</span></label><input type="number" class="form-in sc-in" id="f-sa" min="0" max="10" value="5" oninput="calcScore()"></div>
-        <div class="score-fld"><label class="form-lbl">Transp.<br><span style="color:var(--gold-mid)">×7</span></label><input type="number" class="form-in sc-in" id="f-tr" min="0" max="10" value="5" oninput="calcScore()"></div>
-        <div class="score-fld"><label class="form-lbl">Innov.<br><span style="color:var(--gold-mid)">×8</span></label><input type="number" class="form-in sc-in" id="f-inn" min="0" max="10" value="5" oninput="calcScore()"></div>
-        <div class="score-fld"><label class="form-lbl">Ecologie<br><span style="color:var(--gold-mid)">×6</span></label><input type="number" class="form-in sc-in" id="f-ec" min="0" max="10" value="5" oninput="calcScore()"></div>
-        <div class="score-fld"><label class="form-lbl">Fiabilite<br><span style="color:var(--gold-mid)">×8</span></label><input type="number" class="form-in sc-in" id="f-fi" min="0" max="10" value="5" oninput="calcScore()"></div>
+        <div class="score-fld"><label class="fl">Equite<br><span style="color:var(--gold-mid)">×5</span></label><input type="number" class="fi sc-in" id="f-eq" min="0" max="10" value="5" oninput="calcScore()"></div>
+        <div class="score-fld"><label class="fl">Sante<br><span style="color:var(--gold-mid)">×4</span></label><input type="number" class="fi sc-in" id="f-sa" min="0" max="10" value="5" oninput="calcScore()"></div>
+        <div class="score-fld"><label class="fl">Transp.<br><span style="color:var(--gold-mid)">×7</span></label><input type="number" class="fi sc-in" id="f-tr" min="0" max="10" value="5" oninput="calcScore()"></div>
+        <div class="score-fld"><label class="fl">Innov.<br><span style="color:var(--gold-mid)">×8</span></label><input type="number" class="fi sc-in" id="f-inn" min="0" max="10" value="5" oninput="calcScore()"></div>
+        <div class="score-fld"><label class="fl">Ecologie<br><span style="color:var(--gold-mid)">×6</span></label><input type="number" class="fi sc-in" id="f-ec" min="0" max="10" value="5" oninput="calcScore()"></div>
+        <div class="score-fld"><label class="fl">Fiabilite<br><span style="color:var(--gold-mid)">×8</span></label><input type="number" class="fi sc-in" id="f-fi" min="0" max="10" value="5" oninput="calcScore()"></div>
       </div>
-      <div class="computed">
-        <div><div class="cs-lbl">Score ESS calcule</div><div class="cs-val" id="cs-val">5.00</div></div>
-        <div><div class="cs-lbl">Classe</div><div class="cs-cls cd-B" id="cs-cls">B</div></div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);margin-left:10px;line-height:1.7;" id="cs-label">Engagée</div>
-      </div>
+      <div class="computed-box"><div><div class="cs-lbl">Score calculé</div><div class="cs-val" id="cs-val">5.00</div></div><div><div class="cs-lbl">Classe</div><div class="cs-cls cd-B" id="cs-cls">B</div></div><div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);margin-left:10px;" id="cs-label">Engagée</div></div>
     </div>
-    <div class="modal-ftr">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal()">Annuler</button>
-      <button class="btn btn-primary btn-sm" onclick="submitForm()">✓ Enregistrer</button>
-    </div>
+    <div class="modal-ftr"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Annuler</button><button class="btn btn-primary btn-sm" onclick="submitForm()">✓ Enregistrer</button></div>
   </div>
 </div>
 
-<!-- CONFIRM DELETE -->
+<!-- CONFIRM DELETE (bourse) -->
 <div class="modal-ov" id="confirm-ov">
-  <div class="confirm-box">
-    <div class="confirm-ttl">Supprimer la societe</div>
-    <div class="confirm-msg" id="confirm-msg">Confirmer la suppression ?</div>
-    <div class="confirm-act">
-      <button class="btn btn-ghost btn-sm" onclick="closeConfirm()">Annuler</button>
-      <button class="btn btn-danger btn-sm" onclick="doDelete()">Supprimer</button>
-    </div>
+  <div class="confirm-box"><div class="confirm-ttl">Supprimer</div><div class="confirm-msg" id="confirm-msg">Confirmer ?</div><div class="confirm-act"><button class="btn btn-ghost btn-sm" onclick="closeConfirm()">Annuler</button><button class="btn btn-danger btn-sm" onclick="doDelete()">Supprimer</button></div></div>
+</div>
+
+<!-- GITHUB PUSH (bourse) -->
+<div class="modal-ov" id="gh-ov">
+  <div class="gh-box">
+    <div class="modal-hdr"><div class="modal-ttl" style="color:var(--teal-bright);">Sauvegarde GitHub · bourse.json</div><button class="modal-cls" onclick="document.getElementById('gh-ov').classList.remove('open')">✕</button></div>
+    <div class="modal-body"><div class="gh-log" id="gh-log">Prêt.</div></div>
+    <div class="modal-ftr"><button class="btn btn-ghost btn-sm" onclick="document.getElementById('gh-ov').classList.remove('open')">Fermer</button><button class="btn btn-gh btn-sm" id="gh-push-btn" onclick="pushToGH()">Pousser vers GitHub</button></div>
   </div>
 </div>
 
-<!-- GITHUB MODAL -->
-<div class="modal-ov" id="gh-ov">
-  <div class="github-box">
-    <div class="modal-hdr"><div class="modal-ttl" style="color:var(--teal-bright);">Sauvegarde GitHub</div><button class="modal-cls" onclick="document.getElementById('gh-ov').classList.remove('open')">✕</button></div>
+<!-- EQUIP MODAL (FAN) -->
+<div class="modal-ov" id="equip-ov">
+  <div class="modal-box fan">
+    <div class="modal-hdr"><div class="modal-ttl spice" id="equip-ttl">Ajouter un equipement</div><button class="modal-cls" onclick="closeEquipModal()">✕</button></div>
     <div class="modal-body">
-      <div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.75;">Pousse <code style="font-family:'IBM Plex Mono',monospace;color:var(--gold-mid)">data/bourse.json</code> vers GitHub.</div>
-      <div class="gh-log" id="gh-log">En attente…</div>
+      <div class="form-grid">
+        <div class="fg fg-full"><label class="fl">Nom de l'équipement</label><input type="text" class="fi fan" id="eq-nom" placeholder="Ex : RK-01…"></div>
+        <div class="fg"><label class="fl">Catégorie</label><select class="fs" id="eq-cat"><option value="Terrestre">Terrestre</option><option value="Maritime">Maritime</option><option value="Aerospatiale">Aérien (Aérospatiale)</option></select></div>
+        <div class="fg"><label class="fl">Niveau usine requis</label><select class="fs" id="eq-niv"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></div>
+        <div class="fg"><label class="fl">Coût en slots</label><input type="number" class="fi fan" id="eq-slots" min="0" placeholder="0"></div>
+        <div class="fg"><label class="fl">Coût de production (Cr)</label><input type="number" class="fi fan" id="eq-prod" min="0" placeholder="0"></div>
+        <div class="fg"><label class="fl">Coût de vente (Cr)</label><input type="number" class="fi fan" id="eq-vente" min="0" placeholder="0"></div>
+      </div>
     </div>
-    <div class="modal-ftr">
-      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('gh-ov').classList.remove('open')">Fermer</button>
-      <button class="btn btn-gh btn-sm" id="gh-push-btn" onclick="pushToGH()">Pousser vers GitHub</button>
-    </div>
+    <div class="modal-ftr"><button class="btn btn-ghost btn-sm" onclick="closeEquipModal()">Annuler</button><button class="btn btn-fan btn-sm" onclick="submitEquipForm()">✓ Enregistrer</button></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════
+// ════════════════════════════════════════════════
 //  CONFIG
-// ══════════════════════════
-const REPO='BJBellum/UKN', FILE='data/bourse.json';
-// Admin IDs — must have isAdmin() = true via PharosAuth, OR be in this list
+// ════════════════════════════════════════════════
+const REPO='BJBellum/UKN', FILE='data/bourse.json', FAN_FILE='data/fan.json';
 const ADMIN_IDS=['772821169664426025'];
 
-// ══════════════════════════
+// ════════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════════
+const SECTION_TITLES={
+  bourse:'★ BOURSE DU CAIRE',
+  'fan-bat':'⚔ BATAILLONS · FAN',
+  'fan-prod':'⚔ PRODUCTION · FAN',
+  'fan-new':'⚔ NOUVEAU BATAILLON',
+  'fan-sync':'⚔ SYNC · GITHUB'
+};
+function showSection(key){
+  Object.keys(SECTION_TITLES).forEach(k=>{
+    const pane=document.getElementById('sec-'+k);
+    const nav=document.getElementById('nav-'+k);
+    if(pane)pane.classList.toggle('active',k===key);
+    if(nav){
+      nav.classList.toggle('active',k===key);
+      nav.classList.toggle('spice',k===key&&k!=='bourse');
+    }
+  });
+  const ttl=document.getElementById('tb-title');
+  if(ttl)ttl.textContent=SECTION_TITLES[key]||key;
+  // Lazy renders
+  if(key==='fan-bat')renderBatAdmin();
+  if(key==='fan-prod')renderProdAdmin();
+  if(key==='fan-new')renderNewBatForm();
+}
+
+// ════════════════════════════════════════════════
 //  THEME
-// ══════════════════════════
+// ════════════════════════════════════════════════
 function applyTheme(t){
   document.documentElement.setAttribute('data-theme',t);
   const lbl=document.getElementById('toggle-lbl'),path=document.getElementById('icon-path');
   if(lbl)lbl.textContent=t==='dark'?'NUIT':'JOUR';
-  if(path)path.setAttribute('d',t==='dark'
-    ?'M21 12.79A9 9 0 0 1 12 21a9 9 0 0 1 0-18 7 7 0 0 0 9 9.79z'
-    :'M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 2a8 8 0 1 1 0 16A8 8 0 0 1 12 4z');
+  if(path)path.setAttribute('d',t==='dark'?'M21 12.79A9 9 0 0 1 12 21a9 9 0 0 1 0-18 7 7 0 0 0 9 9.79z':'M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 2a8 8 0 1 1 0 16A8 8 0 0 1 12 4z');
   localStorage.setItem('run-theme',t);
 }
 function toggleTheme(){applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');}
-(function(){
-  const s=localStorage.getItem('run-theme');
-  const mq=window.matchMedia('(prefers-color-scheme: dark)');
-  applyTheme(s||(mq.matches?'dark':'light'));
-})();
+(function(){const s=localStorage.getItem('run-theme'),mq=window.matchMedia('(prefers-color-scheme: dark)');applyTheme(s||(mq.matches?'dark':'light'));})();
 
-// ══════════════════════════
+// ════════════════════════════════════════════════
 //  TOAST
-// ══════════════════════════
-function toast(msg,type='ok'){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.className='toast show '+type;
-  clearTimeout(window._tt);
-  window._tt=setTimeout(()=>el.classList.remove('show'),3000);
-}
+// ════════════════════════════════════════════════
+function toast(msg,type='ok'){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show '+type;clearTimeout(window._tt);window._tt=setTimeout(()=>el.classList.remove('show'),3200);}
 
-// ══════════════════════════
+// ════════════════════════════════════════════════
 //  ESS CALC
-// ══════════════════════════
+// ════════════════════════════════════════════════
 function calcESS(eq,sa,tr,inn,ec,fi){return Math.round(((eq*5)+(sa*4)+(tr*7)+(inn*8)+(ec*6)+(fi*8))/38*100)/100;}
 function toClass(s){if(s>=8.5)return'A';if(s>=7)return'B';if(s>=5.5)return'C';if(s>=4)return'D';if(s>=2.5)return'E';return'F';}
 const CLS_LABELS={A:'Exemplaire',B:'Engagée',C:'En transition',D:'Vulnérable',E:'Critique',F:'Défaillante'};
-
 function calcScore(){
-  const g=id=>parseInt(document.getElementById(id).value)||0;
+  const g=id=>parseInt(document.getElementById(id)?.value)||0;
   const s=calcESS(g('f-eq'),g('f-sa'),g('f-tr'),g('f-inn'),g('f-ec'),g('f-fi'));
   const cl=toClass(s);
   const v=document.getElementById('cs-val'),c=document.getElementById('cs-cls'),l=document.getElementById('cs-label');
@@ -365,289 +521,354 @@ function calcScore(){
   if(l)l.textContent=CLS_LABELS[cl]||'';
 }
 
-// ══════════════════════════
+// ════════════════════════════════════════════════
 //  PAT
-// ══════════════════════════
-function savePat(){const v=document.getElementById('pat-in').value.trim();if(v)localStorage.setItem('pharos_gh_pat',v);updatePat();}
-function getPat(){return document.getElementById('pat-in').value.trim()||localStorage.getItem('pharos_gh_pat')||'';}
-function updatePat(){
-  const p=getPat(),dot=document.getElementById('pat-dot'),txt=document.getElementById('pat-txt');
-  if(!dot||!txt)return;
-  if(p&&p.length>10){dot.className='pat-dot ok';txt.textContent='Configuré ('+p.substring(0,8)+'…)';txt.style.color='var(--teal-bright)';}
-  else{dot.className='pat-dot no';txt.textContent='Non configuré';txt.style.color='var(--text3)';}
-}
+// ════════════════════════════════════════════════
+function savePat(){const v=document.getElementById('pat-in')?.value.trim();if(v)localStorage.setItem('pharos_gh_pat',v);updatePat();}
+function saveFanPat(){const v=document.getElementById('pat-fan')?.value.trim();if(v)localStorage.setItem('pharos_gh_pat',v);updateFanPat();}
+function getPat(){return document.getElementById('pat-in')?.value.trim()||document.getElementById('pat-fan')?.value.trim()||localStorage.getItem('pharos_gh_pat')||'';}
+function updatePat(){const p=getPat(),dot=document.getElementById('pat-dot'),txt=document.getElementById('pat-txt');if(dot&&txt){if(p&&p.length>10){dot.className='pat-dot ok';txt.textContent='Configuré ('+p.substring(0,8)+'…)';txt.style.color='var(--teal-bright)';}else{dot.className='pat-dot no';txt.textContent='Non configuré';txt.style.color='var(--text3)';}}}
+function updateFanPat(){const p=getPat(),dot=document.getElementById('fan-pat-dot'),txt=document.getElementById('fan-pat-txt');if(dot&&txt){if(p&&p.length>10){dot.className='pat-dot ok';txt.textContent='Configuré ('+p.substring(0,8)+'…)';txt.style.color='var(--teal-bright)';}else{dot.className='pat-dot no';txt.textContent='Non configuré';txt.style.color='var(--text3)';}}}
 
-// ══════════════════════════
-//  STATE
-// ══════════════════════════
-let companies=[], editIdx=null, delIdx=null;
-
+// ════════════════════════════════════════════════
+//  BOURSE STATE + CRUD
+// ════════════════════════════════════════════════
+let companies=[],editIdx=null,delIdx=null;
 function processCompanies(raw){
-  const proc=raw.map(c=>{
-    const score=calcESS(c.eq,c.sa,c.tr,c.inn,c.ec,c.fi);
-    return{...c,score,classe:toClass(score)};
-  });
+  const proc=raw.map(c=>{const score=calcESS(c.eq,c.sa,c.tr,c.inn,c.ec,c.fi);return{...c,score,classe:toClass(score)};});
   proc.sort((a,b)=>b.score-a.score);
-  let rank=1;
-  proc.forEach((c,i)=>{
-    if(i>0&&c.score===proc[i-1].score)c.rank=proc[i-1].rank;
-    else c.rank=rank;
-    rank=i+2;
-  });
+  let rank=1;proc.forEach((c,i)=>{if(i>0&&c.score===proc[i-1].score)c.rank=proc[i-1].rank;else c.rank=rank;rank=i+2;});
   return proc;
 }
-
 function colorFor(v){const c=['#882020','#A03030','#C04040','#D04828','#E07028','#F0A030','#D4A843','#8ACA60','#4ACB9A','#22B89A','#22B89A'];return c[Math.max(0,Math.min(10,v))];}
 function scoreColor(s){if(s>=8.5)return'#22B89A';if(s>=7)return'#D4A843';if(s>=5.5)return'#F0A030';if(s>=4)return'#C87020';return'#E84848';}
-function natCode(nat){if(!nat||nat==='Royaume-Uni du Nil')return'RUN';return'UDA';}
-function natCls(nat){return natCode(nat)==='RUN'?'nat-run-b':'nat-uda-b';}
-
+function natCode(nat){return(!nat||nat==='Royaume-Uni du Nil')?'RUN':'UDA';}
+function natCls(nat){return natCode(nat)==='RUN'?'nat-run':'nat-uda';}
 function renderAdminTable(){
-  const tbody=document.getElementById('admin-tbody');
+  const tbody=document.getElementById('admin-tbody');if(!tbody)return;
   if(!companies.length){tbody.innerHTML=`<tr><td colspan="13" style="text-align:center;padding:24px;color:var(--text3);font-family:'IBM Plex Mono',monospace;font-size:11px;">AUCUNE SOCIETE</td></tr>`;return;}
   const el=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
-  el('s-total',companies.length);
-  el('s-a',companies.filter(c=>c.classe==='A').length);
-  el('s-b',companies.filter(c=>c.classe==='B').length);
-  el('s-c',companies.filter(c=>c.classe==='C').length);
-  el('s-nat',companies.filter(c=>c.nat==='Royaume-Uni du Nil').length);
-  el('s-for',companies.filter(c=>c.nat!=='Royaume-Uni du Nil').length);
-  el('s-date',new Date().toISOString().slice(0,10));
-  el('ccount',companies.length+' sociétés');
-  tbody.innerHTML=companies.map((c,i)=>{
-    const sc=scoreColor(c.score);
-    return`<tr>
-      <td style="color:var(--text3);font-size:9px">${c.rank||i+1}</td>
-      <td style="color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:11px;max-width:190px;white-space:normal;line-height:1.3">${c.nom}</td>
-      <td><span class="nat-b ${natCls(c.nat)}">${natCode(c.nat)}</span></td>
-      <td style="color:var(--text3);font-size:10px;max-width:150px;white-space:normal;line-height:1.3">${c.cat||'—'}</td>
-      <td style="color:${colorFor(c.eq)};text-align:center">${c.eq}</td>
-      <td style="color:${colorFor(c.sa)};text-align:center">${c.sa}</td>
-      <td style="color:${colorFor(c.tr)};text-align:center">${c.tr}</td>
-      <td style="color:${colorFor(c.inn)};text-align:center">${c.inn}</td>
-      <td style="color:${colorFor(c.ec)};text-align:center">${c.ec}</td>
-      <td style="color:${colorFor(c.fi)};text-align:center">${c.fi}</td>
-      <td style="color:${sc};font-weight:500">${c.score.toFixed(2)}</td>
-      <td><span class="cls-dot cd-${c.classe}">${c.classe}</span></td>
-      <td style="display:flex;gap:6px;padding:7px 11px;">
-        <button class="btn btn-ghost btn-sm" onclick="openModal(${i})">Modifier</button>
-        <button class="btn btn-danger btn-sm" onclick="openConfirm(${i})">Suppr.</button>
-      </td>
-    </tr>`;
-  }).join('');
+  el('s-total',companies.length);el('s-a',companies.filter(c=>c.classe==='A').length);el('s-b',companies.filter(c=>c.classe==='B').length);el('s-c',companies.filter(c=>c.classe==='C').length);el('s-nat',companies.filter(c=>c.nat==='Royaume-Uni du Nil').length);el('s-for',companies.filter(c=>c.nat!=='Royaume-Uni du Nil').length);el('s-date',new Date().toISOString().slice(0,10));el('ccount',companies.length+' sociétés');
+  tbody.innerHTML=companies.map((c,i)=>{const sc=scoreColor(c.score);return`<tr><td style="color:var(--text3);font-size:9px">${c.rank||i+1}</td><td style="color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:11px;max-width:180px;white-space:normal;line-height:1.3">${c.nom}</td><td><span class="nat-b ${natCls(c.nat)}">${natCode(c.nat)}</span></td><td style="color:var(--text3);font-size:10px;max-width:140px;white-space:normal;line-height:1.3">${c.cat||'—'}</td><td style="color:${colorFor(c.eq)};text-align:center">${c.eq}</td><td style="color:${colorFor(c.sa)};text-align:center">${c.sa}</td><td style="color:${colorFor(c.tr)};text-align:center">${c.tr}</td><td style="color:${colorFor(c.inn)};text-align:center">${c.inn}</td><td style="color:${colorFor(c.ec)};text-align:center">${c.ec}</td><td style="color:${colorFor(c.fi)};text-align:center">${c.fi}</td><td style="color:${sc};font-weight:500">${c.score.toFixed(2)}</td><td><span class="cls-dot cd-${c.classe}">${c.classe}</span></td><td style="display:flex;gap:5px;padding:6px 10px;"><button class="btn btn-ghost btn-sm" onclick="openModal(${i})">Modifier</button><button class="btn btn-danger btn-xs" onclick="openConfirm(${i})">✕</button></td></tr>`;}).join('');
 }
-
-// ══════════════════════════
-//  MODAL
-// ══════════════════════════
 function openModal(idx=null){
-  editIdx=idx;
-  const ttl=document.getElementById('modal-ttl');
-  if(idx!==null){
-    const c=companies[idx];
-    ttl.textContent='Modifier — '+c.nom;
-    document.getElementById('f-nom').value=c.nom;
-    document.getElementById('f-nat').value=c.nat;
-    document.getElementById('f-cat').value=c.cat||'';
-    ['eq','sa','tr','inn','ec','fi'].forEach(k=>document.getElementById('f-'+k).value=c[k]);
-  }else{
-    ttl.textContent='Ajouter une societe';
-    document.getElementById('f-nom').value='';
-    document.getElementById('f-nat').value='Royaume-Uni du Nil';
-    document.getElementById('f-cat').value='Énergie';
-    ['eq','sa','tr','inn','ec','fi'].forEach(k=>document.getElementById('f-'+k).value=5);
-  }
-  calcScore();
-  document.getElementById('modal-ov').classList.add('open');
+  editIdx=idx;const ttl=document.getElementById('modal-ttl');
+  if(idx!==null){const c=companies[idx];if(ttl)ttl.textContent='Modifier — '+c.nom;document.getElementById('f-nom').value=c.nom;document.getElementById('f-nat').value=c.nat;document.getElementById('f-cat').value=c.cat||'';['eq','sa','tr','inn','ec','fi'].forEach(k=>{const el=document.getElementById('f-'+k);if(el)el.value=c[k];});}
+  else{if(ttl)ttl.textContent='Ajouter une societe';document.getElementById('f-nom').value='';document.getElementById('f-nat').value='Royaume-Uni du Nil';document.getElementById('f-cat').value='Énergie';['eq','sa','tr','inn','ec','fi'].forEach(k=>{const el=document.getElementById('f-'+k);if(el)el.value=5;});}
+  calcScore();document.getElementById('modal-ov').classList.add('open');
 }
 function closeModal(){document.getElementById('modal-ov').classList.remove('open');}
 function submitForm(){
-  const nom=document.getElementById('f-nom').value.trim();
-  if(!nom){toast('Le nom est obligatoire.','err');return;}
-  const g=id=>parseInt(document.getElementById(id).value)||0;
+  const nom=document.getElementById('f-nom').value.trim();if(!nom){toast('Le nom est obligatoire.','err');return;}
+  const g=id=>parseInt(document.getElementById(id)?.value)||0;
   const eq=g('f-eq'),sa=g('f-sa'),tr=g('f-tr'),inn=g('f-inn'),ec=g('f-ec'),fi=g('f-fi');
   const score=calcESS(eq,sa,tr,inn,ec,fi);
   const obj={nom,nat:document.getElementById('f-nat').value,cat:document.getElementById('f-cat').value,eq,sa,tr,inn,ec,fi,score,classe:toClass(score)};
-  if(editIdx!==null) companies[editIdx]={...companies[editIdx],...obj};
-  else companies.push(obj);
-  companies=processCompanies(companies);
-  renderAdminTable();
-  closeModal();
-  toast(editIdx!==null?'Société modifiée.':'Société ajoutée.');
+  if(editIdx!==null)companies[editIdx]={...companies[editIdx],...obj};else companies.push(obj);
+  companies=processCompanies(companies);renderAdminTable();closeModal();toast(editIdx!==null?'Société modifiée.':'Société ajoutée.');
 }
-
-// ══════════════════════════
-//  DELETE
-// ══════════════════════════
-function openConfirm(idx){
-  delIdx=idx;
-  const msg=document.getElementById('confirm-msg');
-  if(msg)msg.textContent=`Supprimer « ${companies[idx].nom} » ? Action irréversible.`;
-  document.getElementById('confirm-ov').classList.add('open');
-}
+function openConfirm(idx){delIdx=idx;const msg=document.getElementById('confirm-msg');if(msg)msg.textContent=`Supprimer « ${companies[idx].nom} » ? Action irréversible.`;document.getElementById('confirm-ov').classList.add('open');}
 function closeConfirm(){document.getElementById('confirm-ov').classList.remove('open');}
-function doDelete(){
-  if(delIdx===null)return;
-  companies.splice(delIdx,1);
-  companies=processCompanies(companies);
-  renderAdminTable();
-  closeConfirm();
-  toast('Société supprimée.');
-}
+function doDelete(){if(delIdx===null)return;companies.splice(delIdx,1);companies=processCompanies(companies);renderAdminTable();closeConfirm();toast('Société supprimée.');}
 
-// ══════════════════════════
-//  GITHUB
-// ══════════════════════════
-function openGhModal(){
-  document.getElementById('gh-ov').classList.add('open');
-  document.getElementById('gh-log').innerHTML='<span class="log-info">Prêt. Cliquer sur "Pousser vers GitHub".</span>';
-}
-function logGh(msg,type='info'){
-  const log=document.getElementById('gh-log');
-  if(!log)return;
-  const cls={ok:'log-ok',err:'log-err',info:'log-info'}[type]||'log-info';
-  log.innerHTML+=`\n<span class="${cls}">${msg}</span>`;
-  log.scrollTop=log.scrollHeight;
-}
+// ════════════════════════════════════════════════
+//  BOURSE GITHUB
+// ════════════════════════════════════════════════
+function openGhModal(){document.getElementById('gh-ov').classList.add('open');document.getElementById('gh-log').textContent='Prêt.';}
+function logGh(msg,type='info'){const log=document.getElementById('gh-log');if(!log)return;const cls={ok:'log-ok',err:'log-err',info:'log-info'}[type]||'log-info';log.innerHTML+=`\n<span class="${cls}">${msg}</span>`;log.scrollTop=log.scrollHeight;}
 async function pushToGH(){
-  const pat=getPat();
-  if(!pat||pat.length<10){toast('Configurez votre PAT GitHub.','err');return;}
-  const btn=document.getElementById('gh-push-btn');
-  if(btn)btn.disabled=true;
-  logGh('→ Récupération du SHA et contenu actuel…','info');
-  let sha=null, existingMeta={};
+  const pat=getPat();if(!pat||pat.length<10){toast('Configurez votre PAT.','err');return;}
+  const btn=document.getElementById('gh-push-btn');if(btn)btn.disabled=true;
+  logGh('→ Récupération SHA…','info');
+  let sha=null,existingMeta={};
   try{
-    // Step 1 — get current file SHA + preserve metadata fields
-    const sr=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{
-      headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json'},
-      cache:'no-store'
-    });
-    if(sr.ok){
-      const sd=await sr.json();
-      sha=sd.sha||null;
-      logGh(`✓ SHA: ${sha?sha.substring(0,10):'—'}…`,'ok');
-      // Decode existing file to preserve version/formula/weights/description
-      try{
-        const rawContent=atob(sd.content.replace(/\n/g,''));
-        const parsed=JSON.parse(rawContent);
-        // Keep structural metadata but NOT companies (we replace those)
-        existingMeta={
-          version: parsed.version||'1.0',
-          description: parsed.description||'Bourse du Caire — Données ESS',
-          formula: parsed.formula||'((eq*5)+(sa*4)+(tr*7)+(inn*8)+(ec*6)+(fi*8))/38',
-          weights: parsed.weights||{eq:5,sa:4,tr:7,inn:8,ec:6,fi:8,total:38},
-        };
-        logGh('✓ Métadonnées existantes préservées.','ok');
-      }catch(_){ logGh('⚠ Impossible de lire le contenu existant, métadonnées par défaut.','info'); }
-    }else if(sr.status===404){
-      logGh('✓ Nouveau fichier — sera créé.','ok');
-    }else{
-      logGh(`✗ Erreur SHA: ${sr.status}`,'err');
-      if(btn)btn.disabled=false;
-      return;
-    }
-
-    // Step 2 — build content preserving all metadata
-    const payload={
-      version: existingMeta.version||'1.0',
-      updated: new Date().toISOString().slice(0,10),
-      description: existingMeta.description||'Bourse du Caire — Données ESS',
-      formula: existingMeta.formula||'((eq*5)+(sa*4)+(tr*7)+(inn*8)+(ec*6)+(fi*8))/38',
-      weights: existingMeta.weights||{eq:5,sa:4,tr:7,inn:8,ec:6,fi:8,total:38},
-      companies: companies.map(c=>({
-        id: c.id,
-        nom: c.nom,
-        nat: c.nat,
-        cat: c.cat,
-        eq: c.eq, sa: c.sa, tr: c.tr, inn: c.inn, ec: c.ec, fi: c.fi
-        // score/classe/rank sont calculés côté client, pas stockés
-      }))
-    };
+    const sr=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json'},cache:'no-store'});
+    if(sr.ok){const sd=await sr.json();sha=sd.sha||null;logGh(`✓ SHA: ${sha?sha.substring(0,10):'—'}…`,'ok');try{const raw=atob(sd.content.replace(/\n/g,''));const parsed=JSON.parse(raw);existingMeta={version:parsed.version||'1.0',description:parsed.description||'Bourse du Caire',formula:parsed.formula||'((eq*5)+(sa*4)+(tr*7)+(inn*8)+(ec*6)+(fi*8))/38',weights:parsed.weights||{eq:5,sa:4,tr:7,inn:8,ec:6,fi:8,total:38}};}catch(_){logGh('⚠ Métadonnées par défaut.','info');}}
+    else if(sr.status===404)logGh('✓ Nouveau fichier.','ok');
+    else{logGh(`✗ Erreur SHA: ${sr.status}`,'err');if(btn)btn.disabled=false;return;}
+    const payload={version:existingMeta.version||'1.0',updated:new Date().toISOString().slice(0,10),description:existingMeta.description||'Bourse du Caire',formula:existingMeta.formula||'((eq*5)+(sa*4)+(tr*7)+(inn*8)+(ec*6)+(fi*8))/38',weights:existingMeta.weights||{eq:5,sa:4,tr:7,inn:8,ec:6,fi:8,total:38},companies:companies.map(c=>({id:c.id,nom:c.nom,nat:c.nat,cat:c.cat,eq:c.eq,sa:c.sa,tr:c.tr,inn:c.inn,ec:c.ec,fi:c.fi}))};
     const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
-    const body={message:`update bourse.json — ${companies.length} sociétés [${new Date().toISOString().slice(0,10)}]`,content:encoded};
-    if(sha)body.sha=sha;
-
-    // Step 3 — push
+    const body={message:`update bourse.json — ${companies.length} sociétés`,content:encoded};if(sha)body.sha=sha;
     logGh(`→ Envoi de ${companies.length} sociétés…`,'info');
-    const pr=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{
-      method:'PUT',
-      headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-      body:JSON.stringify(body)
-    });
-    if(pr.ok){
-      const pd=await pr.json();
-      const commitSha=pd.commit&&pd.commit.sha?pd.commit.sha.substring(0,10):'—';
-      logGh(`✓ Poussé avec succès ! Commit: ${commitSha}`,'ok');
-      logGh(`✓ ${companies.length} sociétés · ${payload.updated}`,'ok');
-      toast('Données sauvegardées sur GitHub !','ok');
-    }else{
-      let errMsg='';
-      try{const ed=await pr.json();errMsg=ed.message||'';}catch(_){}
-      logGh(`✗ Erreur GitHub: ${pr.status}${errMsg?' — '+errMsg:''}`, 'err');
-      if(pr.status===401)logGh('⚠ PAT invalide ou expiré. Vérifiez vos permissions (Contents: Write).','err');
-      if(pr.status===422)logGh('⚠ SHA obsolète — rechargez et réessayez.','err');
-      toast('Erreur sauvegarde.','err');
-    }
-  }catch(e){
-    logGh(`✗ Erreur: ${e.message}`,'err');
-    toast('Erreur.','err');
-  }
+    const pr=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{method:'PUT',headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(pr.ok){const pd=await pr.json();logGh(`✓ Poussé ! Commit: ${pd.commit?.sha?.substring(0,10)||'—'}`,'ok');toast('Données sauvegardées !','ok');}
+    else{let em='';try{const ed=await pr.json();em=ed.message||'';}catch(_){}logGh(`✗ Erreur: ${pr.status}${em?' — '+em:''}`, 'err');if(pr.status===401)logGh('⚠ PAT invalide.','err');if(pr.status===422)logGh('⚠ SHA obsolète — rechargez.','err');toast('Erreur sauvegarde.','err');}
+  }catch(e){logGh(`✗ ${e.message}`,'err');toast('Erreur.','err');}
   if(btn)btn.disabled=false;
 }
-
 async function loadFromGH(){
-  try{
-    const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{headers:{'Accept':'application/vnd.github.v3.raw'},cache:'no-store'});
-    if(!r.ok)throw new Error();
-    const db=await r.json();
-    const raw=db.companies||db;
-    if(raw&&raw.length){companies=processCompanies(raw);renderAdminTable();toast(`${companies.length} sociétés chargées.`);}
-  }catch(e){toast('Erreur de chargement.','err');}
+  try{const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{headers:{'Accept':'application/vnd.github.v3.raw'},cache:'no-store'});if(!r.ok)throw new Error();const db=await r.json();const raw=db.companies||db;if(raw&&raw.length){companies=processCompanies(raw);renderAdminTable();toast(`${companies.length} sociétés chargées.`);}}
+  catch(_){toast('Erreur chargement bourse.','err');}
 }
 
-// ══════════════════════════
-//  AUTH — uses PharosAuth
-// ══════════════════════════
+// ════════════════════════════════════════════════
+//  FAN DATA
+// ════════════════════════════════════════════════
+const EQUIP_FIELDS=['Hommes','Fusils','Fusils (Rechange)','Pistolets','Pistolets (Rechange)','Mit. Moyennes','Mit. Moy. (Rechange)','Mit. Lourdes','Mit. Lourdes (Rechange)','Grenades Fragmentation','Grenades Fumigène','Véh. Blindés','Chars Légers','Motos','Camions (Transport)','Camions (Logistique)','Camions (Utilitaires)','Canons (Campagne)','Canons (Obusier)','Canons (AA)','Canons Antichar'];
+const DEFAULT_BATS=[
+  {id:'bat_01',nom:'Bataillon de Fusiliers',quantite:0,equip:{Hommes:900,Fusils:900,'Fusils (Rechange)':450,Pistolets:900,'Pistolets (Rechange)':450,'Mit. Moyennes':500,'Mit. Moy. (Rechange)':250,'Mit. Lourdes':250,'Mit. Lourdes (Rechange)':125,'Grenades Fragmentation':1800,'Grenades Fumigène':1800,'Véh. Blindés':25,'Camions (Transport)':50}},
+  {id:'bat_02',nom:'Compagnie Blindée',quantite:0,equip:{Hommes:250,Fusils:250,'Fusils (Rechange)':125,Pistolets:250,'Pistolets (Rechange)':125,'Mit. Lourdes':50,'Mit. Lourdes (Rechange)':25,'Grenades Fragmentation':500,'Grenades Fumigène':500,'Chars Légers':12,'Camions (Transport)':20}},
+  {id:'bat_03',nom:'Bataillon de Logistique',quantite:0,equip:{Hommes:500,Fusils:500,'Fusils (Rechange)':250,Pistolets:500,'Pistolets (Rechange)':250,'Camions (Transport)':30,'Camions (Logistique)':100}},
+  {id:'bat_04',nom:'Bataillon de Reconnaissance',quantite:0,equip:{Hommes:500,Fusils:500,'Fusils (Rechange)':250,Pistolets:500,'Pistolets (Rechange)':250,'Mit. Moyennes':100,'Mit. Moy. (Rechange)':50,'Grenades Fragmentation':500,'Grenades Fumigène':500,Motos:100,'Camions (Transport)':30}},
+  {id:'bat_05',nom:'Bataillon de Fusiliers Alpins',quantite:0,equip:{Hommes:1200,Fusils:1200,'Fusils (Rechange)':600,Pistolets:1200,'Pistolets (Rechange)':600,'Mit. Moyennes':600,'Mit. Moy. (Rechange)':300,'Mit. Lourdes':300,'Mit. Lourdes (Rechange)':150,'Grenades Fragmentation':2400,'Grenades Fumigène':2400,'Camions (Transport)':70}},
+  {id:'bat_06',nom:'Bataillon de Reconnaissance Alpine',quantite:0,equip:{Hommes:500,Fusils:500,'Fusils (Rechange)':250,Pistolets:500,'Pistolets (Rechange)':250,'Mit. Moyennes':100,'Mit. Moy. (Rechange)':50,'Grenades Fragmentation':500,'Grenades Fumigène':500,'Camions (Transport)':30}},
+  {id:'bat_07',nom:'Bataillon de Logistique Alpin',quantite:0,equip:{Hommes:500,Fusils:500,'Fusils (Rechange)':250,Pistolets:500,'Pistolets (Rechange)':250,'Camions (Transport)':30,'Camions (Logistique)':100}},
+  {id:'bat_08',nom:'Bataillon du Génie Alpin',quantite:0,equip:{Hommes:525,Fusils:525,'Fusils (Rechange)':263,Pistolets:525,'Pistolets (Rechange)':263,'Camions (Transport)':30}},
+  {id:'bat_09',nom:"Bataillon d'Artillerie",quantite:0,equip:{Hommes:600,Fusils:600,'Fusils (Rechange)':300,Pistolets:600,'Pistolets (Rechange)':300,'Camions (Transport)':35,'Camions (Utilitaires)':32,'Canons (Campagne)':32}},
+  {id:'bat_10',nom:"Bataillon d'Obusier",quantite:0,equip:{Hommes:550,Fusils:550,'Fusils (Rechange)':275,Pistolets:550,'Pistolets (Rechange)':275,'Camions (Transport)':35,'Camions (Utilitaires)':24,'Canons (Obusier)':24}},
+  {id:'bat_11',nom:'Bataillon Antiaérien',quantite:0,equip:{Hommes:450,Fusils:450,'Fusils (Rechange)':225,Pistolets:450,'Pistolets (Rechange)':225,'Camions (Transport)':30,'Camions (Utilitaires)':24,'Canons (AA)':24}},
+  {id:'bat_12',nom:'Compagnie de Transmission',quantite:0,equip:{Hommes:200,Pistolets:200,'Camions (Transport)':10}},
+  {id:'bat_13',nom:'Bataillon Médical',quantite:0,equip:{Hommes:1000,'Camions (Transport)':100}},
+  {id:'bat_14',nom:'Bataillon de Fusiliers Marins',quantite:0,equip:{Hommes:1200,Fusils:1200,'Fusils (Rechange)':600,Pistolets:1200,'Pistolets (Rechange)':600,'Mit. Moyennes':700,'Mit. Moy. (Rechange)':350,'Mit. Lourdes':350,'Mit. Lourdes (Rechange)':175,'Grenades Fragmentation':2400,'Grenades Fumigène':2400,'Camions (Transport)':70}},
+  {id:'bat_15',nom:'Bataillon du Génie',quantite:0,equip:{Hommes:525,Fusils:525,'Fusils (Rechange)':263,Pistolets:525,'Pistolets (Rechange)':263,'Camions (Transport)':30}},
+  {id:'bat_16',nom:'Bataillon Antichar',quantite:0,equip:{Hommes:500,Fusils:500,'Fusils (Rechange)':250,Pistolets:500,'Pistolets (Rechange)':250,'Camions (Transport)':30,'Camions (Utilitaires)':32,'Canons Antichar':32}},
+  {id:'bat_17',nom:'Bataillon de Fusiliers Légers',quantite:0,equip:{Hommes:600,Fusils:600,'Fusils (Rechange)':300,Pistolets:600,'Pistolets (Rechange)':300,'Mit. Moyennes':50,'Mit. Moy. (Rechange)':25,'Grenades Fragmentation':600,'Grenades Fumigène':600,'Camions (Transport)':30}},
+];
+const DEFAULT_EQUIP=[
+  {id:'eq_01',nom:'BN-05',categorie:'Terrestre',niveau_requis:3,cout_slots:2,cout_prod:460,cout_vente:999},
+  {id:'eq_02',nom:'SM-04',categorie:'Terrestre',niveau_requis:2,cout_slots:1,cout_prod:124,cout_vente:249},
+  {id:'eq_03',nom:'RK-01',categorie:'Terrestre',niveau_requis:3,cout_slots:4,cout_prod:764,cout_vente:1549},
+  {id:'eq_04',nom:'RD-04',categorie:'Terrestre',niveau_requis:2,cout_slots:4,cout_prod:647,cout_vente:1799},
+  {id:'eq_05',nom:'GR-1',categorie:'Terrestre',niveau_requis:1,cout_slots:1,cout_prod:1,cout_vente:10},
+  {id:'eq_06',nom:'MD-114',categorie:'Terrestre',niveau_requis:3,cout_slots:20,cout_prod:13088,cout_vente:26999},
+  {id:'eq_07',nom:'MD-D-47',categorie:'Terrestre',niveau_requis:3,cout_slots:10,cout_prod:9288,cout_vente:20000},
+  {id:'eq_08',nom:'MD-O-122',categorie:'Terrestre',niveau_requis:3,cout_slots:20,cout_prod:12666,cout_vente:24999},
+  {id:'eq_09',nom:'MD-T-88',categorie:'Terrestre',niveau_requis:3,cout_slots:20,cout_prod:12244,cout_vente:24999},
+  {id:'eq_10',nom:'NM-20 "Sobek"',categorie:'Terrestre',niveau_requis:3,cout_slots:5000,cout_prod:90355,cout_vente:199999},
+  {id:'eq_11',nom:'DB-01 "Saqr"',categorie:'Terrestre',niveau_requis:3,cout_slots:6000,cout_prod:116533,cout_vente:229999},
+  {id:'eq_12',nom:'Classe "Barq"',categorie:'Maritime',niveau_requis:2,cout_slots:20000,cout_prod:936888,cout_vente:2000000},
+  {id:'eq_13',nom:'Classe "Aqrab"',categorie:'Maritime',niveau_requis:2,cout_slots:20000,cout_prod:4753332,cout_vente:10000000},
+  {id:'eq_14',nom:'Classe "Qahir"',categorie:'Maritime',niveau_requis:2,cout_slots:35000,cout_prod:12400000,cout_vente:25000000},
+  {id:'eq_15',nom:'Classe "Al-Temsah"',categorie:'Maritime',niveau_requis:2,cout_slots:20000,cout_prod:1047111,cout_vente:2099999},
+  {id:'eq_16',nom:'MQ-05',categorie:'Aerospatiale',niveau_requis:4,cout_slots:3000,cout_prod:329000,cout_vente:999999},
+  {id:'eq_17',nom:'MQ-33 "Cobra"',categorie:'Aerospatiale',niveau_requis:4,cout_slots:3000,cout_prod:329000,cout_vente:1499999},
+];
+const DEFAULT_FACTORIES=[
+  {id:'terrestre',nom:'Usine Terrestre',categorie:'Terrestre',niveau:7},
+  {id:'maritime',nom:'Chantier Naval',categorie:'Maritime',niveau:7},
+  {id:'aerospatiale',nom:'Usine Aérospatiale',categorie:'Aerospatiale',niveau:7},
+];
+const SLOT_CAP={1:15000,2:22500,3:33000,4:48000,5:69000,6:102000,7:150000};
+const CAT_COL={Terrestre:'#22B89A',Maritime:'#4A9EFF',Aerospatiale:'#E85C0D'};
+let fanBats=[], fanEquip=[], fanFactories=[], editEquipIdx=null;
+
+function loadFanState(){
+  try{
+    const bs=localStorage.getItem('fan_battalions');
+    const es=localStorage.getItem('fan_equipements');
+    const fs=localStorage.getItem('fan_factories');
+    fanBats=bs?JSON.parse(bs):DEFAULT_BATS.map(b=>({...b,equip:{...b.equip}}));
+    fanEquip=es?JSON.parse(es):DEFAULT_EQUIP.map(e=>({...e}));
+    fanFactories=fs?JSON.parse(fs):DEFAULT_FACTORIES.map(f=>({...f}));
+  }catch(_){
+    fanBats=DEFAULT_BATS.map(b=>({...b,equip:{...b.equip}}));
+    fanEquip=DEFAULT_EQUIP.map(e=>({...e}));
+    fanFactories=DEFAULT_FACTORIES.map(f=>({...f}));
+  }
+}
+function saveFanState(){
+  localStorage.setItem('fan_battalions',JSON.stringify(fanBats));
+  localStorage.setItem('fan_equipements',JSON.stringify(fanEquip));
+  localStorage.setItem('fan_factories',JSON.stringify(fanFactories));
+}
+
+// ════════════════════════════════════════════════
+//  FAN: BATAILLONS ADMIN
+// ════════════════════════════════════════════════
+function renderBatAdmin(){
+  const el=document.getElementById('bat-admin-list');if(!el)return;
+  el.innerHTML=fanBats.map(b=>`
+    <div class="bat-item">
+      <div class="bat-hdr" onclick="toggleExpand('${b.id}')">
+        <span class="bat-id">${b.id}</span>
+        <span class="bat-name">${b.nom}</span>
+        <div class="qty-ctrl">
+          <button class="qb" onclick="event.stopPropagation();adminDelta('${b.id}',-1)">−</button>
+          <input class="qi" type="number" value="${b.quantite||0}" min="0"
+            onchange="adminSetQty('${b.id}',this.value)" onclick="event.stopPropagation()">
+          <button class="qb" onclick="event.stopPropagation();adminDelta('${b.id}',+1)">+</button>
+        </div>
+        <button class="expand-btn" id="eb-${b.id}" title="Équipement">▶</button>
+        <button class="btn btn-danger btn-xs" onclick="event.stopPropagation();deleteBat('${b.id}')">✕ Suppr.</button>
+      </div>
+      <div class="equip-panel" id="ep-${b.id}">
+        <div class="equip-grid-edit">
+          ${EQUIP_FIELDS.map(f=>`
+            <div class="ef">
+              <span class="ef-lbl">${f}</span>
+              <input class="ef-in" type="number" min="0" value="${b.equip[f]||0}"
+                onchange="updateEquip('${b.id}','${f}',this.value)">
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+function toggleExpand(id){
+  const ep=document.getElementById('ep-'+id);
+  const eb=document.getElementById('eb-'+id);
+  if(ep)ep.classList.toggle('open');
+  if(eb)eb.classList.toggle('open');
+}
+function adminDelta(id,d){const b=fanBats.find(x=>x.id===id);if(b){b.quantite=Math.max(0,(b.quantite||0)+d);saveFanState();renderBatAdmin();}}
+function adminSetQty(id,v){const b=fanBats.find(x=>x.id===id);if(b){b.quantite=Math.max(0,parseInt(v)||0);saveFanState();}}
+function updateEquip(id,field,val){const b=fanBats.find(x=>x.id===id);if(b){b.equip[field]=Math.max(0,parseInt(val)||0);saveFanState();}}
+function deleteBat(id){if(!confirm('Supprimer définitivement ce type de bataillon ?'))return;fanBats=fanBats.filter(x=>x.id!==id);saveFanState();renderBatAdmin();toast('Bataillon supprimé.');}
+
+function applyBulk(){
+  const filter=document.getElementById('bulk-sel').value;
+  const qty=Math.max(0,parseInt(document.getElementById('bulk-qty').value)||0);
+  if(!filter){toast('Sélectionnez un filtre.','err');return;}
+  const match={
+    all:()=>true,
+    fusiliers:b=>b.nom.toLowerCase().includes('fusilier'),
+    alpine:b=>b.nom.toLowerCase().includes('alpin'),
+    support:b=>['logistique','médical','transmission','génie'].some(s=>b.nom.toLowerCase().includes(s)),
+    artillerie:b=>["artillerie","obusier","antiaérien","antichar"].some(s=>b.nom.toLowerCase().includes(s)),
+  }[filter];
+  if(!match){toast('Filtre inconnu.','err');return;}
+  fanBats.filter(match).forEach(b=>b.quantite=qty);
+  saveFanState();renderBatAdmin();toast(`Quantité ${qty} appliquée.`);
+}
+
+// ════════════════════════════════════════════════
+//  FAN: PRODUCTION ADMIN
+// ════════════════════════════════════════════════
+function renderProdAdmin(){
+  // Factory levels
+  const fg=document.getElementById('fact-grid');
+  if(fg)fg.innerHTML=fanFactories.map(f=>{
+    const cap=(SLOT_CAP[f.niveau]||150000);
+    const col=CAT_COL[f.categorie]||'#E85C0D';
+    return`<div class="fact-card" style="border-top-color:${col};">
+      <div class="fact-name">${f.nom}</div>
+      <div class="fact-row">
+        <span class="fact-lbl">Niveau</span>
+        <select class="fact-sel" onchange="setFactLvl('${f.id}',this.value)">
+          ${[1,2,3,4,5,6,7].map(n=>`<option value="${n}"${f.niveau===n?' selected':''}>${n}</option>`).join('')}
+        </select>
+        <span class="fact-slots" style="color:${col};">${cap.toLocaleString('fr')}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text3);">slots</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Equip table
+  const tbody=document.getElementById('equip-tbody');if(!tbody)return;
+  const fmt=n=>n.toLocaleString('fr');
+  const catCls={Terrestre:'cat-T',Maritime:'cat-M',Aerospatiale:'cat-A'};
+  tbody.innerHTML=fanEquip.map((e,i)=>`<tr>
+    <td style="color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:11px;">${e.nom}</td>
+    <td><span class="cat-b ${catCls[e.categorie]||''}">${e.categorie==='Aerospatiale'?'Aérien':e.categorie}</span></td>
+    <td style="color:var(--text3);">NIV ${e.niveau_requis}</td>
+    <td style="text-align:right;color:var(--spice);">${fmt(e.cout_slots)}</td>
+    <td style="text-align:right;">${fmt(e.cout_prod)}</td>
+    <td style="text-align:right;color:var(--teal-bright);">${fmt(e.cout_vente)}</td>
+    <td style="text-align:right;color:var(--gold);">${fmt(e.cout_vente-e.cout_prod)}</td>
+    <td style="display:flex;gap:5px;padding:6px 10px;">
+      <button class="btn btn-ghost btn-sm" onclick="openEquipModal(${i})">Modifier</button>
+      <button class="btn btn-danger btn-xs" onclick="deleteEquip(${i})">✕</button>
+    </td>
+  </tr>`).join('');
+}
+function setFactLvl(id,lvl){const f=fanFactories.find(x=>x.id===id);if(f){f.niveau=parseInt(lvl);saveFanState();renderProdAdmin();}}
+function openEquipModal(idx=null){
+  editEquipIdx=idx;const ttl=document.getElementById('equip-ttl');
+  if(idx!==null){const e=fanEquip[idx];if(ttl)ttl.textContent='Modifier — '+e.nom;document.getElementById('eq-nom').value=e.nom;document.getElementById('eq-cat').value=e.categorie;document.getElementById('eq-niv').value=e.niveau_requis;document.getElementById('eq-slots').value=e.cout_slots;document.getElementById('eq-prod').value=e.cout_prod;document.getElementById('eq-vente').value=e.cout_vente;}
+  else{if(ttl)ttl.textContent='Ajouter un equipement';['eq-nom','eq-slots','eq-prod','eq-vente'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('eq-cat').value='Terrestre';document.getElementById('eq-niv').value='1';}
+  document.getElementById('equip-ov').classList.add('open');
+}
+function closeEquipModal(){document.getElementById('equip-ov').classList.remove('open');}
+function submitEquipForm(){
+  const nom=document.getElementById('eq-nom').value.trim();if(!nom){toast('Nom obligatoire.','err');return;}
+  const obj={nom,categorie:document.getElementById('eq-cat').value,niveau_requis:parseInt(document.getElementById('eq-niv').value)||1,cout_slots:parseInt(document.getElementById('eq-slots').value)||0,cout_prod:parseInt(document.getElementById('eq-prod').value)||0,cout_vente:parseInt(document.getElementById('eq-vente').value)||0};
+  if(editEquipIdx!==null)fanEquip[editEquipIdx]={...fanEquip[editEquipIdx],...obj};
+  else{obj.id='eq_'+Date.now();fanEquip.push(obj);}
+  saveFanState();renderProdAdmin();closeEquipModal();toast(editEquipIdx!==null?'Équipement modifié.':'Équipement ajouté.');
+}
+function deleteEquip(i){if(!confirm('Supprimer cet équipement ?'))return;fanEquip.splice(i,1);saveFanState();renderProdAdmin();toast('Équipement supprimé.');}
+
+// ════════════════════════════════════════════════
+//  FAN: NOUVEAU BATAILLON
+// ════════════════════════════════════════════════
+function renderNewBatForm(){
+  const el=document.getElementById('nb-equip-grid');if(!el)return;
+  el.innerHTML=EQUIP_FIELDS.map(f=>`
+    <div class="ef">
+      <span class="ef-lbl">${f}</span>
+      <input class="ef-in" type="number" min="0" value="0" id="nb-${f.replace(/[^a-zA-Z0-9]/g,'_')}">
+    </div>
+  `).join('');
+}
+function createNewBat(){
+  const nom=document.getElementById('nb-nom')?.value.trim();
+  if(!nom){toast('Nom obligatoire.','err');return;}
+  const equip={};
+  EQUIP_FIELDS.forEach(f=>{const id='nb-'+f.replace(/[^a-zA-Z0-9]/g,'_');const el=document.getElementById(id);const v=parseInt(el?.value)||0;if(v>0)equip[f]=v;});
+  fanBats.push({id:'bat_'+Date.now(),nom,quantite:0,equip});
+  saveFanState();
+  document.getElementById('nb-nom').value='';
+  renderNewBatForm();
+  toast('Bataillon « '+nom+' » créé !');
+  showSection('fan-bat');
+}
+function clearNewBat(){document.getElementById('nb-nom').value='';renderNewBatForm();}
+
+// ════════════════════════════════════════════════
+//  FAN GITHUB SYNC
+// ════════════════════════════════════════════════
+function logFan(msg,type='info'){const log=document.getElementById('fan-log');if(!log)return;const cls={ok:'log-ok',err:'log-err',info:'log-info'}[type]||'log-info';log.innerHTML+=`\n<span class="${cls}">${msg}</span>`;log.scrollTop=log.scrollHeight;}
+async function fanSaveToGH(){
+  const pat=getPat();if(!pat||pat.length<10){toast('Configurez votre PAT.','err');showSection('fan-sync');return;}
+  logFan('→ Récupération SHA fan.json…','info');
+  try{
+    let sha=null;
+    const sr=await fetch(`https://api.github.com/repos/${REPO}/contents/${FAN_FILE}`,{headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json'},cache:'no-store'});
+    if(sr.ok){const sd=await sr.json();sha=sd.sha||null;logFan(`✓ SHA: ${sha?sha.substring(0,10):'—'}…`,'ok');}
+    else if(sr.status===404)logFan('✓ Nouveau fichier.','ok');
+    else{logFan(`✗ Erreur SHA: ${sr.status}`,'err');return;}
+    const payload={version:'1.0',updated:new Date().toISOString().slice(0,10),bataillons:fanBats.map(b=>({id:b.id,nom:b.nom,quantite:b.quantite,equip:b.equip})),production:{usines:fanFactories,equipements:fanEquip}};
+    const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
+    const body={message:`update fan.json — ${fanBats.length} bat. · ${fanEquip.length} équip.`,content:encoded};if(sha)body.sha=sha;
+    const pr=await fetch(`https://api.github.com/repos/${REPO}/contents/${FAN_FILE}`,{method:'PUT',headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(pr.ok){logFan('✓ fan.json poussé avec succès !','ok');toast('FAN sauvegardé sur GitHub !','ok');}
+    else{const ed=await pr.json();logFan(`✗ Erreur: ${pr.status} — ${ed.message||''}`, 'err');if(pr.status===401)logFan('⚠ PAT invalide.','err');if(pr.status===422)logFan('⚠ SHA obsolète.','err');toast('Erreur.','err');}
+  }catch(e){logFan(`✗ ${e.message}`,'err');toast('Erreur.','err');}
+}
+async function fanLoadFromGH(){
+  logFan('→ Chargement fan.json…','info');
+  try{
+    const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${FAN_FILE}`,{headers:{'Accept':'application/vnd.github.v3.raw'},cache:'no-store'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(d.bataillons?.length){d.bataillons.forEach(gb=>{const local=fanBats.find(x=>x.id===gb.id);if(local){local.quantite=gb.quantite||0;if(gb.equip)local.equip={...local.equip,...gb.equip};}else fanBats.push(gb);});}
+    if(d.production?.usines)d.production.usines.forEach(u=>{const f=fanFactories.find(x=>x.id===u.id);if(f&&u.niveau)f.niveau=u.niveau;});
+    if(d.production?.equipements?.length)d.production.equipements.forEach(ge=>{const local=fanEquip.find(x=>x.id===ge.id);if(local)Object.assign(local,ge);else fanEquip.push(ge);});
+    saveFanState();logFan('✓ Données FAN chargées.','ok');toast('FAN synchronisé.');
+  }catch(e){logFan(`✗ Erreur: ${e.message}`,'err');toast('Erreur chargement.','err');}
+}
+
+// ════════════════════════════════════════════════
+//  AUTH
+// ════════════════════════════════════════════════
 function showAdmin(user){
   document.getElementById('access-wall').style.display='none';
-  document.getElementById('admin-nav').style.display='flex';
-  document.getElementById('admin-body').style.display='block';
-  const av=document.getElementById('user-avatar'),nm=document.getElementById('user-name');
-  if(av&&user.avatar){av.src=`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=32`;av.style.display='block';}
+  document.getElementById('sidebar').style.display='flex';
+  document.getElementById('admin-main').style.display='block';
+  const av=document.getElementById('sb-avatar'),nm=document.getElementById('sb-uname');
+  if(av&&user.avatar){av.src=`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=40`;av.style.display='block';}
   if(nm)nm.textContent=user.global_name||user.username||'—';
-  const savedPat=localStorage.getItem('pharos_gh_pat');
-  if(savedPat){document.getElementById('pat-in').value=savedPat;}
-  updatePat();
+  const sp=localStorage.getItem('pharos_gh_pat');
+  if(sp){const pi=document.getElementById('pat-in');if(pi)pi.value=sp;const pf=document.getElementById('pat-fan');if(pf)pf.value=sp;}
+  updatePat();updateFanPat();
+  loadFanState();
   loadFromGH();
 }
-
-function logout(){
-  if(window.PharosAuth?.logout)window.PharosAuth.logout();
-  else{['ukn_token','ukn_user','pharos_session','pharos-discord-token'].forEach(k=>localStorage.removeItem(k));}
-  location.href='../';
-}
-
-// Build Discord OAuth URL
-(function(){
-  const STATE=btoa(encodeURIComponent(window.location.href));
-  const url=`https://discord.com/oauth2/authorize?client_id=1483200078092042300&redirect_uri=${encodeURIComponent('https://BJBellum.github.io/UKN/auth/callback/')}&response_type=token&scope=identify&state=${STATE}`;
-  const btn=document.getElementById('discord-btn');
-  if(btn)btn.href=url;
-})();
-
-// Check auth after pharos-auth.js has run
-window.addEventListener('DOMContentLoaded',()=>{
-  // pharos-auth.js runs synchronously before this, so PharosAuth is ready
-  const pa=window.PharosAuth;
-  if(pa){
-    const user=pa.getUser();
-    const isAdmin=pa.isAdmin();
-    if(user&&isAdmin) showAdmin(user);
-    // not admin — access wall stays visible
-  }
-});
+function logout(){if(window.PharosAuth?.logout)window.PharosAuth.logout();else{['ukn_token','ukn_user','pharos_session'].forEach(k=>localStorage.removeItem(k));}location.href='../';}
+(function(){const STATE=btoa(encodeURIComponent(window.location.href));const url=`https://discord.com/oauth2/authorize?client_id=1483200078092042300&redirect_uri=${encodeURIComponent('https://BJBellum.github.io/UKN/auth/callback/')}&response_type=token&scope=identify&state=${STATE}`;const btn=document.getElementById('discord-btn');if(btn)btn.href=url;})();
+window.addEventListener('DOMContentLoaded',()=>{const pa=window.PharosAuth;if(pa){const user=pa.getUser();if(user&&pa.isAdmin())showAdmin(user);}});
 </script>
-<!-- pharos-auth.js MUST be loaded before DOMContentLoaded fires -->
 <script src="../pharos-auth.js"></script>
 </body>
 </html>
