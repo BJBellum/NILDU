@@ -13,242 +13,107 @@
 <link rel="stylesheet" href="../assets/dune.css">
 <style>
 /* ── ECONOMIE SPECIFIC ── */
-.hero-eco {
-  min-height: 64vh;
-  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200,150,12,0.12) 0%, transparent 60%);
-}
+.hero-eco { min-height: 64vh; background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200,150,12,0.12) 0%, transparent 60%); }
 
 /* Bourse card */
-.bourse-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border2);
-  border-radius: 2px; overflow: hidden;
-  text-decoration: none; color: inherit; display: block;
-  transition: border-color .25s;
-  margin-bottom: 24px;
-}
+.bourse-card { background: var(--card-bg); border: 1px solid var(--border2); border-radius: 2px; overflow: hidden; text-decoration: none; color: inherit; display: block; transition: border-color .25s; margin-bottom: 24px; }
 .bourse-card:hover { border-color: var(--gold-mid); }
-
-.bourse-header {
-  padding: 28px 32px 20px;
-  border-bottom: 1px solid var(--border);
-  background: linear-gradient(135deg, rgba(200,150,12,0.05) 0%, transparent 60%);
-}
-.bourse-ref {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px; color: var(--text3); letter-spacing: 0.14em;
-  margin-bottom: 8px;
-}
-.bourse-title {
-  font-family: 'Dune Rise', serif;
-  font-size: 24px; color: var(--gold-pale);
-  letter-spacing: 0.06em; margin-bottom: 4px;
-}
-.bourse-arabic {
-  font-family: 'Noto Kufi Arabic', sans-serif;
-  font-size: 14px; color: var(--gold-mid); direction: rtl;
-}
-
-.bourse-stats {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  border-bottom: 1px solid var(--border);
-}
+.bourse-header { padding: 28px 32px 20px; border-bottom: 1px solid var(--border); background: linear-gradient(135deg, rgba(200,150,12,0.05) 0%, transparent 60%); }
+.bourse-ref { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text3); letter-spacing: 0.14em; margin-bottom: 8px; }
+.bourse-title { font-family: 'Dune Rise', serif; font-size: 24px; color: var(--gold-pale); letter-spacing: 0.06em; margin-bottom: 4px; }
+.bourse-arabic { font-family: 'Noto Kufi Arabic', sans-serif; font-size: 14px; color: var(--gold-mid); direction: rtl; }
+.bourse-stats { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--border); }
 @media(max-width:640px) { .bourse-stats { grid-template-columns: 1fr 1fr; } }
-
-.bourse-stat {
-  padding: 16px 20px;
-  border-right: 1px solid var(--border);
-  display: flex; flex-direction: column; gap: 4px;
-  text-align: center;
-}
+.bourse-stat { padding: 16px 20px; border-right: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; text-align: center; }
 .bourse-stat:last-child { border-right: none; }
-
-.bourse-stat-lbl {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 8px; color: var(--text3); letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.bourse-stat-val {
-  font-family: 'Dune Rise', serif;
-  font-size: 20px; color: var(--gold); letter-spacing: 0.04em;
-}
+.bourse-stat-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 8px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; }
+.bourse-stat-val { font-family: 'Dune Rise', serif; font-size: 20px; color: var(--gold); letter-spacing: 0.04em; }
 .bourse-stat-val.teal { color: var(--teal-bright); }
 .bourse-stat-val.amber { color: var(--amber); }
 .bourse-stat-val.sm { font-size: 14px; color: var(--text2); font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.06em; }
-
-.bourse-desc {
-  padding: 20px 32px;
-  font-size: 13px; color: var(--text2); line-height: 1.8;
-}
-
-.bourse-criteria {
-  padding: 16px 32px 20px;
-  display: flex; gap: 8px; flex-wrap: wrap;
-  border-top: 1px solid var(--border);
-}
-.criteria-tag {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px; color: var(--text3); letter-spacing: 0.1em;
-  border: 1px solid var(--border2);
-  padding: 4px 10px; border-radius: 2px;
-}
+.bourse-desc { padding: 20px 32px; font-size: 13px; color: var(--text2); line-height: 1.8; }
+.bourse-criteria { padding: 16px 32px 20px; display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid var(--border); }
+.criteria-tag { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text3); letter-spacing: 0.1em; border: 1px solid var(--border2); padding: 4px 10px; border-radius: 2px; }
 .criteria-tag strong { color: var(--gold-mid); }
-
-.bourse-cta {
-  padding: 14px 32px;
-  border-top: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
-  color: var(--gold-mid); letter-spacing: 0.1em;
-  transition: background .2s;
-}
+.bourse-cta { padding: 14px 32px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--gold-mid); letter-spacing: 0.1em; transition: background .2s; }
 .bourse-card:hover .bourse-cta { background: rgba(200,150,12,0.05); }
 
 /* ESS Grid */
-.ess-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
+.ess-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 @media(max-width:700px) { .ess-grid { grid-template-columns: 1fr 1fr; } }
 @media(max-width:440px) { .ess-grid { grid-template-columns: 1fr; } }
-
-.ess-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-top: 2px solid;
-  padding: 20px 18px;
-  transition: border-color .2s;
-}
-.ess-class {
-  font-family: 'Dune Rise', serif;
-  font-size: 36px; margin-bottom: 2px; letter-spacing: 0.06em;
-  line-height: 1;
-}
-.ess-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px; letter-spacing: 0.14em; color: var(--text3);
-  text-transform: uppercase; margin-bottom: 8px;
-}
-.ess-condition {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 8px; color: var(--text3); margin-bottom: 12px;
-  letter-spacing: 0.06em;
-}
-.ess-perks {
-  font-size: 11px; color: var(--text2); line-height: 1.75;
-}
+.ess-card { background: var(--card-bg); border: 1px solid var(--border); border-top: 2px solid; padding: 20px 18px; transition: border-color .2s; }
+.ess-class { font-family: 'Dune Rise', serif; font-size: 36px; margin-bottom: 2px; letter-spacing: 0.06em; line-height: 1; }
+.ess-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.14em; color: var(--text3); text-transform: uppercase; margin-bottom: 8px; }
+.ess-condition { font-family: 'IBM Plex Mono', monospace; font-size: 8px; color: var(--text3); margin-bottom: 12px; letter-spacing: 0.06em; }
+.ess-perks { font-size: 11px; color: var(--text2); line-height: 1.75; }
 
 /* Score bar */
-.score-bar {
-  height: 3px; background: var(--border); border-radius: 2px;
-  margin: 8px 0; overflow: hidden;
-}
-.score-fill {
-  height: 100%; border-radius: 2px;
-  transition: width 1s ease-out;
-}
-
-/* Count badge */
-.count-badge {
-  font-family: 'Dune Rise', serif;
-  font-size: 11px; letter-spacing: 0.08em;
-  padding: 2px 10px; border-radius: 2px;
-  border: 1px solid; margin-left: auto;
-}
+.score-bar { height: 3px; background: var(--border); border-radius: 2px; margin: 8px 0; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 2px; transition: width 1s ease-out; }
 </style>
 </head>
 <body>
-
-<!-- ── NAV ── -->
 <nav class="topnav">
   <div class="nav-left">
     <div class="nav-logo">
-      <svg viewBox="0 0 20 20" fill="none">
-        <rect x="3" y="5" width="14" height="10" rx="1" stroke="#C8960C" stroke-width="1" fill="none"/>
-        <line x1="3" y1="9" x2="17" y2="9" stroke="#C8960C" stroke-width="0.8" opacity="0.5"/>
-        <rect x="5" y="11" width="2" height="2" rx="0.3" fill="#C8960C" opacity="0.6"/>
-        <rect x="8.5" y="10.5" width="2" height="2.5" rx="0.3" fill="#C8960C" opacity="0.8"/>
-        <rect x="12" y="10" width="2" height="3" rx="0.3" fill="#C8960C"/>
-      </svg>
+      <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="5" width="14" height="10" rx="1" stroke="#C8960C" stroke-width="1" fill="none"/><line x1="3" y1="9" x2="17" y2="9" stroke="#C8960C" stroke-width="0.8" opacity="0.5"/><rect x="5" y="11" width="2" height="2" rx="0.3" fill="#C8960C" opacity="0.6"/><rect x="8.5" y="10.5" width="2" height="2.5" rx="0.3" fill="#C8960C" opacity="0.8"/><rect x="12" y="10" width="2" height="3" rx="0.3" fill="#C8960C"/></svg>
     </div>
     <span class="nav-brand">Économie & Finances</span>
     <span class="nav-sub">الاقتصاد والمالية</span>
   </div>
-
   <div class="nav-right">
     <a href="../" class="nav-back">← Portail National</a>
     <button class="theme-toggle" onclick="toggleTheme()">
-      <svg id="toggle-icon" width="12" height="12" viewBox="0 0 24 24" fill="none">
-        <path id="icon-path" d="M21 12.79A9 9 0 0 1 12 21a9 9 0 0 1 0-18 7 7 0 0 0 9 9.79z" fill="currentColor"/>
-      </svg>
+      <svg id="toggle-icon" width="12" height="12" viewBox="0 0 24 24" fill="none"><path id="icon-path" d="M21 12.79A9 9 0 0 1 12 21a9 9 0 0 1 0-18 7 7 0 0 0 9 9.79z" fill="currentColor"/></svg>
       <span id="toggle-lbl">NUIT</span>
     </button>
   </div>
 </nav>
 
-<!-- ── HERO ── -->
 <section class="hero hero-eco">
   <div class="hero-desert"></div>
   <div class="hero-content" style="padding-top:60px;padding-bottom:72px;">
-
     <div class="hero-eyebrow">Ministère de l'Économie · Royaume-Uni du Nil</div>
-
-    <h1 class="hero-title">Économie & Finances</h1>
-
+    <!--
+      REGLE DUNE RISE : les capitales accentuées (É, À, È...) ne s'affichent pas correctement
+      dans la police Dune Rise. On retire les accents sur les majuscules dans le titre.
+      Le texte du corps (nav, descriptions) garde les accents normaux.
+    -->
+    <h1 class="hero-title">Economie & Finances</h1>
     <div class="hero-arabic">الاقتصاد والمالية · مملكة النيل</div>
-
     <div class="hero-ornament">
       <div class="hero-ornament-line"></div>
       <div class="hero-ornament-diamond"></div>
       <div class="hero-ornament-line" style="transform:scaleX(-1);background:linear-gradient(90deg,transparent,var(--gold-mid));"></div>
     </div>
-
     <p class="hero-desc">
-      Portail économique et financier du <strong>Royaume-Uni du Nil</strong>.
-      Accédez aux données boursières, aux indicateurs économiques nationaux
-      et au système d'Économie Sociale et Solidaire.
+      Portail économique et financier du <strong>Royaume-Uni du Nil</strong>. Accédez aux données boursières,
+      aux indicateurs économiques nationaux et au système d'Économie Sociale et Solidaire.
     </p>
-
-    <!-- Macro stats -->
     <div class="hero-stats">
-      <div class="hstat">
-        <span class="hstat-lbl">Entreprises cotées</span>
-        <span class="hstat-val gold" id="stat-total">…</span>
-      </div>
-      <div class="hstat">
-        <span class="hstat-lbl">Nationales</span>
-        <span class="hstat-val amber" id="stat-nat">…</span>
-      </div>
-      <div class="hstat">
-        <span class="hstat-lbl">Étrangères</span>
-        <span class="hstat-val teal" id="stat-for">…</span>
-      </div>
-      <div class="hstat">
-        <span class="hstat-lbl">Système</span>
-        <span class="hstat-val" style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.06em">ESS</span>
-      </div>
+      <div class="hstat"><span class="hstat-lbl">Entreprises cotées</span><span class="hstat-val gold" id="stat-total">…</span></div>
+      <div class="hstat"><span class="hstat-lbl">Nationales</span><span class="hstat-val amber" id="stat-nat">…</span></div>
+      <div class="hstat"><span class="hstat-lbl">Étrangères</span><span class="hstat-val teal" id="stat-for">…</span></div>
+      <div class="hstat"><span class="hstat-lbl">Système</span><span class="hstat-val" style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.06em">ESS</span></div>
     </div>
-
   </div>
 </section>
 
-<!-- ── PAGE BODY ── -->
 <div class="page">
 
-  <!-- ── BOURSE DU CAIRE ── -->
   <div class="section-header" style="margin-bottom:20px;">
-    <span class="section-eyebrow">Place Boursière Nationale</span>
+    <span class="section-eyebrow">Place Boursiere Nationale</span>
     <div class="section-line"></div>
   </div>
 
   <a href="./bourse-du-caire/" class="bourse-card">
     <div class="bourse-header">
       <div class="bourse-ref">BRS-CAI-001 · Exercice 2305 · <span style="color:var(--teal-bright);">Données publiques</span></div>
+      <!-- Dune Rise : B, D, C ne posent pas de problème d'accent -->
       <div class="bourse-title">Bourse du Caire</div>
       <div class="bourse-arabic">بورصة القاهرة · Notation ESS</div>
     </div>
-
     <div class="bourse-stats">
       <div class="bourse-stat">
         <span class="bourse-stat-lbl">Classe A — Exemplaire</span>
@@ -267,13 +132,11 @@
         <span class="bourse-stat-val sm" id="score-avg">…</span>
       </div>
     </div>
-
     <div class="bourse-desc">
       La Bourse du Caire utilise un système de notation unique basé sur l'<strong>Économie Sociale et Solidaire</strong>,
       privilégiant l'éthique et l'efficacité réelle à la spéculation.
       Notation sur 6 critères pondérés : Équité, Santé, Transparence, Innovation, Écologie, Fiabilité.
     </div>
-
     <div class="bourse-criteria">
       <span class="criteria-tag">Équité <strong>×5</strong></span>
       <span class="criteria-tag">Santé <strong>×4</strong></span>
@@ -282,122 +145,87 @@
       <span class="criteria-tag">Écologie <strong>×6</strong></span>
       <span class="criteria-tag">Fiabilité <strong>×8</strong></span>
     </div>
-
     <div class="bourse-cta">
       <span>Consulter la liste complète des sociétés cotées</span>
       <span>→</span>
     </div>
   </a>
 
-  <!-- ── SYSTÈME ESS ── -->
+  <!-- SYSTÈME ESS -->
   <div class="section-header" style="margin-top:56px;margin-bottom:20px;">
-    <span class="section-eyebrow">Système ESS — Économie Sociale et Solidaire</span>
+    <span class="section-eyebrow">Systeme ESS — Economie Sociale et Solidaire</span>
     <div class="section-line"></div>
   </div>
-
   <div class="ess-grid">
-
     <div class="ess-card" style="border-top-color:#22B89A;">
       <div class="ess-class" style="color:#22B89A;">A</div>
       <div class="ess-label">Exemplaire</div>
       <div class="ess-condition">Score ≥ 8,5 / 10</div>
       <div class="score-bar"><div class="score-fill" style="width:95%;background:#22B89A;"></div></div>
-      <div class="ess-perks">
-        Fiscalité réduite (−10%), accès prioritaire aux marchés publics, taux d'emprunt réduit.
-      </div>
+      <div class="ess-perks">Fiscalité réduite (−10%), accès prioritaire aux marchés publics, taux d'emprunt réduit.</div>
     </div>
-
     <div class="ess-card" style="border-top-color:#D4A843;">
       <div class="ess-class" style="color:#D4A843;">B</div>
       <div class="ess-label">Engagée</div>
       <div class="ess-condition">Score 7,0 – 8,4</div>
       <div class="score-bar"><div class="score-fill" style="width:75%;background:#D4A843;"></div></div>
-      <div class="ess-perks">
-        Fiscalité normale, accès standard aux marchés publics, taux d'emprunt normal.
-      </div>
+      <div class="ess-perks">Fiscalité normale, accès standard aux marchés publics, taux d'emprunt normal.</div>
     </div>
-
     <div class="ess-card" style="border-top-color:#F0A030;">
       <div class="ess-class" style="color:#F0A030;">C</div>
       <div class="ess-label">En transition</div>
       <div class="ess-condition">Score 5,5 – 6,9</div>
       <div class="score-bar"><div class="score-fill" style="width:58%;background:#F0A030;"></div></div>
-      <div class="ess-perks">
-        Fiscalité majorée +5%, accès conditionné aux marchés publics, taux légèrement majoré.
-      </div>
+      <div class="ess-perks">Fiscalité majorée +5%, accès conditionné aux marchés publics, taux légèrement majoré.</div>
     </div>
-
     <div class="ess-card" style="border-top-color:#C87020;">
       <div class="ess-class" style="color:#C87020;">D</div>
       <div class="ess-label">Vulnérable</div>
       <div class="ess-condition">Score 4,0 – 5,4</div>
       <div class="score-bar"><div class="score-fill" style="width:42%;background:#C87020;"></div></div>
-      <div class="ess-perks">
-        Fiscalité +10%, accès restreint aux marchés publics, taux majoré.
-      </div>
+      <div class="ess-perks">Fiscalité +10%, accès restreint aux marchés publics, taux majoré.</div>
     </div>
-
     <div class="ess-card" style="border-top-color:#E84848;">
       <div class="ess-class" style="color:#E84848;">E</div>
       <div class="ess-label">Critique</div>
       <div class="ess-condition">Score 2,5 – 3,9</div>
       <div class="score-bar"><div class="score-fill" style="width:28%;background:#E84848;"></div></div>
-      <div class="ess-perks">
-        Fiscalité +15%, marchés publics suspendus, taux fortement majoré.
-      </div>
+      <div class="ess-perks">Fiscalité +15%, marchés publics suspendus, taux fortement majoré.</div>
     </div>
-
     <div class="ess-card" style="border-top-color:#8B1A1A;opacity:0.8;">
       <div class="ess-class" style="color:#B02020;">F</div>
       <div class="ess-label">Défaillante</div>
       <div class="ess-condition">Score &lt; 2,5</div>
       <div class="score-bar"><div class="score-fill" style="width:12%;background:#8B1A1A;"></div></div>
-      <div class="ess-perks">
-        Fiscalité +25%, exclusion des marchés publics, pas d'accès au crédit institutionnel.
-      </div>
+      <div class="ess-perks">Fiscalité +25%, exclusion des marchés publics, pas d'accès au crédit institutionnel.</div>
     </div>
-
   </div>
 
-  <!-- ── PHILOSOPHIE ── -->
+  <!-- À PROPOS -->
   <div class="section-header" style="margin-top:56px;margin-bottom:20px;">
-    <span class="section-eyebrow">À propos</span>
+    <span class="section-eyebrow">A propos</span>
     <div class="section-line"></div>
   </div>
-
   <div class="about-grid">
     <div class="about-card">
       <div class="about-card-title">Philosophie économique</div>
-      <div class="about-card-body">
-        Le Royaume-Uni du Nil a adopté un modèle d'<strong>Économie Sociale et Solidaire</strong>
-        qui privilégie l'éthique, la transparence et l'efficacité réelle sur la spéculation
-        et la valeur monétaire. La Bourse du Caire en est l'expression institutionnelle principale.
-      </div>
+      <div class="about-card-body">Le Royaume-Uni du Nil a adopté un modèle d'<strong>Économie Sociale et Solidaire</strong> qui privilégie l'éthique, la transparence et l'efficacité réelle sur la spéculation et la valeur monétaire. La Bourse du Caire en est l'expression institutionnelle principale.</div>
     </div>
     <div class="about-card">
       <div class="about-card-title">Bourse du Caire · بورصة القاهرة</div>
-      <div class="about-card-body">
-        <strong id="about-total">30 entreprises et coopératives</strong> sont actuellement listées,
-        dont <strong id="about-nat">27 nationales</strong> et <strong id="about-for">3 étrangères</strong>
-        (Union Démocratique d'Asie). Le système de notation pondérée garantit que
-        les critères sociaux et environnementaux ont un poids supérieur à la seule rentabilité.
-      </div>
+      <div class="about-card-body"><strong id="about-total">31 entreprises et coopératives</strong> sont actuellement listées, dont <strong id="about-nat">28 nationales</strong> et <strong id="about-for">3 étrangères</strong> (Union Démocratique d'Asie). Le système de notation pondérée garantit que les critères sociaux et environnementaux ont un poids supérieur à la seule rentabilité.</div>
     </div>
   </div>
 
   <footer class="footer">
     <div class="footer-inner">
       <div>
-        <div class="footer-left">
-          ÉCONOMIE & FINANCES · الاقتصاد والمالية · ROYAUME-UNI DU NIL<br>
-          BOURSE DU CAIRE · SYSTÈME ESS · LE CAIRE
-        </div>
+        <div class="footer-left">ÉCONOMIE & FINANCES · الاقتصاد والمالية · ROYAUME-UNI DU NIL<br>BOURSE DU CAIRE · SYSTÈME ESS · LE CAIRE</div>
         <div class="footer-credit">Projet Résurgence © 2026 · Police: Dune Rise — Fontswan (SIL OFL 1.1)</div>
       </div>
       <div class="footer-right">الاقتصاد والمالية · مملكة النيل</div>
     </div>
   </footer>
-
 </div>
 
 <script>
@@ -420,41 +248,73 @@ function toggleTheme() {
   applyTheme(saved || (mq.matches ? 'dark' : 'light'));
 })();
 </script>
+
 <script>
+// ── ESS CALC ──
+// Les scores ne sont PAS stockés dans bourse.json — ils sont calculés depuis les champs bruts.
+// Formule : ((eq*5)+(sa*4)+(tr*7)+(inn*8)+(ec*6)+(fi*8)) / 38
+function calcESS(eq, sa, tr, inn, ec, fi) {
+  return ((eq*5) + (sa*4) + (tr*7) + (inn*8) + (ec*6) + (fi*8)) / 38;
+}
+function setEl(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
 (async function() {
   try {
     var r = await fetch('https://api.github.com/repos/BJBellum/UKN/contents/data/bourse.json', {
-      headers: {'Accept':'application/vnd.github.v3.raw'}, cache: 'no-store'
+      headers: { 'Accept': 'application/vnd.github.v3.raw' },
+      cache: 'no-store'
     });
-    if (!r.ok) return;
+    if (!r.ok) throw new Error('GitHub fetch failed');
     var db = await r.json();
-    var cs = db.companies || [];
+    var cs = db.companies || db;
     var total = cs.length;
     var nat = cs.filter(x => x.nat === 'Royaume-Uni du Nil').length;
     var foreign = total - nat;
 
-    // ESS class counts
-    var scores = cs.map(x => x.ess_score || x.score || 0);
-    var avg = scores.length ? (scores.reduce((a,b) => a+b, 0) / scores.length).toFixed(2) : '—';
-    var clA = cs.filter(x => (x.ess_score||x.score||0) >= 8.5).length;
-    var clB = cs.filter(x => { var s=x.ess_score||x.score||0; return s>=7 && s<8.5; }).length;
-    var clC = cs.filter(x => { var s=x.ess_score||x.score||0; return s>=5.5 && s<7; }).length;
+    // Compute ESS scores from raw fields
+    var scores = cs.map(x => calcESS(
+      x.eq  || 0,
+      x.sa  || 0,
+      x.tr  || 0,
+      x.inn || 0,
+      x.ec  || 0,
+      x.fi  || 0
+    ));
 
-    var setEl = (id, val) => { var el = document.getElementById(id); if(el) el.textContent = val; };
+    var avg = scores.length
+      ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2)
+      : '—';
+
+    var clA = scores.filter(s => s >= 8.5).length;
+    var clB = scores.filter(s => s >= 7 && s < 8.5).length;
+    var clC = scores.filter(s => s >= 5.5 && s < 7).length;
+
     setEl('stat-total', total);
     setEl('stat-nat', nat);
     setEl('stat-for', foreign);
-    setEl('class-a', clA || '—');
-    setEl('class-b', clB || '—');
-    setEl('class-c', clC || '—');
+    setEl('class-a', clA);
+    setEl('class-b', clB);
+    setEl('class-c', clC);
     setEl('score-avg', avg);
     setEl('about-total', total + ' entreprises et coopératives');
     setEl('about-nat', nat + ' nationales');
     setEl('about-for', foreign + ' étrangères');
-  } catch(e) {}
+  } catch(e) {
+    // Fallback — données statiques connues (31 sociétés)
+    setEl('stat-total', '31');
+    setEl('stat-nat', '28');
+    setEl('stat-for', '3');
+    setEl('class-a', '2');
+    setEl('class-b', '22');
+    setEl('class-c', '7');
+    setEl('score-avg', '7.28');
+  }
 })();
 </script>
-<script src="../assets/dune-init.js"></script>
+
 <script src="../pharos-auth.js"></script>
 </body>
 </html>
