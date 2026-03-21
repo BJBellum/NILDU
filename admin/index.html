@@ -514,22 +514,84 @@ async function pushToGH(){
   if(!pat||pat.length<10){toast('Configurez votre PAT GitHub.','err');return;}
   const btn=document.getElementById('gh-push-btn');
   if(btn)btn.disabled=true;
-  logGh('→ Récupération du SHA actuel…','info');
+  logGh('→ Récupération du SHA et contenu actuel…','info');
+  let sha=null, existingMeta={};
   try{
-    const sr=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json'}});
-    let sha=null;
-    if(sr.ok){const sd=await sr.json();sha=sd.sha;logGh(`✓ SHA: ${sha.substring(0,10)}…`,'ok');}
-    else if(sr.status===404)logGh('✓ Nouveau fichier.','ok');
-    else{logGh(`✗ Erreur SHA: ${sr.status}`,'err');if(btn)btn.disabled=false;return;}
-    const content={companies,meta:{updated:new Date().toISOString().slice(0,10),total:companies.length}};
-    const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(content,null,2))));
-    const body={message:`update bourse.json — ${companies.length} sociétés`,content:encoded};
+    // Step 1 — get current file SHA + preserve metadata fields
+    const sr=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{
+      headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json'},
+      cache:'no-store'
+    });
+    if(sr.ok){
+      const sd=await sr.json();
+      sha=sd.sha||null;
+      logGh(`✓ SHA: ${sha?sha.substring(0,10):'—'}…`,'ok');
+      // Decode existing file to preserve version/formula/weights/description
+      try{
+        const rawContent=atob(sd.content.replace(/\n/g,''));
+        const parsed=JSON.parse(rawContent);
+        // Keep structural metadata but NOT companies (we replace those)
+        existingMeta={
+          version: parsed.version||'1.0',
+          description: parsed.description||'Bourse du Caire — Données ESS',
+          formula: parsed.formula||'((eq*5)+(sa*4)+(tr*7)+(inn*8)+(ec*6)+(fi*8))/38',
+          weights: parsed.weights||{eq:5,sa:4,tr:7,inn:8,ec:6,fi:8,total:38},
+        };
+        logGh('✓ Métadonnées existantes préservées.','ok');
+      }catch(_){ logGh('⚠ Impossible de lire le contenu existant, métadonnées par défaut.','info'); }
+    }else if(sr.status===404){
+      logGh('✓ Nouveau fichier — sera créé.','ok');
+    }else{
+      logGh(`✗ Erreur SHA: ${sr.status}`,'err');
+      if(btn)btn.disabled=false;
+      return;
+    }
+
+    // Step 2 — build content preserving all metadata
+    const payload={
+      version: existingMeta.version||'1.0',
+      updated: new Date().toISOString().slice(0,10),
+      description: existingMeta.description||'Bourse du Caire — Données ESS',
+      formula: existingMeta.formula||'((eq*5)+(sa*4)+(tr*7)+(inn*8)+(ec*6)+(fi*8))/38',
+      weights: existingMeta.weights||{eq:5,sa:4,tr:7,inn:8,ec:6,fi:8,total:38},
+      companies: companies.map(c=>({
+        id: c.id,
+        nom: c.nom,
+        nat: c.nat,
+        cat: c.cat,
+        eq: c.eq, sa: c.sa, tr: c.tr, inn: c.inn, ec: c.ec, fi: c.fi
+        // score/classe/rank sont calculés côté client, pas stockés
+      }))
+    };
+    const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
+    const body={message:`update bourse.json — ${companies.length} sociétés [${new Date().toISOString().slice(0,10)}]`,content:encoded};
     if(sha)body.sha=sha;
-    logGh('→ Envoi…','info');
-    const pr=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{method:'PUT',headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
-    if(pr.ok){const pd=await pr.json();logGh(`✓ Poussé ! Commit: ${pd.commit?.sha?.substring(0,10)||'—'}`,'ok');toast('Données sauvegardées sur GitHub !','ok');}
-    else{const ed=await pr.json();logGh(`✗ Erreur: ${pr.status} — ${ed.message||''}`,'err');toast('Erreur sauvegarde.','err');}
-  }catch(e){logGh(`✗ Erreur réseau: ${e.message}`,'err');toast('Erreur réseau.','err');}
+
+    // Step 3 — push
+    logGh(`→ Envoi de ${companies.length} sociétés…`,'info');
+    const pr=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{
+      method:'PUT',
+      headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(pr.ok){
+      const pd=await pr.json();
+      const commitSha=pd.commit&&pd.commit.sha?pd.commit.sha.substring(0,10):'—';
+      logGh(`✓ Poussé avec succès ! Commit: ${commitSha}`,'ok');
+      logGh(`✓ ${companies.length} sociétés · ${payload.updated}`,'ok');
+      toast('Données sauvegardées sur GitHub !','ok');
+    }else{
+      let errMsg='';
+      try{const ed=await pr.json();errMsg=ed.message||'';}catch(_){}
+      logGh(`✗ Erreur GitHub: ${pr.status}${errMsg?' — '+errMsg:''}`, 'err');
+      if(pr.status===401)logGh('⚠ PAT invalide ou expiré. Vérifiez vos permissions (Contents: Write).','err');
+      if(pr.status===422)logGh('⚠ SHA obsolète — rechargez et réessayez.','err');
+      toast('Erreur sauvegarde.','err');
+    }
+  }catch(e){
+    logGh(`✗ Erreur: ${e.message}`,'err');
+    toast('Erreur.','err');
+  }
   if(btn)btn.disabled=false;
 }
 
