@@ -562,7 +562,7 @@ function showSection(key){
   // Lazy renders
   if(key==='fan-bat')renderBatAdmin();
   if(key==='fan-prod')renderProdAdmin();
-  if(key==='fan-new')renderNewBatForm();
+  if(key==='fan-new'){switchSubTab('bat');renderNewBatForm();}
 }
 
 // ════════════════════════════════════════════════
@@ -955,7 +955,7 @@ function renderCustomFieldsList(){
     ?customEquipFields.length+' catégorie'+(customEquipFields.length>1?'s':'')+ ' personnalisée'+(customEquipFields.length>1?'s':'')
     :'Aucune catégorie personnalisée';
   if(!el)return;
-  if(!customEquipFields.length){el.innerHTML='<div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);padding:20px;text-align:center;border:1px solid var(--border);">Aucune catégorie personnalisée. Utilisez le formulaire ci-dessus pour en ajouter.</div>';return;}
+  if(!customEquipFields.length){el.innerHTML=`<div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);padding:20px;text-align:center;border:1px solid var(--border);">Aucune catégorie personnalisée. Utilisez le formulaire ci-dessus pour en ajouter.</div>`;return;}
   el.innerHTML=customEquipFields.map((cf,i)=>`
     <div class="cf-item">
       <span class="cf-nom">${cf.nom}</span>
@@ -974,14 +974,15 @@ function saveCustomField(){
   const isDup=customEquipFields.some((cf,i)=>cf.nom===nom&&i!==editCfIdx);
   if(isDup){toast('Ce nom existe déjà.','err');return;}
   const obj={nom,groupe:document.getElementById('cf-groupe')?.value||'Autre'};
+  const wasEdit=editCfIdx!==null;
   if(editCfIdx!==null){customEquipFields[editCfIdx]=obj;}
   else{customEquipFields.push(obj);}
   editCfIdx=null;
   document.getElementById('cf-nom').value='';
-  document.getElementById('cf-form-title').textContent='+ Ajouter une catégorie';
+  const ftt=document.getElementById('cf-form-title');if(ftt)ftt.textContent='+ Ajouter une catégorie';
   const cc=document.getElementById('cf-cancel');if(cc)cc.style.display='none';
   saveFanState();renderCustomFieldsList();
-  toast(editCfIdx!==null?'Catégorie modifiée.':'Catégorie ajoutée.');
+  toast(wasEdit?'Catégorie modifiée.':'Catégorie ajoutée.');
 }
 function editCustomField(i){
   editCfIdx=i;
