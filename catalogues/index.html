@@ -19,7 +19,7 @@
 .cat-card{background:var(--card-bg);border:1px solid var(--border2);border-top:2px solid;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:all .25s;position:relative;overflow:hidden;}
 .cat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,150,12,.03) 0%,transparent 50%);pointer-events:none;}
 .cat-card:hover:not(.locked){border-color:var(--gold-mid);}
-.cat-card.locked{opacity:.55;cursor:default;pointer-events:none;}
+
 .cat-card-body{padding:32px 28px 20px;flex:1;}
 .cat-card-icon{width:60px;height:60px;border:1px solid;border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
 .cat-card-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;}
@@ -76,10 +76,7 @@
           <div class="cat-card-name">Catalogue Militaire</div>
           <div class="cat-card-sub" id="cat-mil-sub" style="color:rgba(232,92,13,.7);">Armement · Véhicules · Artillerie · Navires</div>
           <p class="cat-card-desc">Répertoire complet des équipements militaires en service dans les Forces Armées du Nil. Armes à feu, explosifs, véhicules terrestres, artillerie, missiles, aéronefs et navires.</p>
-          <div id="cat-mil-lock" class="cat-locked-badge" style="display:none;">
-            <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><rect x="2" y="5" width="8" height="6" rx=".5" stroke="#888" stroke-width=".9" fill="none"/><path d="M3.5 5V3.5a2.5 2.5 0 0 1 5 0V5" stroke="#888" stroke-width=".9" fill="none"/></svg>
-            Connexion requise
-          </div>
+
         </div>
         <div class="cat-card-footer" style="color:var(--spice);border-top-color:rgba(232,92,13,.15);">
           <span>9 catégories</span>
@@ -128,23 +125,11 @@
 </div>
 
 <script>
-const FAN_IDS=['772821169664426025','928291843958014014','1014832884764393523','1113422056525144104','293869524091142144','1302403450566610944'];
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const lbl=document.getElementById('toggle-lbl'),path=document.getElementById('icon-path');if(lbl)lbl.textContent=t==='dark'?'NUIT':'JOUR';if(path)path.setAttribute('d',t==='dark'?'M21 12.79A9 9 0 0 1 12 21a9 9 0 0 1 0-18 7 7 0 0 0 9 9.79z':'M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 2a8 8 0 1 1 0 16A8 8 0 0 1 12 4z');localStorage.setItem('run-theme',t);}
 function toggleTheme(){applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');}
 (function(){const s=localStorage.getItem('run-theme'),mq=window.matchMedia('(prefers-color-scheme: dark)');applyTheme(s||(mq.matches?'dark':'light'));})();
 
-window.addEventListener('DOMContentLoaded',()=>{
-  // Le catalogue militaire est accessible à tous les membres FAN
-  const pa=window.PharosAuth,user=pa?.getUser();
-  const isFan=user&&FAN_IDS.includes(user.id);
-  const milCard=document.getElementById('cat-mil-card');
-  const milLock=document.getElementById('cat-mil-lock');
-  if(!isFan&&milCard){
-    milCard.classList.add('locked');
-    milCard.removeAttribute('href');
-    if(milLock)milLock.style.display='inline-flex';
-  }
-});
+// Catalogue militaire: acces public, aucune restriction
 </script>
 <script src="../pharos-auth.js"></script>
 </body>
