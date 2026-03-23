@@ -248,34 +248,37 @@ html,body{height:100%;overflow:hidden;}
 // ── SVG ICONS (no emojis) ──────────────────
 var ICONS={
   terrestre:'<svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M8 2L2 5v4c0 3.5 2.5 6 6 7 3.5-1 6-3.5 6-7V5L8 2Z" stroke="currentColor" stroke-width="1.1" fill="none"/><line x1="5" y1="8" x2="11" y2="8" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><line x1="8" y1="5" x2="8" y2="11" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>',
-  missiles:'<svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M10 2L14 6l-8 8-4-1-1-4 9-8Z" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linejoin="round"/><path d="M7 9l2-2" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M2 14l3-1" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".5"/></svg>',
+  aerien:'<svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M9 3c0 0 2 1 2 3L14 8l-3 1-2-2H7L5 9H3L2 8l3-2c0-2 1-3 1-3H9Z" stroke="currentColor" stroke-width="1" fill="none" stroke-linejoin="round"/><path d="M7 11l1 2h1l1-2" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   naval:'<svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M3 10L8 4l5 6H3Z" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linejoin="round"/><line x1="8" y1="4" x2="8" y2="2" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M2 12c1.5 1.5 10 1.5 12 0" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" fill="none"/></svg>',
+  missiles:'<svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M10 2L14 6l-8 8-4-1-1-4 9-8Z" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linejoin="round"/><path d="M7 9l2-2" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M2 14l3-1" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".5"/></svg>',
   shield:'<svg viewBox="0 0 48 48" fill="none" width="40" height="40"><path d="M24 6L6 13V24C6 34 14 42 24 45C34 42 42 34 42 24V13L24 6Z" stroke="#3A2E1E" stroke-width="1.5" fill="none"/></svg>'
 };
 
 // ── DATA ──────────────────────────────────
 var GROUPS=[
-  {id:'terrestre',label:'Armement & Forces Terrestres',icon:'terrestre',sub:[
-    {id:'armes-feu',    label:'Armes a Feu'},
-    {id:'explosifs',    label:'Explosifs & Grenades'},
+  {id:'terrestre',label:'Terrestre',icon:'terrestre',sub:[
+    {id:'armes-feu',            label:'Armes a Feu'},
+    {id:'explosifs',            label:'Explosifs & Grenades'},
     {id:'vehicules-terrestres', label:'Vehicules Terrestres'},
-    {id:'artillerie',   label:'Artillerie Placee'}
+    {id:'artillerie',           label:'Artillerie Placee'}
   ]},
-  {id:'missiles',label:'Missiles & Systemes Balistiques',icon:'missiles',sub:[
-    {id:'missiles',             label:'Missiles & Roquettes'},
-    {id:'missiles-strategiques',label:'Missiles Strategiques'}
+  {id:'aerien',label:'Aerien',icon:'aerien',sub:[
+    {id:'aeronefs',label:'Vehicules Aeriens Militaires'}
   ]},
-  {id:'naval',label:'Forces Navales & Aeriennes',icon:'naval',sub:[
-    {id:'aeronefs',   label:'Vehicules Aeriens Militaires'},
+  {id:'naval',label:'Naval',icon:'naval',sub:[
     {id:'navires',    label:'Navires de Surface'},
     {id:'sous-marins',label:'Sous-marins'}
+  ]},
+  {id:'balistique',label:'Balistique & Spatial',icon:'missiles',sub:[
+    {id:'missiles',             label:'Missiles & Roquettes'},
+    {id:'missiles-strategiques',label:'Missiles Strategiques'}
   ]}
 ];
 var TECH={1:'1910-1919',2:'1920-1929',3:'1930-1939',4:'1940-1949',5:'1950-1959',6:'1960-1969',7:'1970-1979',8:'1980-1989',9:'1990-1999',10:'2000-2009',11:'2010-2019',12:'2020+'};
 
 // ── STATE ─────────────────────────────────
 var catalogue=[];
-var openG={terrestre:true,missiles:true,naval:true};
+var openG={terrestre:true,aerien:true,naval:true,balistique:true};
 var activeCat='';
 var searchQ='';
 

@@ -508,15 +508,23 @@
       <div class="form-grid" style="margin-bottom:14px;">
         <div class="fg"><label class="fl">Catégorie</label>
           <select class="fs" id="cat-f-categorie" onchange="updateSpecFields()">
-            <option value="armes-feu">Armes à Feu</option>
-            <option value="explosifs">Explosifs</option>
-            <option value="vehicules-terrestres">Véhicules Terrestres</option>
-            <option value="artillerie">Artillerie Placée</option>
-            <option value="missiles">Missiles</option>
-            <option value="missiles-strategiques">Missiles Stratégiques</option>
-            <option value="aeronefs">Véhicules Aériens Militaires</option>
-            <option value="navires">Navires Militaires de Surface</option>
-            <option value="sous-marins">Sous-marins</option>
+            <optgroup label="─── Terrestre ───">
+              <option value="armes-feu">Armes à Feu</option>
+              <option value="explosifs">Explosifs &amp; Grenades</option>
+              <option value="vehicules-terrestres">Véhicules Terrestres</option>
+              <option value="artillerie">Artillerie Placée</option>
+            </optgroup>
+            <optgroup label="─── Aérien ───">
+              <option value="aeronefs">Véhicules Aériens Militaires</option>
+            </optgroup>
+            <optgroup label="─── Naval ───">
+              <option value="navires">Navires de Surface</option>
+              <option value="sous-marins">Sous-marins</option>
+            </optgroup>
+            <optgroup label="─── Balistique &amp; Spatial ───">
+              <option value="missiles">Missiles &amp; Roquettes</option>
+              <option value="missiles-strategiques">Missiles Stratégiques</option>
+            </optgroup>
           </select>
         </div>
         <div class="fg"><label class="fl">Niveau technologique</label>
@@ -587,15 +595,23 @@
       <div style="display:flex;gap:6px;">
         <select id="cat-filter-cat" class="fs" style="font-size:10px;padding:4px 8px;" onchange="renderCatalogueList()">
           <option value="">Toutes catégories</option>
-          <option value="armes-feu">Armes à Feu</option>
-          <option value="explosifs">Explosifs</option>
-          <option value="vehicules-terrestres">Véhicules Terrestres</option>
-          <option value="artillerie">Artillerie Placée</option>
-          <option value="missiles">Missiles</option>
-          <option value="missiles-strategiques">Missiles Stratégiques</option>
-          <option value="aeronefs">Véhicules Aériens</option>
-          <option value="navires">Navires de Surface</option>
-          <option value="sous-marins">Sous-marins</option>
+          <optgroup label="Terrestre">
+            <option value="armes-feu">Armes à Feu</option>
+            <option value="explosifs">Explosifs &amp; Grenades</option>
+            <option value="vehicules-terrestres">Véhicules Terrestres</option>
+            <option value="artillerie">Artillerie Placée</option>
+          </optgroup>
+          <optgroup label="Aérien">
+            <option value="aeronefs">Véhicules Aériens</option>
+          </optgroup>
+          <optgroup label="Naval">
+            <option value="navires">Navires de Surface</option>
+            <option value="sous-marins">Sous-marins</option>
+          </optgroup>
+          <optgroup label="Balistique &amp; Spatial">
+            <option value="missiles">Missiles &amp; Roquettes</option>
+            <option value="missiles-strategiques">Missiles Stratégiques</option>
+          </optgroup>
         </select>
         <button class="btn btn-ghost btn-sm" onclick="fanLoadCatalogue()">↺ Sync GitHub</button>
       </div>
@@ -1432,7 +1448,7 @@ function renderCatalogueList(){
     el.innerHTML=`<div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);padding:24px;text-align:center;border:1px solid var(--border);">Aucun équipement. Utilisez le formulaire ci-dessus pour en ajouter.</div>`;
     return;
   }
-  const catLabels={'armes-feu':'Armes à Feu','explosifs':'Explosifs','vehicules-terrestres':'Véhicules Terrestres','artillerie':'Artillerie Placée','missiles':'Missiles','missiles-strategiques':'Missiles Stratégiques','aeronefs':'Véhicules Aériens','navires':'Navires de Surface','sous-marins':'Sous-marins'};
+  const catLabels={'armes-feu':'Armes à Feu','explosifs':'Explosifs & Grenades','vehicules-terrestres':'Véhicules Terrestres','artillerie':'Artillerie Placée','missiles':'Missiles & Roquettes','missiles-strategiques':'Missiles Stratégiques','aeronefs':'Véhicules Aériens','navires':'Navires de Surface','sous-marins':'Sous-marins'};
   el.innerHTML=items.map(item=>{
     const niv=item.niveau||1;
     const imgSrc=item.image_data||(item.image_path?`https://bjbellum.github.io/UKN/${item.image_path}`:null);
@@ -1542,11 +1558,21 @@ function handleImgUpload(input){
   const file=input.files[0];if(!file)return;
   catImgFile=file;
   const ext=file.name.split('.').pop().toLowerCase();
-  // Generate unique sequential name per category: e.g. armes-feu-1, armes-feu-2…
+  // Generate unique sequential image name: find highest existing number for this prefix
   const cat=document.getElementById('cat-f-categorie')?.value||'equip';
-  // Count existing images in same category (exclude current item if editing)
-  const samecat=catItems.filter(i=>i.categorie===cat&&i.image_path&&(!catEditId||i.id!==catEditId));
-  const nextNum=samecat.length+1;
+  const prefix=cat+'-';
+  // Find max existing number across ALL items (any category) to avoid any collision
+  let maxNum=0;
+  catItems.forEach(function(i){
+    if(!i.image_path)return;
+    const fname=i.image_path.split('/').pop(); // e.g. "armes-feu-3.jpg"
+    const m=fname.match(/^(.+?)-(\d+)\.[^.]+$/);
+    if(m){
+      const n=parseInt(m[2]);
+      if(!isNaN(n)&&n>maxNum)maxNum=n;
+    }
+  });
+  const nextNum=maxNum+1;
   const filename=`${cat}-${nextNum}.${ext}`;
   const imgPath=CAT_IMAGES_PATH+filename;
   document.getElementById('cat-img-path').value=imgPath;
