@@ -200,6 +200,20 @@
 .cf-groupe-badge{font-family:'IBM Plex Mono',monospace;font-size:8px;padding:2px 7px;border-radius:2px;border:1px solid rgba(232,92,13,.3);color:rgba(232,92,13,.8);background:rgba(232,92,13,.06);letter-spacing:.08em;}
 /* SYNC PANEL */
 .sync-card{background:var(--bg2);border:1px solid var(--border2);border-top:2px solid var(--teal);max-width:500px;}
+/* CATALOGUE */
+.cat-preview-img{width:80px;height:60px;object-fit:cover;border:1px solid var(--border2);border-radius:2px;}
+.cat-item-row{background:var(--card-bg);border:1px solid var(--border);border-left:3px solid rgba(232,92,13,.3);margin-bottom:6px;display:flex;align-items:center;gap:12px;padding:10px 14px;transition:border-color .2s;}
+.cat-item-row:hover{border-left-color:var(--spice);}
+.cat-form-sec{background:var(--card-bg);border:1px solid var(--border);border-top:2px solid var(--spice);padding:16px;margin-bottom:16px;}
+.cat-form-sec-title{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;color:var(--spice);text-transform:uppercase;margin-bottom:12px;}
+.spec-fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:0;}
+@media(max-width:800px){.spec-fields-grid{grid-template-columns:1fr;}}
+.img-preview-box{border:1px solid var(--border2);background:var(--bg2);border-radius:2px;overflow:hidden;height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;cursor:pointer;transition:border-color .2s;}
+.img-preview-box:hover{border-color:var(--spice);}
+.img-preview-box img{width:100%;height:100%;object-fit:cover;}
+.img-preview-ph{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);text-align:center;}
+.cat-niv-select{background:var(--bg);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:6px 10px;border-radius:2px;outline:none;appearance:none;width:100%;}
+.niv-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 8px;border-radius:2px;border:1px solid;display:inline-block;}
 </style>
 <meta property="og:image" content="https://BJBellum.github.io/UKN/assets/images/UKNSite.png">
 <meta property="og:image:alt" content="Portail National — Royaume-Uni du Nil">
@@ -251,6 +265,13 @@
   <a class="sb-item" id="nav-fan-new" onclick="showSection('fan-new')">
     <svg viewBox="0 0 14 14" fill="none" width="13" height="13"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1" fill="none"/><line x1="7" y1="4.5" x2="7" y2="9.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="4.5" y1="7" x2="9.5" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
     Nouveau Bataillon
+  </a>
+
+  <div class="sb-sep"></div>
+  <div class="sb-sec">📖 Catalogue</div>
+  <a class="sb-item" id="nav-catalogue" onclick="showSection('catalogue')">
+    <svg viewBox="0 0 14 14" fill="none" width="13" height="13"><rect x="2" y="1" width="8" height="11" rx="1" stroke="currentColor" stroke-width="1" fill="none"/><rect x="3.5" y="1" width="9" height="11" rx="1" stroke="currentColor" stroke-width=".7" fill="none" opacity=".5"/><line x1="4" y1="4.5" x2="8.5" y2="4.5" stroke="currentColor" stroke-width=".8"/><line x1="4" y1="6.5" x2="8.5" y2="6.5" stroke="currentColor" stroke-width=".8"/><line x1="4" y1="8.5" x2="6.5" y2="8.5" stroke="currentColor" stroke-width=".8"/></svg>
+    Catalogue Militaire
   </a>
 
   <div class="sb-sep"></div>
@@ -469,6 +490,117 @@
     </div>
   </div>
 
+
+  <!-- ══════════════════════════════════
+       SECTION: CATALOGUE MILITAIRE
+  ══════════════════════════════════ -->
+  <div class="sec-pane" id="sec-catalogue">
+    <div class="dash-hdr">
+      <div class="dash-title">📖 Catalogue Militaire</div>
+      <div class="dash-sub">Gérer les équipements du catalogue militaire des Forces Armées du Nil.</div>
+    </div>
+
+    <!-- ADD/EDIT FORM -->
+    <div class="cat-form-sec" id="cat-form-container">
+      <div class="cat-form-sec-title" id="cat-form-title">+ Ajouter un équipement</div>
+
+      <!-- BASE FIELDS -->
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div class="fg"><label class="fl">Catégorie</label>
+          <select class="fs" id="cat-f-categorie" onchange="updateSpecFields()">
+            <option value="armes-feu">Armes à Feu</option>
+            <option value="explosifs">Explosifs</option>
+            <option value="vehicules-terrestres">Véhicules Terrestres</option>
+            <option value="artillerie">Artillerie Placée</option>
+            <option value="missiles">Missiles</option>
+            <option value="missiles-strategiques">Missiles Stratégiques</option>
+            <option value="aeronefs">Véhicules Aériens Militaires</option>
+            <option value="navires">Navires Militaires de Surface</option>
+            <option value="sous-marins">Sous-marins</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Niveau technologique</label>
+          <select class="cat-niv-select" id="cat-f-niveau">
+            <option value="1">NIV 1 · 1910-1919</option>
+            <option value="2">NIV 2 · 1920-1929</option>
+            <option value="3">NIV 3 · 1930-1939</option>
+            <option value="4">NIV 4 · 1940-1949</option>
+            <option value="5">NIV 5 · 1950-1959</option>
+            <option value="6">NIV 6 · 1960-1969</option>
+            <option value="7">NIV 7 · 1970-1979</option>
+            <option value="8">NIV 8 · 1980-1989</option>
+            <option value="9">NIV 9 · 1990-1999</option>
+            <option value="10">NIV 10 · 2000-2009</option>
+            <option value="11">NIV 11 · 2010-2019</option>
+            <option value="12">NIV 12 · 2020-∞</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Nom</label><input type="text" class="fi fan" id="cat-f-nom" placeholder="Ex : BAT-303…"></div>
+        <div class="fg"><label class="fl">Fabricant</label><input type="text" class="fi fan" id="cat-f-fabricant" placeholder="Ex : YASSIN Heavy Industries…"></div>
+        <div class="fg"><label class="fl">Coût unitaire (Crédits)</label><input type="number" class="fi fan" id="cat-f-cout" min="0" placeholder="0"></div>
+        <div class="fg"><label class="fl">Inspiration (réel)</label><input type="text" class="fi fan" id="cat-f-inspiration" placeholder="Ex : AK-47, T-72, F-16…"></div>
+      </div>
+
+      <!-- IMAGE UPLOAD -->
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div class="fg fg-full">
+          <label class="fl">Image (JPG / PNG)</label>
+          <div style="display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:start;">
+            <div>
+              <div class="img-preview-box" id="cat-img-preview" onclick="document.getElementById('cat-img-input').click()">
+                <div class="img-preview-ph">Cliquer pour<br>sélectionner une image</div>
+              </div>
+              <input type="file" id="cat-img-input" accept="image/jpeg,image/png" style="display:none;" onchange="handleImgUpload(this)">
+              <button class="btn btn-ghost btn-xs" onclick="clearImage()" style="width:100%;margin-top:4px;">✕ Effacer</button>
+            </div>
+            <div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.06em;line-height:1.9;margin-bottom:10px;">
+                L'image sera stockée localement. Pour l'héberger sur GitHub, utilisez le bouton "Pousser l'image" après avoir configuré votre PAT.
+              </div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text3);margin-bottom:6px;" id="cat-img-filename">Aucune image sélectionnée</div>
+              <button class="btn btn-fan btn-sm" id="cat-img-push-btn" onclick="pushImageToGH()" style="display:none;">⬆ Pousser l'image sur GitHub</button>
+              <div id="cat-img-path-display" style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--teal-bright);margin-top:6px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SPEC FIELDS (dynamic by category) -->
+      <div class="cat-form-sec-title" style="margin-bottom:10px;border-top:1px solid var(--border);padding-top:12px;">Fiche Technique</div>
+      <div class="spec-fields-grid" id="cat-spec-fields"></div>
+
+      <input type="hidden" id="cat-edit-id">
+      <input type="hidden" id="cat-img-data">
+      <input type="hidden" id="cat-img-path">
+
+      <div style="display:flex;gap:8px;margin-top:16px;">
+        <button class="btn btn-fan" onclick="saveCatalogueItem()">✓ Enregistrer</button>
+        <button class="btn btn-ghost" onclick="cancelCatalogueEdit()">✕ Annuler</button>
+        <button class="btn btn-gh btn-sm" onclick="pushCatalogueToGH()" style="margin-left:auto;">⬆ Sauvegarder sur GitHub</button>
+      </div>
+    </div>
+
+    <!-- ITEM LIST -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--spice);letter-spacing:.1em;text-transform:uppercase;" id="cat-list-count">— équipements</div>
+      <div style="display:flex;gap:6px;">
+        <select id="cat-filter-cat" class="fs" style="font-size:10px;padding:4px 8px;" onchange="renderCatalogueList()">
+          <option value="">Toutes catégories</option>
+          <option value="armes-feu">Armes à Feu</option>
+          <option value="explosifs">Explosifs</option>
+          <option value="vehicules-terrestres">Véhicules Terrestres</option>
+          <option value="artillerie">Artillerie Placée</option>
+          <option value="missiles">Missiles</option>
+          <option value="missiles-strategiques">Missiles Stratégiques</option>
+          <option value="aeronefs">Véhicules Aériens</option>
+          <option value="navires">Navires de Surface</option>
+          <option value="sous-marins">Sous-marins</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" onclick="fanLoadCatalogue()">↺ Sync GitHub</button>
+      </div>
+    </div>
+    <div id="cat-admin-list"></div>
+  </div>
 </div><!-- /admin-main -->
 
 <!-- ═══════════ MODALS ═══════════ -->
@@ -559,7 +691,8 @@ const SECTION_TITLES={
   'fan-bat':'⚔ BATAILLONS · FAN',
   'fan-prod':'⚔ PRODUCTION · FAN',
   'fan-new':'⚔ NOUVEAU BATAILLON',
-  'fan-sync':'⚔ SYNC · GITHUB'
+  'fan-sync':'⚔ SYNC · GITHUB',
+  'catalogue':'📖 CATALOGUE MILITAIRE'
 };
 function showSection(key){
   Object.keys(SECTION_TITLES).forEach(k=>{
@@ -575,6 +708,7 @@ function showSection(key){
   if(ttl)ttl.textContent=SECTION_TITLES[key]||key;
   // Lazy renders
   if(key==='fan-bat')renderBatAdmin();
+  if(key==='catalogue')renderCatalogueAdmin();
   if(key==='fan-prod')renderProdAdmin();
   if(key==='fan-new'){switchSubTab('bat');renderNewBatForm();}
 }
@@ -1237,6 +1371,281 @@ async function fanLoadFromGH(){
 }
 
 // ════════════════════════════════════════════════
+//  CATALOGUE MILITAIRE
+// ════════════════════════════════════════════════
+
+const CAT_PRESETS={
+  "armes-feu":["Calibre","Masse (non chargé)","Longueur","Longueur du canon","Cadence de tir","Vitesse initiale","Portée pratique","Portée maximale","Capacité","Type de munitions","Équipements possibles"],
+  "explosifs":["Délai","Portée de lancer","Poids","Longueur","Largeur/Diamètre","Portée létale","Type d'explosif"],
+  "vehicules-terrestres":["Moteur","Carburant","Transmission","Poids à vide","Vitesse max. (Route)","Vitesse max. (Tout-terrain)","Autonomie (Route)","Autonomie (Tout-terrain)","Type de suspensions","Longueur","Largeur","Hauteur","Membres d'équipage","Passagers","Cargaison","Blindage Caisse — Front","Blindage Caisse — Côté","Blindage Caisse — Arrière","Blindage Caisse — Toit","Blindage Caisse — Plancher","Blindage Tourelle — Front","Blindage Tourelle — Côté","Blindage Tourelle — Arrière","Blindage Tourelle — Toit","Blindage Tourelle — Plancher","Armement","Munitions"],
+  "artillerie":["Calibre","Équipage","Masse (non chargé)","Longueur","Longueur du canon","Cadence de tir","Vitesse initiale","Système de visée","Portée maximale","Munitions"],
+  "missiles":["Masse","Longueur","Diamètre","Envergure","Vitesse","Portée maximale","Tête explosive / Charge utile","Guidage"],
+  "missiles-strategiques":["Nombre d'étages","Type de moteurs","Nombre de moteurs","Masse au lancement","Longueur","Diamètre","Vitesse maximale","Portée maximale","Plafond","Tête explosive / Charge utile","Guidage"],
+  "aeronefs":["Moteur","Carburant","Cargaison et équipage","Vitesse maximale","Vitesse ascensionnelle","Plafond","Rayon d'action","Poids à vide","Poids chargé maximal","Envergure","Longueur","Hauteur","Surface alaire","Armement","Équipement"],
+  "navires":["Longueur","Maître-bau","Tirant d'eau","Type de Propulsion","Nombre de moteurs","Nombre de pales / hélices","Vitesse maximale","Portée opérationnelle","Déplacement","Équipage","Blindage — Ceinture","Blindage — Pont principal","Blindage — Tourelle(s)","Armement","Équipements"],
+  "sous-marins":["Longueur","Maître-bau","Tirant d'eau","Type de Propulsion","Nombre de moteurs","Nombre de pales / hélices","Vitesse max. (Surface)","Vitesse max. (Immersion)","Portée opérationnelle","Profondeur maximale","Déplacement (Surface)","Déplacement (Immersion)","Équipage","Armement","Équipements"],
+};
+
+const CAT_FILE='data/catalogue-militaire.json';
+const CAT_IMAGES_PATH='assets/images/catalogue/';
+let catItems=[], catEditId=null, catImgFile=null;
+const TECH_MAP_ADM={1:'1910-1919',2:'1920-1929',3:'1930-1939',4:'1940-1949',5:'1950-1959',6:'1960-1969',7:'1970-1979',8:'1980-1989',9:'1990-1999',10:'2000-2009',11:'2010-2019',12:'2020-∞'};
+
+function loadCatState(){
+  try{const s=localStorage.getItem('cat_militaire');catItems=s?JSON.parse(s):[];}
+  catch(_){catItems=[];}
+}
+function saveCatState(){localStorage.setItem('cat_militaire',JSON.stringify(catItems));}
+
+function updateSpecFields(){
+  const cat=document.getElementById('cat-f-categorie')?.value||'armes-feu';
+  const fields=CAT_PRESETS[cat]||[];
+  const grid=document.getElementById('cat-spec-fields');
+  if(!grid)return;
+  const current=catEditId?catItems.find(x=>x.id===catEditId):null;
+  const specs=current?.specs||{};
+  grid.innerHTML=fields.map(f=>{
+    const fid='cat-spec-'+f.replace(/[^a-zA-Z0-9]/g,'_');
+    const val=specs[f]||'';
+    return`<div class="fg">
+      <label class="fl">${f}</label>
+      <input type="text" class="fi fan" id="${fid}" value="${val.replace(/"/g,'&quot;')}" placeholder="${f}…">
+    </div>`;
+  }).join('');
+}
+
+function renderCatalogueAdmin(){
+  loadCatState();
+  updateSpecFields();
+  renderCatalogueList();
+}
+
+function renderCatalogueList(){
+  const el=document.getElementById('cat-admin-list');
+  const cnt=document.getElementById('cat-list-count');
+  const filterCat=document.getElementById('cat-filter-cat')?.value||'';
+  const items=filterCat?catItems.filter(i=>i.categorie===filterCat):catItems;
+  if(cnt)cnt.textContent=`${items.length} équipement${items.length!==1?'s':''}`;
+  if(!el)return;
+  if(!items.length){
+    el.innerHTML=`<div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);padding:24px;text-align:center;border:1px solid var(--border);">Aucun équipement. Utilisez le formulaire ci-dessus pour en ajouter.</div>`;
+    return;
+  }
+  const catLabels={'armes-feu':'Armes à Feu','explosifs':'Explosifs','vehicules-terrestres':'Véhicules Terrestres','artillerie':'Artillerie Placée','missiles':'Missiles','missiles-strategiques':'Missiles Stratégiques','aeronefs':'Véhicules Aériens','navires':'Navires de Surface','sous-marins':'Sous-marins'};
+  el.innerHTML=items.map(item=>{
+    const niv=item.niveau||1;
+    const imgSrc=item.image_data||(item.image_path?`https://bjbellum.github.io/UKN/${item.image_path}`:null);
+    return`<div class="cat-item-row">
+      ${imgSrc
+        ?`<img class="cat-preview-img" src="${imgSrc}" alt="${item.nom}" loading="lazy" onerror="this.style.display='none'">`
+        :`<div style="width:80px;height:60px;border:1px solid var(--border2);border-radius:2px;background:var(--bg2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;">📦</div>`
+      }
+      <div style="flex:1;min-width:0;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);font-weight:500;">${item.nom}</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);margin-top:2px;">${catLabels[item.categorie]||item.categorie} · ${item.fabricant||'—'}</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--spice);margin-top:3px;">NIV ${niv} · ${TECH_MAP_ADM[niv]||''}</div>
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);white-space:nowrap;padding:0 10px;">${item.cout_unite?Number(item.cout_unite).toLocaleString('fr')+' Cr.':''}</div>
+      <div style="display:flex;gap:5px;flex-shrink:0;">
+        <button class="btn btn-ghost btn-sm" onclick="editCatalogueItem('${item.id}')">Modifier</button>
+        <button class="btn btn-danger btn-xs" onclick="deleteCatalogueItem('${item.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function saveCatalogueItem(){
+  const nom=document.getElementById('cat-f-nom')?.value.trim();
+  if(!nom){toast('Nom obligatoire.','err');return;}
+  const cat=document.getElementById('cat-f-categorie')?.value;
+  const fields=CAT_PRESETS[cat]||[];
+  const specs={};
+  fields.forEach(f=>{
+    const fid='cat-spec-'+f.replace(/[^a-zA-Z0-9]/g,'_');
+    const el=document.getElementById(fid);
+    const v=el?.value?.trim()||'';
+    if(v)specs[f]=v;
+  });
+  const obj={
+    id:catEditId||'cat_'+Date.now(),
+    nom,
+    categorie:cat,
+    niveau:parseInt(document.getElementById('cat-f-niveau')?.value)||1,
+    fabricant:document.getElementById('cat-f-fabricant')?.value?.trim()||'',
+    cout_unite:document.getElementById('cat-f-cout')?.value||'',
+    inspiration:document.getElementById('cat-f-inspiration')?.value?.trim()||'',
+    specs,
+    image_data:document.getElementById('cat-img-data')?.value||'',
+    image_path:document.getElementById('cat-img-path')?.value||'',
+  };
+  if(catEditId){const idx=catItems.findIndex(x=>x.id===catEditId);if(idx>=0)catItems[idx]=obj;}
+  else catItems.push(obj);
+  saveCatState();
+  cancelCatalogueEdit();
+  renderCatalogueList();
+  toast(catEditId?'Équipement modifié.':'Équipement ajouté.');
+}
+
+function editCatalogueItem(id){
+  const item=catItems.find(x=>x.id===id);if(!item)return;
+  catEditId=id;
+  const ft=document.getElementById('cat-form-title');if(ft)ft.textContent='✎ Modifier — '+item.nom;
+  document.getElementById('cat-f-nom').value=item.nom||'';
+  document.getElementById('cat-f-categorie').value=item.categorie||'armes-feu';
+  document.getElementById('cat-f-niveau').value=item.niveau||1;
+  document.getElementById('cat-f-fabricant').value=item.fabricant||'';
+  document.getElementById('cat-f-cout').value=item.cout_unite||'';
+  document.getElementById('cat-f-inspiration').value=item.inspiration||'';
+  document.getElementById('cat-img-data').value=item.image_data||'';
+  document.getElementById('cat-img-path').value=item.image_path||'';
+  // Show image preview
+  const preview=document.getElementById('cat-img-preview');
+  if(preview){
+    const src=item.image_data||(item.image_path?`https://bjbellum.github.io/UKN/${item.image_path}`:null);
+    preview.innerHTML=src?`<img src="${src}" style="width:100%;height:100%;object-fit:cover;">`:`<div class="img-preview-ph">Cliquer pour<br>sélectionner une image</div>`;
+  }
+  const fn=document.getElementById('cat-img-filename');
+  if(fn)fn.textContent=item.image_path?item.image_path.split('/').pop():'Aucune image';
+  const pushBtn=document.getElementById('cat-img-push-btn');
+  if(pushBtn)pushBtn.style.display=item.image_data?'inline-flex':'none';
+  updateSpecFields();
+  // Scroll to form
+  document.getElementById('cat-form-container')?.scrollIntoView({behavior:'smooth'});
+}
+
+function cancelCatalogueEdit(){
+  catEditId=null;catImgFile=null;
+  const ft=document.getElementById('cat-form-title');if(ft)ft.textContent='+ Ajouter un équipement';
+  ['cat-f-nom','cat-f-fabricant','cat-f-cout','cat-f-inspiration','cat-img-data','cat-img-path'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('cat-f-categorie').value='armes-feu';
+  document.getElementById('cat-f-niveau').value='1';
+  const preview=document.getElementById('cat-img-preview');
+  if(preview)preview.innerHTML='<div class="img-preview-ph">Cliquer pour<br>sélectionner une image</div>';
+  const fn=document.getElementById('cat-img-filename');if(fn)fn.textContent='Aucune image sélectionnée';
+  const pushBtn=document.getElementById('cat-img-push-btn');if(pushBtn)pushBtn.style.display='none';
+  const pathDisp=document.getElementById('cat-img-path-display');if(pathDisp)pathDisp.textContent='';
+  updateSpecFields();
+}
+
+function deleteCatalogueItem(id){
+  const item=catItems.find(x=>x.id===id);
+  if(!confirm(`Supprimer « ${item?.nom||id} » du catalogue ?`))return;
+  catItems=catItems.filter(x=>x.id!==id);
+  saveCatState();renderCatalogueList();toast('Équipement supprimé.');
+}
+
+// ── IMAGE HANDLING ──
+function handleImgUpload(input){
+  const file=input.files[0];if(!file)return;
+  catImgFile=file;
+  const ext=file.name.split('.').pop().toLowerCase();
+  const safeName=document.getElementById('cat-f-nom')?.value.trim().replace(/[^a-zA-Z0-9]/g,'-').toLowerCase()||'image';
+  const filename=`${safeName}.${ext}`;
+  const imgPath=CAT_IMAGES_PATH+filename;
+  document.getElementById('cat-img-path').value=imgPath;
+  document.getElementById('cat-img-filename').textContent=filename;
+  document.getElementById('cat-img-push-btn').style.display='inline-flex';
+  document.getElementById('cat-img-path-display').textContent=`Chemin GitHub : ${imgPath}`;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const b64=e.target.result;
+    document.getElementById('cat-img-data').value=b64;
+    const preview=document.getElementById('cat-img-preview');
+    if(preview)preview.innerHTML=`<img src="${b64}" style="width:100%;height:100%;object-fit:cover;">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearImage(){
+  catImgFile=null;
+  document.getElementById('cat-img-data').value='';
+  document.getElementById('cat-img-path').value='';
+  document.getElementById('cat-img-filename').textContent='Aucune image sélectionnée';
+  document.getElementById('cat-img-push-btn').style.display='none';
+  document.getElementById('cat-img-path-display').textContent='';
+  const preview=document.getElementById('cat-img-preview');
+  if(preview)preview.innerHTML='<div class="img-preview-ph">Cliquer pour<br>sélectionner une image</div>';
+  document.getElementById('cat-img-input').value='';
+}
+
+async function pushImageToGH(){
+  const pat=getPat();if(!pat||pat.length<10){toast('Configurez votre PAT.','err');return;}
+  const imgData=document.getElementById('cat-img-data')?.value;
+  const imgPath=document.getElementById('cat-img-path')?.value;
+  if(!imgData||!imgPath){toast('Aucune image à pousser.','err');return;}
+  // Convert data URL to base64
+  const base64=imgData.split(',')[1];
+  if(!base64){toast('Format image invalide.','err');return;}
+  const btn=document.getElementById('cat-img-push-btn');if(btn)btn.disabled=true;
+  toast('Envoi de l\'image…','ok');
+  try{
+    // Get SHA if exists
+    let sha=null;
+    const sr=await fetch(`https://api.github.com/repos/${REPO}/contents/${imgPath}`,{
+      headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json'},cache:'no-store'
+    });
+    if(sr.ok){const sd=await sr.json();sha=sd.sha||null;}
+    const body={message:`add catalogue image: ${imgPath}`,content:base64};
+    if(sha)body.sha=sha;
+    const pr=await fetch(`https://api.github.com/repos/${REPO}/contents/${imgPath}`,{
+      method:'PUT',
+      headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(pr.ok){
+      toast('Image uploadée sur GitHub !','ok');
+      const pathDisp=document.getElementById('cat-img-path-display');
+      if(pathDisp)pathDisp.innerHTML=`<a href="https://bjbellum.github.io/UKN/${imgPath}" target="_blank" style="color:var(--teal-bright);">${imgPath} ↗</a>`;
+    }else{const ed=await pr.json();toast(`Erreur image: ${pr.status} — ${ed.message||''}`, 'err');}
+  }catch(e){toast(`Erreur: ${e.message}`,'err');}
+  if(btn)btn.disabled=false;
+}
+
+// ── CATALOGUE GITHUB SYNC ──
+async function pushCatalogueToGH(){
+  const pat=getPat();if(!pat||pat.length<10){toast('Configurez votre PAT.','err');return;}
+  toast('Sauvegarde du catalogue…','ok');
+  try{
+    // Save without image_data (too large for JSON — only image_path)
+    const payload=catItems.map(({image_data,...rest})=>rest);
+    let sha=null;
+    const sr=await fetch(`https://api.github.com/repos/${REPO}/contents/${CAT_FILE}`,{
+      headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json'},cache:'no-store'
+    });
+    if(sr.ok){const sd=await sr.json();sha=sd.sha||null;}
+    else if(sr.status!==404){toast(`Erreur SHA: ${sr.status}`,'err');return;}
+    const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
+    const body={message:`update catalogue-militaire.json — ${catItems.length} équipements`,content:encoded};
+    if(sha)body.sha=sha;
+    const pr=await fetch(`https://api.github.com/repos/${REPO}/contents/${CAT_FILE}`,{
+      method:'PUT',
+      headers:{'Authorization':`token ${pat}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(pr.ok){toast('Catalogue sauvegardé sur GitHub !','ok');}
+    else{const ed=await pr.json();toast(`Erreur: ${pr.status} — ${ed.message||''}`, 'err');}
+  }catch(e){toast(`Erreur: ${e.message}`,'err');}
+}
+
+async function fanLoadCatalogue(){
+  try{
+    const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${CAT_FILE}`,{
+      headers:{'Accept':'application/vnd.github.v3.raw'},cache:'no-store'
+    });
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(Array.isArray(d)){
+      // Merge: preserve local image_data
+      d.forEach(remote=>{
+        const local=catItems.find(x=>x.id===remote.id);
+        if(local?.image_data)remote.image_data=local.image_data;
+      });
+      catItems=d;saveCatState();renderCatalogueList();toast(`${catItems.length} équipements chargés.`);
+    }
+  }catch(e){toast('Erreur chargement catalogue: '+e.message,'err');}
+}
+
+// ════════════════════════════════════════════════
 //  AUTH
 // ════════════════════════════════════════════════
 function showAdmin(user){
@@ -1250,6 +1659,7 @@ function showAdmin(user){
   if(sp){const pi=document.getElementById('pat-in');if(pi)pi.value=sp;const pf=document.getElementById('pat-fan');if(pf)pf.value=sp;}
   updatePat();updateFanPat();
   loadFanState();
+  loadCatState();
   loadFromGH();
 }
 function logout(){if(window.PharosAuth?.logout)window.PharosAuth.logout();else{['ukn_token','ukn_user','pharos_session'].forEach(k=>localStorage.removeItem(k));}location.href='../';}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalogues du Nil · Royaume-Uni du Nil</title>
+<meta name="theme-color" content="#C8960C">
+<meta property="og:image" content="https://BJBellum.github.io/UKN/assets/images/UKNSite.png">
+<link rel="icon" type="image/png" href="../assets/images/UKNSite.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&family=Noto+Kufi+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/dune.css">
+<style>
+.hero-cat{min-height:68vh;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(200,150,12,.10) 0%,transparent 58%);}
+.hero-title-cat{font-family:'Dune Rise',serif;font-size:clamp(28px,4vw,52px);color:var(--gold-pale);letter-spacing:.08em;line-height:1.05;margin-bottom:6px;text-shadow:0 0 80px rgba(200,150,12,.2);}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:0 auto 40px;}
+@media(max-width:680px){.cat-grid{grid-template-columns:1fr;}}
+.cat-card{background:var(--card-bg);border:1px solid var(--border2);border-top:2px solid;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:all .25s;position:relative;overflow:hidden;}
+.cat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,150,12,.03) 0%,transparent 50%);pointer-events:none;}
+.cat-card:hover:not(.locked){border-color:var(--gold-mid);}
+.cat-card.locked{opacity:.55;cursor:default;pointer-events:none;}
+.cat-card-body{padding:32px 28px 20px;flex:1;}
+.cat-card-icon{width:60px;height:60px;border:1px solid;border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+.cat-card-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;}
+.cat-card-name{font-family:'Dune Rise',serif;font-size:18px;color:var(--gold-pale);letter-spacing:.06em;margin-bottom:4px;}
+.cat-card-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.06em;margin-bottom:14px;}
+.cat-card-desc{font-size:12px;color:var(--text2);line-height:1.85;}
+.cat-card-footer{padding:12px 28px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;}
+.cat-locked-badge{display:inline-flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.12em;color:var(--text3);border:1px solid var(--border2);padding:3px 8px;border-radius:2px;background:var(--card-bg);margin-top:10px;}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="nav-left">
+    <div class="nav-logo" style="border-color:rgba(200,150,12,.4);background:rgba(200,150,12,.06);">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="2" width="10" height="14" rx="1" stroke="#C8960C" stroke-width="1" fill="none"/><rect x="5" y="2" width="12" height="14" rx="1" stroke="#C8960C" stroke-width=".7" fill="none" opacity=".5"/><line x1="5" y1="6" x2="11" y2="6" stroke="#C8960C" stroke-width=".8" opacity=".8"/><line x1="5" y1="9" x2="11" y2="9" stroke="#C8960C" stroke-width=".8" opacity=".8"/><line x1="5" y1="12" x2="8" y2="12" stroke="#C8960C" stroke-width=".8" opacity=".8"/></svg>
+    </div>
+    <span class="nav-brand" style="color:var(--gold-mid);">Catalogues du Nil</span>
+    <span class="nav-sub">فهارس النيل</span>
+  </div>
+  <div class="nav-right">
+    <a href="../" class="nav-back">← Portail National</a>
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <svg id="toggle-icon" width="12" height="12" viewBox="0 0 24 24" fill="none"><path id="icon-path" d="M21 12.79A9 9 0 0 1 12 21a9 9 0 0 1 0-18 7 7 0 0 0 9 9.79z" fill="currentColor"/></svg>
+      <span id="toggle-lbl">NUIT</span>
+    </button>
+  </div>
+</nav>
+
+<section class="hero hero-cat">
+  <div class="hero-desert"></div>
+  <div class="hero-content" style="padding-top:52px;padding-bottom:60px;">
+    <div class="hero-eyebrow">CAT-001 · Archives Nationales · Royaume-Uni du Nil</div>
+    <h1 class="hero-title-cat">Catalogues du Nil</h1>
+    <div class="hero-arabic">فهارس النيل المتحدة · الأرشيف الوطني</div>
+    <div class="hero-ornament">
+      <div class="hero-ornament-line"></div>
+      <div class="hero-ornament-diamond"></div>
+      <div class="hero-ornament-line" style="background:linear-gradient(90deg,var(--gold-mid),transparent);transform:scaleX(-1);"></div>
+    </div>
+    <p class="hero-desc" style="max-width:560px;margin:0 auto 32px;">Répertoire officiel des équipements, matériels et technologies du Royaume-Uni du Nil. Accédez aux catalogues militaires et civils classifiés.</p>
+
+    <div class="cat-grid">
+      <!-- CATALOGUE MILITAIRE -->
+      <a href="./militaire/" class="cat-card" id="cat-mil-card" style="border-top-color:var(--spice);">
+        <div class="cat-card-body">
+          <div class="cat-card-icon" style="border-color:rgba(232,92,13,.4);background:rgba(232,92,13,.06);">
+            <svg viewBox="0 0 32 32" fill="none" width="30" height="30">
+              <path d="M16 4L4 9V16C4 23 9 29 16 31C23 29 28 23 28 16V9L16 4Z" stroke="#E85C0D" stroke-width="1.3" fill="none"/>
+              <line x1="11" y1="16" x2="21" y2="16" stroke="#E85C0D" stroke-width="1.3"/>
+              <line x1="16" y1="11" x2="16" y2="21" stroke="#E85C0D" stroke-width="1.3"/>
+            </svg>
+          </div>
+          <div class="cat-card-label">Forces Armées du Nil · CAT-MIL-001</div>
+          <div class="cat-card-name">Catalogue Militaire</div>
+          <div class="cat-card-sub" id="cat-mil-sub" style="color:rgba(232,92,13,.7);">Armement · Véhicules · Artillerie · Navires</div>
+          <p class="cat-card-desc">Répertoire complet des équipements militaires en service dans les Forces Armées du Nil. Armes à feu, explosifs, véhicules terrestres, artillerie, missiles, aéronefs et navires.</p>
+          <div id="cat-mil-lock" class="cat-locked-badge" style="display:none;">
+            <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><rect x="2" y="5" width="8" height="6" rx=".5" stroke="#888" stroke-width=".9" fill="none"/><path d="M3.5 5V3.5a2.5 2.5 0 0 1 5 0V5" stroke="#888" stroke-width=".9" fill="none"/></svg>
+            Connexion requise
+          </div>
+        </div>
+        <div class="cat-card-footer" style="color:var(--spice);border-top-color:rgba(232,92,13,.15);">
+          <span>9 catégories</span>
+          <span>→</span>
+        </div>
+      </a>
+
+      <!-- CATALOGUE CIVIL (verrouillé) -->
+      <div class="cat-card locked" style="border-top-color:var(--border2);">
+        <div class="cat-card-body">
+          <div class="cat-card-icon" style="border-color:var(--border2);background:var(--card-bg);">
+            <svg viewBox="0 0 32 32" fill="none" width="30" height="30">
+              <rect x="4" y="8" width="24" height="16" rx="2" stroke="#4A3C28" stroke-width="1.3" fill="none"/>
+              <path d="M10 8V6a6 6 0 0 1 12 0v2" stroke="#4A3C28" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              <circle cx="16" cy="16" r="2" fill="#4A3C28"/>
+            </svg>
+          </div>
+          <div class="cat-card-label" style="color:var(--text3);">Archives Civiles · CAT-CIV-001</div>
+          <div class="cat-card-name" style="color:var(--text3);">Catalogue Civil</div>
+          <div class="cat-card-sub" style="color:var(--text3);">Infrastructures · Matériel · Industries</div>
+          <p class="cat-card-desc" style="color:var(--text3);">Répertoire des équipements et matériels civils du Royaume-Uni du Nil. Infrastructures publiques, équipements industriels et matériels d'État.</p>
+          <div class="cat-locked-badge">
+            <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><rect x="2" y="5" width="8" height="6" rx=".5" stroke="#888" stroke-width=".9" fill="none"/><path d="M3.5 5V3.5a2.5 2.5 0 0 1 5 0V5" stroke="#888" stroke-width=".9" fill="none"/></svg>
+            Indisponible · Exercice 2306
+          </div>
+        </div>
+        <div class="cat-card-footer" style="color:var(--text3);">
+          <span>À venir</span>
+          <span style="opacity:.4">→</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page">
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-left">CATALOGUES DU NIL · CAT-001 · ROYAUME-UNI DU NIL<br>ARCHIVES NATIONALES · LE CAIRE · EXERCICE 2305</div>
+        <div class="footer-credit">Projet Résurgence © 2026 · Police: Dune Rise — Fontswan (SIL OFL 1.1)</div>
+      </div>
+      <div class="footer-right">فهارس النيل · الأرشيف الوطني</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+const FAN_IDS=['772821169664426025','928291843958014014','1014832884764393523','1113422056525144104','293869524091142144','1302403450566610944'];
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const lbl=document.getElementById('toggle-lbl'),path=document.getElementById('icon-path');if(lbl)lbl.textContent=t==='dark'?'NUIT':'JOUR';if(path)path.setAttribute('d',t==='dark'?'M21 12.79A9 9 0 0 1 12 21a9 9 0 0 1 0-18 7 7 0 0 0 9 9.79z':'M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 2a8 8 0 1 1 0 16A8 8 0 0 1 12 4z');localStorage.setItem('run-theme',t);}
+function toggleTheme(){applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');}
+(function(){const s=localStorage.getItem('run-theme'),mq=window.matchMedia('(prefers-color-scheme: dark)');applyTheme(s||(mq.matches?'dark':'light'));})();
+
+window.addEventListener('DOMContentLoaded',()=>{
+  // Le catalogue militaire est accessible à tous les membres FAN
+  const pa=window.PharosAuth,user=pa?.getUser();
+  const isFan=user&&FAN_IDS.includes(user.id);
+  const milCard=document.getElementById('cat-mil-card');
+  const milLock=document.getElementById('cat-mil-lock');
+  if(!isFan&&milCard){
+    milCard.classList.add('locked');
+    milCard.removeAttribute('href');
+    if(milLock)milLock.style.display='inline-flex';
+  }
+});
+</script>
+<script src="../pharos-auth.js"></script>
+</body>
+</html>
