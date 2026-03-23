@@ -25,5 +25,26 @@
       "Équipement": "Test"
     },
     "image_path": "assets/images/catalogue/armes-feu-1.png"
+  },
+  {
+    "id": "cat_1774271208413",
+    "nom": "Shy Hulud",
+    "categorie": "missiles",
+    "niveau": 12,
+    "fabricant": "Aucun.",
+    "cout_unite": "10000000000",
+    "inspiration": "Shai Hulud (DUNE)",
+    "disponibilite": "Mis en service en Juin 2306.",
+    "specs": {
+      "Masse": "Non-mesuré.",
+      "Longueur": "Non-mesuré.",
+      "Diamètre": "Non-mesuré.",
+      "Envergure": "Non-mesuré.",
+      "Vitesse": "Non-mesuré.",
+      "Portée maximale": "Non-mesuré.",
+      "Tête explosive / Charge utile": "Non-mesuré.",
+      "Guidage": "Non-mesuré."
+    },
+    "image_path": "assets/images/catalogue/missiles-2.png"
   }
 ]
