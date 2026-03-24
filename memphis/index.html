@@ -6,8 +6,6 @@
 <title>MEMPHIS · Pile Atomique de Recherche</title>
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#E85C0D">
-<meta property="og:image" content="https://BJBellum.github.io/UKN/assets/images/UKNSite.png">
-<meta property="og:image:alt" content="Portail National — Royaume-Uni du Nil">
 <link rel="icon" type="image/png" href="../assets/images/UKNSite.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,6 +51,20 @@
   .leaflet-popup-tip{background:#0E0B06;}
   .leaflet-popup-content{margin:0;}
   </style>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MEMPHIS · Réacteur de Recherche · Pharos Energy">
+  <meta property="og:description" content="Pile de recherche nucléaire MEMPHIS-PILE-001 — production d'eau lourde D₂O via procédé Girdler pour la filière NILDU. Site classifié, Delta du Nil.">
+  <meta property="og:url" content="https://BJBellum.github.io/UKN/memphis/">
+  <meta property="og:image" content="https://BJBellum.github.io/UKN/assets/images/UKNSite.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Portail National — Royaume-Uni du Nil">
+  <meta property="og:site_name" content="Royaume-Uni du Nil">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MEMPHIS · Réacteur de Recherche · Pharos Energy">
+  <meta name="twitter:description" content="Pile de recherche nucléaire MEMPHIS-PILE-001 — production d'eau lourde D₂O via procédé Girdler pour la filière NILDU. Site classifié, Delta du Nil.">
+  <meta name="twitter:image" content="https://BJBellum.github.io/UKN/assets/images/UKNSite.png">
+  <meta name="description" content="Pile de recherche nucléaire MEMPHIS-PILE-001 — production d'eau lourde D₂O via procédé Girdler pour la filière NILDU. Site classifié, Delta du Nil.">
 </head>
 <body>
 
@@ -292,55 +304,22 @@ window.addEventListener('DOMContentLoaded',()=>{
 </script>
 <script src="../pharos-auth.js"></script>
 
+
 <script>
-(function() {
-  function initMap() {
-    var el = document.getElementById('map-memphis');
-    if (!el || el._leaflet_id) return;
-    var m = L.map('map-memphis', {
-      zoomControl: true,
-      attributionControl: true,
-      renderer: L.canvas()
-    }).setView([30.21796, 31.25895], 13);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com">CARTO</a>',
-      subdomains: 'abcd', maxZoom: 19
-    }).addTo(m);
-    var ic = L.divIcon({
-      html: '<div style="width:16px;height:16px;border-radius:50%;background:#E85C0D;border:2px solid #F0A030;box-shadow:0 0 14px rgba(232,92,13,.8);"></div>',
-      className: '', iconAnchor: [8, 8]
-    });
-    L.marker([30.21796, 31.25895], {icon: ic}).addTo(m)
-      .bindPopup('<div style="font-family:monospace;font-size:10px;padding:8px 12px;background:#0E0B06;color:#C8960C;min-width:160px;"><strong>MEMPHIS-PILE-001</strong><br><span style="color:#666;font-size:9px;">30.21796, 31.25895</span></div>', {offset: [0, -4]});
-    // Multiple invalidateSize calls to handle deferred rendering
-    [100, 300, 600, 1200].forEach(function(d) {
-      setTimeout(function() { m.invalidateSize(true); }, d);
-    });
-  }
-  
-  function waitAndInit() {
-    if (typeof L === 'undefined') { setTimeout(waitAndInit, 100); return; }
-    var el = document.getElementById('map-memphis');
-    if (!el) { setTimeout(waitAndInit, 100); return; }
-    initMap();
-  }
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', waitAndInit);
-  } else {
-    waitAndInit();
-  }
-  window.addEventListener('load', function() {
-    setTimeout(function() {
-      var el = document.getElementById('map-memphis');
-      if (el && el._leaflet_id) {
-        window.L && el._leaflet_map && el._leaflet_map.invalidateSize(true);
-      } else {
-        initMap();
-      }
-    }, 500);
-  });
-})();
+setTimeout(function() {
+  var el = document.getElementById('map-memphis');
+  if (!el || el._leaflet_id) return;
+  var m = L.map('map-memphis').setView([30.21796,31.25895],13);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com">CARTO</a>',
+    subdomains:'abcd',maxZoom:19
+  }).addTo(m);
+  m.invalidateSize();
+  L.divIcon && L.marker([30.21796,31.25895],{icon:L.divIcon({
+    html:'<div style="width:16px;height:16px;border-radius:50%;background:#E85C0D;border:2px solid #F0A030;box-shadow:0 0 12px rgba(232,92,13,.8);"></div>',
+    className:'',iconAnchor:[8,8]
+  })}).addTo(m);
+}, 400);
 </script>
 </body>
 </html>
