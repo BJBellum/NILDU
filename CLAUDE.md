@@ -70,7 +70,7 @@ Guide de référence pour Claude lors de travaux sur ce dépôt.
 
 ### Typographie
 
-- **Dune Rise** — Titres, hero, badges importants. **CRITIQUE : pas d'accents** (É→E, À→A, È→E, Ô→O, etc.)
+- **Dune Rise** — Titres, hero, badges importants. **CRITIQUE : pas d'accents** (É→E, À→A, È→E, Ô→O, Û→U, etc.) — classes concernées : `hero-title`, `section-eyebrow`, `nav-brand`, `hemi-title`, `hemi-kpi-val`, `kpi-val`, `hstat-val`, `portal-card-title`
 - **IBM Plex Mono** — Corps, labels, données techniques
 - **IBM Plex Sans** — Texte courant
 - **Noto Kufi Arabic** — Texte arabe
@@ -219,17 +219,25 @@ setTimeout(function() {
 
 ### Catégories disponibles
 
+**4 grandes catégories (dans cet ordre) :**
+
 | ID | Groupe | Label |
 |---|---|---|
-| `armes-feu` | Terrestre | Armes à Feu |
-| `explosifs` | Terrestre | Explosifs & Grenades |
-| `vehicules-terrestres` | Terrestre | Véhicules Terrestres |
-| `artillerie` | Terrestre | Artillerie Placée |
-| `aeronefs` | Aérien | Véhicules Aériens Militaires |
-| `navires` | Naval | Navires de Surface |
-| `sous-marins` | Naval | Sous-marins |
-| `missiles` | Balistique & Spatial | Missiles & Roquettes |
-| `missiles-strategiques` | Balistique & Spatial | Missiles Stratégiques |
+| `armes-feu` | **Terrestre** | Armes à Feu |
+| `explosifs` | **Terrestre** | Explosifs & Grenades |
+| `vehicules-terrestres` | **Terrestre** | Véhicules Terrestres |
+| `artillerie` | **Terrestre** | Artillerie Placée |
+| `aeronefs` | **Aérien** | Véhicules Aériens Militaires |
+| `navires` | **Naval** | Navires de Surface |
+| `sous-marins` | **Naval** | Sous-marins |
+| `missiles` | **Balistique & Spatial** | Missiles & Roquettes |
+| `missiles-strategiques` | **Balistique & Spatial** | Missiles Stratégiques |
+
+**Layout du catalogue :** chaque équipement est une fiche inline pleine largeur (pas d'overlay) :
+1. Image hero (ratio 2:1 — **format recommandé : 2000×1000 px**)
+2. 3 badges clés : Inspiration · Désignation · Coût N£
+3. Barre méta : Fabricant (gauche) · NIV centré · Disponibilité (droite) — CSS grid 3 colonnes
+4. Toutes les specs en grille 3 colonnes
 
 ### Niveaux technologiques
 
@@ -295,6 +303,47 @@ Les images sont nommées `{categorie}-{N}.{ext}` avec N = max global + 1 pour é
 
 ---
 
+## Gouvernement du Nil
+
+Page : `politique/gouvernement/index.html` — accessible depuis `politique/index.html`.
+
+**GOUV-NL-001 · Exercice 2306**
+
+| Rôle | Titulaire |
+|---|---|
+| Premier ministre | Achraf Bazzi |
+| Intérieur | Ahmed El-Shazly |
+| Défense | Mahmoud Daher |
+| Affaires étrangères | Mustafa El-Sayed |
+| Justice | Siddiq Al-Tahir |
+| Travail | Mustafa Al-Werfalli |
+| Logement | Salem Al-Hassi |
+| Santé | Omar Al-Amin |
+| Économie | Hazem El-Beblawi |
+| Agriculture | Ibrahim Mansour |
+| Commerce | Salma El-Ghandour |
+| Enseignement | Nabil Hegazi |
+| Culture | Mansour Al-Kikhia |
+
+---
+
+## Bilan Économique National
+
+Page : `economie/bilan-economique/index.html` — accessible depuis `economie/index.html`.
+
+| Indicateur | 2303 | 2304 | 2305 |
+|---|---|---|---|
+| PIB nominal | 3 450 000 000 N£ | 11 695 500 000 N£ | 25 144 250 000 N£ |
+| Inflation | 5,20 % | 5,20 % | 2,60 % |
+| Chômage | 25,73 % | 14,79 % | 8,35 % |
+| Pauvreté | 36,82 % | 27,60 % | 27,72 % |
+| Population | 12 022 345 hab. | 17 345 605 hab. | 18 656 628 hab. |
+| PIB/hab. | 286,96 N£ | 674,55 N£ | 1 347,54 N£ |
+
+Graphiques : PIB en barres horizontales + canvas line charts (chômage, pauvreté, inflation, population).
+
+---
+
 ## Règles de développement
 
 ### À toujours faire
@@ -354,7 +403,7 @@ Les images sont nommées `{categorie}-{N}.{ext}` avec N = max global + 1 pour é
 - **Royaume-Uni du Nil** — État fédéral fictif couvrant la vallée du Nil (Égypte + Soudan du Nord fictifs)
 - **Capitale** : Le Caire
 - **Calendrier** : Exercice 2305–2306 (futur proche fictif)
-- **Monnaie** : Livre Nilienne (N£)
+- **Monnaie** : Livre Nilotique (N£)
 - **Langue** : Français + Arabe (bilingue officiel)
 - **Pharos Energy** — Opérateur énergétique d'État (hydroélectrique + géothermique + nucléaire NILDU)
 - **FAN** — Forces Armées du Nil
