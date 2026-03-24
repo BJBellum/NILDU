@@ -83,86 +83,51 @@ html,body{height:100%;overflow:hidden;}
 .cat-item{
   background:var(--card-bg);
   border:1px solid var(--border);
-  border-top:2px solid rgba(232,92,13,.5);
-  margin-bottom:20px;
+  border-top:2px solid rgba(232,92,13,.6);
   overflow:hidden;
 }
-.cat-item:hover{border-top-color:var(--spice);}
+.cat-item:hover{border-top-color:var(--spice);box-shadow:0 4px 20px rgba(232,92,13,.06);}
 
-/* Image hero — 2:1 ratio (designed for 2000×1000px) */
-.item-img{
-  width:100%;aspect-ratio:2/1;
-  overflow:hidden;background:var(--bg2);
-  position:relative;
-}
+/* Image hero — 2:1 */
+.item-img{width:100%;aspect-ratio:2/1;overflow:hidden;background:var(--bg2);position:relative;}
 .item-img img{width:100%;height:100%;object-fit:cover;display:block;}
-.item-img-ph{
-  width:100%;height:100%;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-}
-.item-img-ph-ico{opacity:.14;display:flex;}
-.item-img-ph-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.14em;}
+.item-img-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.item-img-ph-ico{opacity:.18;display:flex;}
+.item-img-ph-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);letter-spacing:.12em;}
 
-/* 3 key characteristics */
-.item-keys{
-  display:grid;grid-template-columns:1fr 1fr 1fr;
-  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-}
-.item-key{
-  padding:16px 20px;text-align:center;
-  border-right:1px solid var(--border);
-}
+/* 3 key badges */
+.item-keys{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.item-key{padding:13px 14px;text-align:center;border-right:1px solid var(--border);}
 .item-key:last-child{border-right:none;}
-.ik-lbl{
-  font-family:'IBM Plex Mono',monospace;font-size:7px;
-  color:var(--text3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px;
-}
-.ik-val{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text);letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.ik-val.spice{color:var(--spice);}
+.ik-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:rgba(255,255,255,.48);letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px;}
+[data-theme="light"] .ik-lbl{color:rgba(0,0,0,.42);}
+.ik-val{font-family:'IBM Plex Mono',monospace;font-size:13px;color:rgba(255,255,255,.92);letter-spacing:.03em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+[data-theme="light"] .ik-val{color:rgba(0,0,0,.84);}
+.ik-val.spice{color:#FF6B35;font-weight:500;}
+[data-theme="light"] .ik-val.spice{color:#C84000;}
 .ik-val.gold{color:var(--gold);font-family:'Dune Rise',serif;font-size:14px;}
-.ik-val.bold{font-weight:500;font-size:14px;}
+.ik-val.bold{font-weight:600;font-size:14px;}
 
 /* Meta bar */
-.item-meta{
-  display:grid;grid-template-columns:1fr auto 1fr;
-  align-items:center;
-  padding:8px 18px;border-bottom:1px solid var(--border);
-  background:rgba(0,0,0,.07);gap:12px;
-}
-[data-theme="light"] .item-meta{background:rgba(0,0,0,.03);}
-.item-niv{
-  font-family:'IBM Plex Mono',monospace;font-size:8px;
-  padding:3px 10px;border-radius:2px;border:1px solid;
-  display:inline-block;text-align:center;justify-self:center;
-}
-.item-fab{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);justify-self:start;}
-.item-dispo{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--teal-bright);justify-self:end;text-align:right;}
+.item-meta{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:7px 14px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.14);gap:10px;}
+[data-theme="light"] .item-meta{background:rgba(0,0,0,.05);}
+.item-niv{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 9px;border-radius:2px;border:1px solid;display:inline-block;text-align:center;justify-self:center;font-weight:500;}
+.item-fab{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.72);justify-self:start;}
+[data-theme="light"] .item-fab{color:rgba(0,0,0,.65);}
+.item-dispo{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--teal-bright);justify-self:end;text-align:right;}
 
-/* Specs grid — 3 cols */
-.item-specs-hdr{
-  font-family:'IBM Plex Mono',monospace;font-size:7px;
-  letter-spacing:.18em;color:var(--spice);text-transform:uppercase;
-  padding:10px 18px 7px;border-bottom:1px solid rgba(232,92,13,.15);
-}
-.item-specs-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-}
-@media(max-width:860px){.item-specs-grid{grid-template-columns:1fr 1fr;}}
-@media(max-width:520px){.item-specs-grid{grid-template-columns:1fr;}}
-.isg-item{
-  padding:9px 18px;
-  border-bottom:1px solid var(--border);
-  border-right:1px solid var(--border);
-}
-.isg-item:nth-child(3n){border-right:none;}
-@media(max-width:860px){
-  .isg-item:nth-child(3n){border-right:1px solid var(--border);}
-  .isg-item:nth-child(2n){border-right:none;}
-}
-@media(max-width:520px){.isg-item{border-right:none;}}
-.isg-key{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:.07em;margin-bottom:3px;}
-.isg-val{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);}
-.item-specs-empty{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);padding:14px 18px;}
+/* Specs — 2 cols */
+.item-specs-hdr{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.16em;color:var(--spice);text-transform:uppercase;padding:9px 14px 7px;border-bottom:1px solid rgba(232,92,13,.2);background:rgba(232,92,13,.04);}
+.item-specs-grid{display:grid;grid-template-columns:1fr 1fr;}
+@media(max-width:480px){.item-specs-grid{grid-template-columns:1fr;}}
+.isg-item{padding:8px 14px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);}
+.isg-item:nth-child(even){border-right:none;}
+@media(max-width:480px){.isg-item{border-right:none;}}
+.isg-key{font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(255,255,255,.44);letter-spacing:.06em;margin-bottom:3px;}
+[data-theme="light"] .isg-key{color:rgba(0,0,0,.44);}
+.isg-val{font-family:'IBM Plex Mono',monospace;font-size:13px;color:rgba(255,255,255,.90);letter-spacing:.02em;}
+[data-theme="light"] .isg-val{color:rgba(0,0,0,.82);}
+.item-specs-empty{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);padding:14px 16px;}
 
 /* NIV colors */
 .niv-1,.niv-2{color:#9B8060;border-color:rgba(155,128,96,.35);}
@@ -179,8 +144,8 @@ html,body{height:100%;overflow:hidden;}
   <meta property="og:type" content="website">
   <meta property="og:title" content="Catalogue Militaire · Forces Armées du Nil">
   <meta property="og:description" content="Répertoire complet des équipements militaires en service — armes à feu, véhicules terrestres, artillerie, missiles, aéronefs et navires de guerre.">
-  <meta property="og:url" content="https://BJBellum.github.io/UKN/catalogues/militaire/">
-  <meta property="og:image" content="https://BJBellum.github.io/UKN/assets/images/UKNSite.png">
+  <meta property="og:url" content="https://ukn-seven.vercel.app/catalogues/militaire/">
+  <meta property="og:image" content="https://ukn-seven.vercel.app/assets/images/UKNSite.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Portail National — Royaume-Uni du Nil">
@@ -188,7 +153,7 @@ html,body{height:100%;overflow:hidden;}
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Catalogue Militaire · Forces Armées du Nil">
   <meta name="twitter:description" content="Répertoire complet des équipements militaires en service — armes à feu, véhicules terrestres, artillerie, missiles, aéronefs et navires de guerre.">
-  <meta name="twitter:image" content="https://BJBellum.github.io/UKN/assets/images/UKNSite.png">
+  <meta name="twitter:image" content="https://ukn-seven.vercel.app/assets/images/UKNSite.png">
   <meta name="description" content="Répertoire complet des équipements militaires en service — armes à feu, véhicules terrestres, artillerie, missiles, aéronefs et navires de guerre.">
 </head>
 <body>
@@ -341,7 +306,7 @@ function onSearch(){
 function buildItemHTML(item){
   var niv=item.niveau||1;
   var nivLbl='NIV '+niv+' · '+(TECH[niv]||'');
-  var imgSrc=item.image_data||(item.image_path?'https://bjbellum.github.io/UKN/'+item.image_path:'');
+  var imgSrc=item.image_data||(item.image_path?'https://ukn-seven.vercel.app/'+item.image_path:'');
   var specs=item.specs||{};
   var specKeys=Object.keys(specs).filter(function(k){return specs[k];});
   var coutFmt=item.cout_unite?Number(item.cout_unite).toLocaleString('fr')+' N\u00a3':'—';
@@ -406,7 +371,9 @@ function renderContent(){
     });
     if(!items.length){el.innerHTML='<div class="cat-empty"><div class="cat-empty-ico"><svg viewBox="0 0 48 48" fill="none" width="48" height="48"><path d="M24 6L6 13V24C6 34 14 42 24 45C34 42 42 34 42 24V13L24 6Z" stroke="#4A3C28" stroke-width="1.5" fill="none"/></svg></div>Aucun resultat pour "'+searchQ+'".</div>';return;}
     var html='<div class="cat-sec-hdr"><span class="cat-sec-title">RESULTATS DE RECHERCHE</span><span class="cat-sec-count">'+items.length+' resultat'+(items.length!==1?'s':'')+'</span></div>';
+    html+='<div class="cat-items-grid">';
     items.forEach(function(i){html+=buildItemHTML(i);});
+    html+='</div>';
     el.innerHTML=html;return;
   }
 
@@ -416,8 +383,9 @@ function renderContent(){
     var catInfo=allSub.find(function(s){return s.id===activeCat;})||{label:activeCat};
     if(!items.length){el.innerHTML='<div class="cat-empty"><div class="cat-empty-ico"><svg viewBox="0 0 48 48" fill="none" width="48" height="48"><path d="M24 6L6 13V24C6 34 14 42 24 45C34 42 42 34 42 24V13L24 6Z" stroke="#4A3C28" stroke-width="1.5" fill="none"/></svg></div>Aucun equipement dans cette categorie.</div>';return;}
     var html='<div id="sec-'+activeCat+'" class="cat-section cat-sec-anchor"><div class="cat-sec-hdr"><span class="cat-sec-title">'+catInfo.label.toUpperCase()+'</span><span class="cat-sec-count">'+items.length+' equipement'+(items.length!==1?'s':'')+' · FAN · 2305</span></div>';
+    html+='<div class="cat-items-grid">';
     items.forEach(function(i){html+=buildItemHTML(i);});
-    html+='</div>';
+    html+='</div></div>';
     el.innerHTML=html;return;
   }
 
@@ -430,8 +398,9 @@ function renderContent(){
       total+=items.length;
       html+='<div id="sec-'+sub.id+'" class="cat-section cat-sec-anchor">';
       html+='<div class="cat-sec-hdr"><span class="cat-sec-title">'+sub.label.toUpperCase()+'</span><span class="cat-sec-count">'+items.length+' equipement'+(items.length!==1?'s':'')+'</span></div>';
+      html+='<div class="cat-items-grid">';
       items.forEach(function(i){html+=buildItemHTML(i);});
-      html+='</div>';
+      html+='</div></div>';
     });
   });
   if(!total){el.innerHTML='<div class="cat-empty"><div class="cat-empty-ico"><svg viewBox="0 0 48 48" fill="none" width="48" height="48"><path d="M24 6L6 13V24C6 34 14 42 24 45C34 42 42 34 42 24V13L24 6Z" stroke="#4A3C28" stroke-width="1.5" fill="none"/></svg></div>Selectionnez une categorie dans la barre laterale.</div>';return;}
