@@ -780,6 +780,12 @@
       <input type="file" id="ec-import-file" accept=".json" style="display:none;" onchange="ecImportJSON(this)">
     </div>
 
+    <!-- Link syntax shortcut -->
+    <div style="display:flex;flex-wrap:wrap;gap:3px;padding:4px 10px;background:var(--card-bg);border:1px solid var(--border);border-top:1px solid rgba(200,150,12,.08);border-bottom:none;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;align-self:center;margin-right:4px;">Syntaxe</span>
+      <button class="ec-btn ec-char" onclick="ecFmt('mdlink')" title="Lien Markdown [texte](url)" style="width:auto;padding:0 9px;font-size:10px;letter-spacing:.02em;color:var(--teal-bright);">[]()</button>
+    </div>
+
     <!-- Special characters row -->
     <div style="display:flex;flex-wrap:wrap;gap:3px;padding:6px 10px;background:var(--card-bg);border:1px solid var(--border);border-top:1px solid rgba(200,150,12,.12);border-bottom:none;">
       <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;align-self:center;margin-right:4px;">Caractères</span>
@@ -798,6 +804,40 @@
       <button class="ec-btn ec-char" onclick="ecInsert('+')" title="+">+</button><span class="ec-char-sep">,</span>
       <button class="ec-btn ec-char" onclick="ecInsert('∞')" title="∞">∞</button><span class="ec-char-sep">,</span>
       <button class="ec-btn ec-char" onclick="ecInsert('N£')" title="N£" style="width:auto;padding:0 7px;color:var(--gold);font-weight:600;">N£</button>
+    </div>
+
+    <!-- Extra characters row 2 -->
+    <div style="display:flex;flex-wrap:wrap;gap:3px;padding:6px 10px;background:var(--card-bg);border:1px solid var(--border);border-top:none;border-bottom:none;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;align-self:center;margin-right:4px;">Divers</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('█')" title="Bloc plein █">█</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('↳')" title="↳">↳</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('➯')" title="➯">➯</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('➢')" title="➢">➢</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('↖︎')" title="↖︎">↖︎</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('↘︎')" title="↘︎">↘︎</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('↑')" title="↑">↑</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('↓')" title="↓">↓</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('←')" title="←">←</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('→')" title="→">→</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('⠀')" title="Caractère invisible Discord (U+2800)" style="position:relative;">
+        <svg viewBox="0 0 14 14" fill="none" width="10" height="10"><rect x="2" y="2" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1" fill="none" opacity=".4"/><line x1="5" y1="7" x2="9" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".3"/></svg>
+      </button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('—')" title="Tiret cadratin —">—</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('−')" title="Signe moins −">−</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('━')" title="Trait épais ━">━</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('~')" title="Tilde ~">~</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('▬')" title="Rectangle plein ▬">▬</button><span class="ec-char-sep">,</span>
+      <div style="width:1px;background:var(--border);margin:0 3px;align-self:stretch;"></div>
+      <button class="ec-btn ec-char" onclick="ecInsert('¹')" title="Exposant ¹">¹</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('²')" title="Exposant ²">²</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('³')" title="Exposant ³">³</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('⁴')" title="Exposant ⁴">⁴</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('⁵')" title="Exposant ⁵">⁵</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('⁶')" title="Exposant ⁶">⁶</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('⁷')" title="Exposant ⁷">⁷</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('⁸')" title="Exposant ⁸">⁸</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('⁹')" title="Exposant ⁹">⁹</button><span class="ec-char-sep">,</span>
+      <button class="ec-btn ec-char" onclick="ecInsert('⁰')" title="Exposant ⁰">⁰</button>
     </div>
 
     <!-- Doc title + selector -->
@@ -2300,6 +2340,10 @@ function ecFmt(type){
       var pre2=ta.value.substring(0,ls2),post2=ta.value.substring(le2);
       var mid2=ta.value.substring(ls2,le2).split('\n').map(function(l){return (n++)+'. '+l;});
       result=pre2+mid2.join('\n')+post2;cursor=s+3;break;
+    case 'mdlink':
+      if(sel){result=before+'['+sel+'](url)'+after;cursor=s+1;}
+      else{result=before+'[](url)'+after;cursor=s+1;}
+      break;
     case 'rule':
       result=before+(before.endsWith('\n')?'':'\n')+'---\n'+after;cursor=s+4;break;
   }
@@ -2377,14 +2421,14 @@ function ecBoldFontKeyHandler(e){
   ecSave();ecCount();
 }
 
-var ecBoldMode=false;
+var ecBoldActive=false;
 
 function ecToggleBoldFont(){
-  ecBoldMode=!ecBoldMode;
+  ecBoldActive=!ecBoldActive;
   var btn=document.getElementById('ec-bold-toggle');
-  if(btn)btn.classList.toggle('bold-active',ecBoldMode);
+  if(btn)btn.classList.toggle('bold-active',ecBoldActive);
   // Convert selection immediately if mode turned ON
-  if(ecBoldMode){
+  if(ecBoldActive){
     var ta=document.getElementById('ec-editor');
     if(ta&&ta.selectionStart!==ta.selectionEnd){
       var s=ta.selectionStart,en=ta.selectionEnd;
@@ -2414,7 +2458,7 @@ function ecKeyDown(e){
     ta.selectionStart=ta.selectionEnd=s+2;ecSave();ecCount();
     return;
   }
-  if(ecBoldMode&&e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){
+  if(ecBoldActive&&e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){
     var bold=ecToBold(e.key);
     if(bold!==e.key){
       e.preventDefault();
