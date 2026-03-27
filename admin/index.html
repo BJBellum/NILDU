@@ -766,7 +766,7 @@
       <button class="ec-btn" onclick="ecFmt('numbered')" title="Liste numérotée (1. )" style="font-size:10px;padding:0 7px;">1.</button>
       <button class="ec-btn" onclick="ecFmt('rule')" title="Séparateur (---)" style="font-size:10px;padding:0 7px;">—</button>
       <div style="width:1px;background:var(--border);margin:0 4px;align-self:stretch;"></div>
-      <button class="ec-btn" id="ec-bold-font-btn" onclick="ecToggleBoldFont()" title="Police grasse Unicode (toggle — reste actif à l'écriture)" style="width:auto;padding:0 9px;font-size:13px;letter-spacing:.04em;" title="Activer la saisie en police grasse Unicode">𝐁𝐨𝐥𝐝</button>
+      <button class="ec-btn" id="ec-bold-toggle" onclick="ecToggleBoldFont()" title="Police grasse Unicode — cliquer pour activer/désactiver" style="width:auto;padding:0 8px;font-size:12px;">𝐀𝐚</button>
       <div style="width:1px;background:var(--border);margin:0 4px;align-self:stretch;"></div>
       <button class="ec-btn" id="ec-bold-toggle" onclick="ecToggleBoldFont()" title="Police grasse Unicode — cliquer pour activer la saisie en 𝐛𝐨𝐥𝐝" style="font-size:12px;padding:0 8px;width:auto;">𝐀𝐚</button>
       <div style="flex:1;"></div>
@@ -874,21 +874,29 @@
   <div class="sec-pane" id="sec-docs">
     <div class="dash-hdr">
       <div class="dash-title" style="color:var(--gold-mid);">&#128196; Mes Documents</div>
-      <div class="dash-sub">Documents sauvegardés dans l'Espace d'Écriture — cliquez "Modifier" pour ouvrir.</div>
+      <div class="dash-sub">Documents sauvegardés — organisez en dossiers, cliquez "Modifier" pour ouvrir dans l'éditeur.</div>
     </div>
 
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
-      <div id="docs-count-lbl" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.1em;">— documents</div>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-fan btn-sm" onclick="docsNew()">+ Nouveau document</button>
-        <button class="btn btn-ghost btn-sm" onclick="ecExportJSON()">&#8595; Exporter tout (JSON)</button>
-        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('ec-import-file2').click()">&#8593; Importer JSON</button>
-        <input type="file" id="ec-import-file2" accept=".json" style="display:none;" onchange="ecImportJSON(this);renderDocsList();">
-      </div>
+    <!-- Toolbar -->
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+      <button class="btn btn-fan btn-sm" onclick="docsNew()">+ Nouveau document</button>
+      <button class="btn btn-ghost btn-sm" onclick="docsNewFolder()">&#128193; Nouveau dossier</button>
+      <div style="flex:1;"></div>
+      <button class="btn btn-ghost btn-sm" onclick="ecExportJSON()">&#8595; Exporter (JSON)</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('ec-import-file2').click()">&#8593; Importer JSON</button>
+      <input type="file" id="ec-import-file2" accept=".json" style="display:none;" onchange="ecImportJSON(this);renderDocsList();">
     </div>
 
+    <!-- Breadcrumb -->
+    <div id="docs-breadcrumb" style="display:flex;align-items:center;gap:6px;margin-bottom:10px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.08em;flex-wrap:wrap;"></div>
+
+    <!-- Count -->
+    <div id="docs-count-lbl" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.1em;margin-bottom:10px;">— éléments</div>
+
+    <!-- List -->
     <div id="docs-list"></div>
   </div>
+
 </div><!-- /admin-main -->
 
 <!-- ═══════════ MODALS ═══════════ -->
@@ -2162,55 +2170,127 @@ var ecDocs={};
 var ecCurrentId=null;
 
 
+
+// ── FOLDER STATE ──
+var docsCurrentFolder = null; // null = root
+
+function renderDocsBreadcrumb(){
+  var el=document.getElementById('docs-breadcrumb');
+  if(!el)return;
+  var html='<span style="cursor:pointer;color:var(--gold-mid);" onclick="docsGoFolder(null)">&#128196; Racine</span>';
+  if(docsCurrentFolder){
+    html+='<span style="opacity:.4;">›</span>';
+    var f=ecDocs['folder_'+docsCurrentFolder];
+    html+='<span style="color:var(--text2);">'+(f?f.name:'Dossier')+'</span>';
+  }
+  el.innerHTML=html;
+}
+
+function docsGoFolder(folderId){
+  docsCurrentFolder=folderId;
+  renderDocsList();
+}
+
 function renderDocsList(){
   ecLoadAll();
   var el=document.getElementById('docs-list');
   var lbl=document.getElementById('docs-count-lbl');
   if(!el)return;
-  var ids=Object.keys(ecDocs).sort(function(a,b){return (ecDocs[b].updated||0)-(ecDocs[a].updated||0);});
-  if(lbl)lbl.textContent=ids.length+' document'+(ids.length!==1?'s':'');
-  if(!ids.length){
-    el.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--text3);padding:32px;text-align:center;border:1px solid var(--border);">Aucun document. Créez-en un dans l\'Espace d\'Écriture.</div>';
+  renderDocsBreadcrumb();
+
+  // Separate folders and docs
+  var allIds=Object.keys(ecDocs);
+  var folders=allIds.filter(function(id){return ecDocs[id]&&ecDocs[id]._type==='folder'&&ecDocs[id].parentId===docsCurrentFolder;});
+  var docs=allIds.filter(function(id){
+    var d=ecDocs[id];
+    return d&&d._type!=='folder'&&(d.folder||null)===docsCurrentFolder;
+  }).sort(function(a,b){return (ecDocs[b].updated||0)-(ecDocs[a].updated||0);});
+
+  if(lbl)lbl.textContent=folders.length+' dossier'+(folders.length!==1?'s':'')+' · '+docs.length+' document'+(docs.length!==1?'s':'');
+
+  if(!folders.length&&!docs.length){
+    el.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:var(--text3);padding:32px;text-align:center;border:1px dashed var(--border);">'+(docsCurrentFolder?'Dossier vide.':'Aucun document. Créez-en un avec "+ Nouveau document".')+'</div>';
     return;
   }
-  var html='<div style="display:flex;flex-direction:column;gap:8px;">';
-  ids.forEach(function(id){
-    var d=ecDocs[id]||{};
-    var title=d.title||'Sans titre';
-    var content=d.content||'';
-    var preview=content.replace(/[#*_~`>|]+/g,'').substring(0,120).trim();
-    if(content.length>120)preview+='…';
-    var date=d.updated?new Date(d.updated).toLocaleString('fr'):'—';
-    var charCount=(content.length).toLocaleString('fr');
-    html+='<div style="display:flex;align-items:flex-start;gap:16px;background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--gold-mid);padding:14px 16px;">';
-    // Info
+  var html='<div style="display:flex;flex-direction:column;gap:6px;">';
+
+  // Render folders first
+  folders.forEach(function(fid){
+    var f=ecDocs[fid];
+    var name=f.name||'Sans nom';
+    var docCount=Object.keys(ecDocs).filter(function(id){return ecDocs[id]&&ecDocs[id].folder===fid.replace('folder_','');}).length;
+    html+='<div style="display:flex;align-items:center;gap:12px;background:var(--card-bg);border:1px solid var(--border);border-left:3px solid rgba(200,150,12,.5);padding:11px 14px;cursor:pointer;" ondblclick="docsGoFolder(fid.replace(\'folder_\',\'\'))">';
+    html+='<span style="font-size:16px;">&#128193;</span>';
     html+='<div style="flex:1;min-width:0;">';
-    html+='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;font-weight:600;color:rgba(255,255,255,.92);margin-bottom:4px;">'+escHtml(title)+'</div>';
-    if(preview)html+='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:rgba(255,255,255,.4);line-height:1.5;margin-bottom:6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">'+escHtml(preview)+'</div>';
-    html+='<div style="display:flex;gap:14px;flex-wrap:wrap;">';
-    html+='<span style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;color:var(--text3);letter-spacing:.08em;">'+charCount+' car.</span>';
-    html+='<span style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;color:var(--text3);letter-spacing:.08em;">Modifié le '+date+'</span>';
-    html+='</div></div>';
-    // Actions
-    html+='<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">';
-    html+='<button class="btn btn-fan btn-sm" onclick="docsEdit(\''+id+'\')">&#9998; Modifier</button>';
-    html+='<button class="btn btn-danger btn-xs" onclick="docsDelete(\''+id+'\')">✕ Supprimer</button>';
+    html+='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;color:var(--gold-mid);">'+escHtml(name)+'</div>';
+    html+='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:var(--text3);margin-top:2px;">'+docCount+' document'+(docCount!==1?'s':'')+'</div>';
+    html+='</div>';
+    html+='<div style="display:flex;gap:5px;flex-shrink:0;">';
+    var fidClean=fid.replace('folder_','');
+    html+='<button class="btn btn-fan btn-sm" onclick="docsGoFolder(\''+fidClean+'\')">&#128194; Ouvrir</button>';
+    html+='<button class="btn btn-ghost btn-sm" onclick="docsRenameFolder(\''+fid+'\')">✎</button>';
+    html+='<button class="btn btn-danger btn-xs" onclick="docsDeleteFolder(\''+fid+'\')">✕</button>';
     html+='</div>';
     html+='</div>';
   });
+
+  // Render docs
+  docs.forEach(function(id){
+    var d=ecDocs[id]||{};
+    var title=d.title||'Sans titre';
+    var content=d.content||'';
+    var preview=content.replace(/[#*_~`>|]+/g,'').substring(0,100).trim();
+    if(content.length>100)preview+='…';
+    var date=d.updated?new Date(d.updated).toLocaleDateString('fr'):'—';
+    var charCount=(content.length).toLocaleString('fr');
+
+    // Folder badge
+    var folderBadge='';
+    if(!docsCurrentFolder&&d.folder){
+      var fp=ecDocs['folder_'+d.folder];
+      if(fp)folderBadge='<span style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;padding:1px 6px;border:1px solid rgba(200,150,12,.3);color:var(--gold-mid);border-radius:2px;flex-shrink:0;">&#128193; '+escHtml(fp.name)+'</span>';
+    }
+
+    html+='<div style="display:flex;align-items:flex-start;gap:12px;background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--gold-mid);padding:12px 14px;">';
+    html+='<div style="flex:1;min-width:0;">';
+    html+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">';
+    html+='<span style="font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:600;color:rgba(255,255,255,.92);">'+escHtml(title)+'</span>';
+    html+=folderBadge;
+    html+='</div>';
+    if(preview)html+='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:rgba(255,255,255,.38);line-height:1.5;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+escHtml(preview)+'</div>';
+    html+='<div style="display:flex;gap:12px;flex-wrap:wrap;">';
+    html+='<span style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;color:var(--text3);">'+charCount+' car.</span>';
+    html+='<span style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;color:var(--text3);">'+date+'</span>';
+    html+='</div></div>';
+
+    html+='<div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0;">';
+    html+='<button class="btn btn-fan btn-sm" onclick="docsEdit(\''+id+'\')">✎ Modifier</button>';
+    html+='<button class="btn btn-ghost btn-sm" onclick="docsMovePrompt(\''+id+'\')">&#128193; Déplacer</button>';
+    html+='<button class="btn btn-danger btn-xs" onclick="docsDelete(\''+id+'\')">✕</button>';
+    html+='</div>';
+    html+='</div>';
+  });
+
   html+='</div>';
   el.innerHTML=html;
 }
 
 function docsEdit(id){
-  // Switch to Espace d'Écriture and open this doc
   showSection('ecriture');
   setTimeout(function(){ecOpenDoc(id);},80);
 }
 
 function docsNew(){
   showSection('ecriture');
-  setTimeout(function(){ecNewDoc();},80);
+  setTimeout(function(){
+    ecNewDoc();
+    // Set folder on the new doc
+    if(docsCurrentFolder&&ecCurrentId){
+      if(!ecDocs[ecCurrentId])ecDocs[ecCurrentId]={};
+      ecDocs[ecCurrentId].folder=docsCurrentFolder;
+      ecSaveAll();
+    }
+  },80);
 }
 
 function docsDelete(id){
@@ -2219,14 +2299,60 @@ function docsDelete(id){
   if(!confirm('Supprimer "'+(d&&d.title?d.title:'ce document')+'" ?'))return;
   delete ecDocs[id];
   if(ecCurrentId===id)ecCurrentId=null;
-  ecSaveAll();
-  renderDocsList();
-  toast('Document supprimé.');
+  ecSaveAll();renderDocsList();toast('Document supprimé.');
 }
 
-function escHtml(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function docsNewFolder(){
+  var name=prompt('Nom du dossier :','');
+  if(!name||!name.trim())return;
+  var fid='folder_'+Date.now();
+  ecLoadAll();
+  ecDocs[fid]={_type:'folder',name:name.trim(),parentId:docsCurrentFolder,updated:Date.now()};
+  ecSaveAll();renderDocsList();
 }
+
+function docsRenameFolder(fid){
+  ecLoadAll();
+  var f=ecDocs[fid];if(!f)return;
+  var name=prompt('Renommer le dossier :',f.name||'');
+  if(!name||!name.trim())return;
+  ecDocs[fid].name=name.trim();ecDocs[fid].updated=Date.now();
+  ecSaveAll();renderDocsList();
+}
+
+function docsDeleteFolder(fid){
+  ecLoadAll();
+  var f=ecDocs[fid];
+  var fidClean=fid.replace('folder_','');
+  var count=Object.keys(ecDocs).filter(function(id){return ecDocs[id]&&ecDocs[id].folder===fidClean;}).length;
+  var msg='Supprimer le dossier "'+(f?f.name:'?')+'"'+(count?' et déplacer ses '+count+' document(s) à la racine ?':' ?');
+  if(!confirm(msg))return;
+  // Move docs to root
+  Object.keys(ecDocs).forEach(function(id){if(ecDocs[id]&&ecDocs[id].folder===fidClean)delete ecDocs[id].folder;});
+  delete ecDocs[fid];
+  ecSaveAll();
+  if(docsCurrentFolder===fidClean)docsCurrentFolder=null;
+  renderDocsList();
+}
+
+function docsMovePrompt(id){
+  ecLoadAll();
+  var folderIds=Object.keys(ecDocs).filter(function(fid){return ecDocs[fid]&&ecDocs[fid]._type==='folder';});
+  var current=ecDocs[id];
+  if(!folderIds.length){alert('Aucun dossier disponible. Créez-en un avec "+ Nouveau dossier".');return;}
+  var opts=['Racine'].concat(folderIds.map(function(fid){return ecDocs[fid].name||fid;}));
+  var chosen=prompt('Déplacer vers :\n'+(opts.map(function(o,i){return i+') '+o;}).join('\n')),'0');
+  if(chosen===null)return;
+  var idx=parseInt(chosen);
+  if(isNaN(idx)||idx<0||idx>folderIds.length)return;
+  if(idx===0){delete ecDocs[id].folder;}
+  else{ecDocs[id].folder=folderIds[idx-1].replace('folder_','');}
+  ecDocs[id].updated=Date.now();
+  ecSaveAll();renderDocsList();
+}
+
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
 
 function ecLoadAll(){try{ecDocs=JSON.parse(localStorage.getItem(EC_LS_KEY)||'{}');}catch(e){ecDocs={};}}
 function ecSaveAll(){localStorage.setItem(EC_LS_KEY,JSON.stringify(ecDocs));}
