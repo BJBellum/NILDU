@@ -372,6 +372,7 @@
     </div>
     <div class="action-bar">
       <button class="btn btn-primary" onclick="openModal()">+ Ajouter une société</button>
+      <button class="btn btn-ghost" onclick="openPaysModal()">&#127758; Gérer les pays</button>
       <button class="btn btn-ghost" onclick="loadFromGH()">↺ Actualiser</button>
       <button class="btn btn-gh" onclick="openGhModal()">⬆ Sauvegarder sur GitHub</button>
       <div style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);" id="ccount">—</div>
@@ -418,9 +419,49 @@
   ══════════════════════════════════ -->
   <div class="sec-pane" id="sec-fan-prod">
     <div class="dash-hdr">
-      <div class="dash-title">⚔ Système de Production</div>
+      <div class="dash-title">&#9876; Systeme de Production</div>
       <div class="dash-sub">Gérer les niveaux d'usine et la base de données des équipements militaires.</div>
     </div>
+
+    <!-- NIV TECH BOOST PANEL -->
+    <div style="display:flex;align-items:center;gap:16px;padding:12px 16px;background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--spice);margin-bottom:16px;flex-wrap:wrap;">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;color:var(--spice);text-transform:uppercase;margin-bottom:4px;">Coefficient Niveau Technologique</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);">Applique un multiplicateur aux slots de production selon le NIV tech.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <select id="niv-boost-select" onchange="applyNivBoost()" style="font-family:'IBM Plex Mono',monospace;font-size:10px;padding:6px 10px;background:var(--bg);border:1px solid var(--border2);color:var(--text);border-radius:2px;cursor:pointer;">
+          <option value="1">NIV 1 — ×1</option>
+          <option value="2">NIV 2 — ×1,16</option>
+          <option value="3">NIV 3 — ×1,34</option>
+          <option value="4">NIV 4 — ×1,55</option>
+          <option value="5">NIV 5 — ×1,80</option>
+          <option value="6">NIV 6 — ×2,08</option>
+          <option value="7">NIV 7 — ×2,41</option>
+          <option value="8">NIV 8 — ×2,78</option>
+          <option value="9">NIV 9 — ×3,22</option>
+          <option value="10">NIV 10 — ×3,73</option>
+          <option value="11">NIV 11 — ×4,32</option>
+          <option value="12">NIV 12 — ×5</option>
+        </select>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);">Coef actif :</div>
+        <div id="niv-boost-val" style="font-family:'Dune Rise',serif;font-size:20px;color:var(--spice);letter-spacing:.04em;min-width:48px;">×1</div>
+        <button class="btn btn-fan btn-sm" onclick="applyNivBoost()">Appliquer</button>
+        <button class="btn btn-ghost btn-sm" onclick="resetNivBoost()">Réinitialiser</button>
+      </div>
+      <!-- Boosted totals -->
+      <div style="margin-left:auto;display:flex;gap:20px;flex-wrap:wrap;">
+        <div style="text-align:right;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;">Slots totaux (base)</div>
+          <div id="boost-slots-base" style="font-family:'Dune Rise',serif;font-size:14px;color:var(--text2);">—</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--spice);letter-spacing:.1em;text-transform:uppercase;">Slots totaux (boost)</div>
+          <div id="boost-slots-boosted" style="font-family:'Dune Rise',serif;font-size:14px;color:var(--spice);">—</div>
+        </div>
+      </div>
+    </div>
+
     <div class="fact-grid" id="fact-grid"></div>
     <div class="action-bar">
       <button class="btn btn-fan btn-sm" onclick="openEquipModal()">+ Ajouter un équipement</button>
@@ -907,7 +948,7 @@
     <div class="modal-body">
       <div class="form-grid">
         <div class="fg fg-full"><label class="fl">Nom</label><input type="text" class="fi" id="f-nom" placeholder="Nom officiel…"></div>
-        <div class="fg"><label class="fl">Nationalité</label><select class="fs" id="f-nat"><option value="Royaume-Uni du Nil">Royaume-Uni du Nil</option><option value="Union Démocratique d'Asie">Union Démocratique d'Asie</option></select></div>
+        <div class="fg"><label class="fl">Nationalité</label><select class="fs" id="f-nat"></select></div>
         <div class="fg"><label class="fl">Secteur</label><select class="fs" id="f-cat"><option>Agriculture &amp; Agroalimentaire</option><option>BTP &amp; Infrastructures</option><option>Commerce</option><option>Énergie</option><option>Finance</option><option>Industrie Aéronautique</option><option>Industrie Automobile</option><option>Industrie de Défense</option><option>Industrie lourde</option><option>Industrie Naval &amp; Portuaire</option><option>Médias</option><option>Santé &amp; Pharmacie</option><option>Secteur Minier</option><option>Services d'Eau</option><option>Télécommunications</option><option>Textile</option><option>Transport &amp; Logistique</option><option>Transport aérien &amp; Tourisme</option></select></div>
       </div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.12em;color:var(--text3);text-transform:uppercase;margin-bottom:8px;">Notation ESS (0–10)</div>
@@ -922,6 +963,29 @@
       <div class="computed-box"><div><div class="cs-lbl">Score calculé</div><div class="cs-val" id="cs-val">5.00</div></div><div><div class="cs-lbl">Classe</div><div class="cs-cls cd-B" id="cs-cls">B</div></div><div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);margin-left:10px;" id="cs-label">Engagée</div></div>
     </div>
     <div class="modal-ftr"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Annuler</button><button class="btn btn-primary btn-sm" onclick="submitForm()">✓ Enregistrer</button></div>
+  </div>
+</div>
+
+<!-- PAYS MANAGER MODAL -->
+<div class="modal-ov" id="pays-ov">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-hdr">
+      <div class="modal-ttl">&#127758; Gestion des pays</div>
+      <button class="modal-cls" onclick="closePaysModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:8px;margin-bottom:14px;">
+        <input type="text" class="fi" id="pays-new-nom" placeholder="Nom du pays…" style="flex:1;" onkeydown="if(event.key==='Enter')addPays()">
+        <input type="text" class="fi" id="pays-new-code" placeholder="Code (ex: RUN)" style="width:90px;text-transform:uppercase;" maxlength="5" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')addPays()">
+        <button class="btn btn-primary btn-sm" onclick="addPays()">+ Ajouter</button>
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">Pays enregistrés</div>
+      <div id="pays-list" style="display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto;"></div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn btn-ghost btn-sm" onclick="closePaysModal()">Fermer</button>
+      <button class="btn btn-gh btn-sm" onclick="savePaysToGH()">⬆ Sauvegarder sur GitHub</button>
+    </div>
   </div>
 </div>
 
@@ -1070,7 +1134,106 @@ function processCompanies(raw){
 }
 function colorFor(v){const c=['#882020','#A03030','#C04040','#D04828','#E07028','#F0A030','#D4A843','#8ACA60','#4ACB9A','#22B89A','#22B89A'];return c[Math.max(0,Math.min(10,v))];}
 function scoreColor(s){if(s>=8.5)return'#22B89A';if(s>=7)return'#D4A843';if(s>=5.5)return'#F0A030';if(s>=4)return'#C87020';return'#E84848';}
-function natCode(nat){return(!nat||nat==='Royaume-Uni du Nil')?'RUN':'UDA';}
+// ────────────────────────────────────────
+//  PAYS
+// ────────────────────────────────────────
+const PAYS_LS='bourse_pays';
+// Default countries
+const DEFAULT_PAYS=[
+  {nom:'Royaume-Uni du Nil',code:'RUN'},
+  {nom:"Union Démocratique d'Asie",code:'UDA'},
+];
+var paysList=[];
+
+function loadPays(){
+  try{
+    const s=localStorage.getItem(PAYS_LS);
+    paysList=s?JSON.parse(s):DEFAULT_PAYS.map(p=>({...p}));
+  }catch(e){paysList=DEFAULT_PAYS.map(p=>({...p}));}
+  if(!paysList.length)paysList=DEFAULT_PAYS.map(p=>({...p}));
+}
+function savePays(){localStorage.setItem(PAYS_LS,JSON.stringify(paysList));}
+
+function populateNatSelect(currentVal){
+  const sel=document.getElementById('f-nat');if(!sel)return;
+  sel.innerHTML=paysList.map(p=>`<option value="${p.nom}"${p.nom===currentVal?' selected':''}>${p.nom}</option>`).join('');
+  if(!sel.value&&paysList.length)sel.value=paysList[0].nom;
+}
+
+function openPaysModal(){
+  loadPays();
+  renderPaysList();
+  document.getElementById('pays-ov').classList.add('open');
+}
+function closePaysModal(){
+  document.getElementById('pays-ov').classList.remove('open');
+  populateNatSelect();
+}
+
+function renderPaysList(){
+  const el=document.getElementById('pays-list');if(!el)return;
+  if(!paysList.length){el.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:var(--text3);padding:12px;text-align:center;">Aucun pays.</div>';return;}
+  el.innerHTML=paysList.map((p,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--gold-mid);padding:9px 12px;">
+      <span style="font-family:'Dune Rise',serif;font-size:11px;color:var(--gold-mid);letter-spacing:.08em;flex-shrink:0;min-width:42px;">${p.code}</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);flex:1;">${p.nom}</span>
+      <button class="btn btn-ghost btn-sm" onclick="renamePays(${i})" style="padding:2px 8px;">✎</button>
+      ${paysList.length>1?`<button class="btn btn-danger btn-xs" onclick="deletePays(${i})">✕</button>`:''}
+    </div>`).join('');
+}
+
+function addPays(){
+  const nomEl=document.getElementById('pays-new-nom');
+  const codeEl=document.getElementById('pays-new-code');
+  const nom=(nomEl?.value||'').trim();
+  const code=(codeEl?.value||'').trim().toUpperCase().substring(0,5);
+  if(!nom){toast('Nom obligatoire.','err');return;}
+  if(!code){toast('Code obligatoire.','err');return;}
+  if(paysList.find(p=>p.nom===nom)){toast('Ce pays existe déjà.','err');return;}
+  paysList.push({nom,code});
+  savePays();
+  if(nomEl)nomEl.value='';
+  if(codeEl)codeEl.value='';
+  renderPaysList();
+  toast('Pays ajouté : '+nom);
+}
+
+function renamePays(idx){
+  const p=paysList[idx];
+  const nom=prompt('Nouveau nom :',p.nom);if(!nom||!nom.trim())return;
+  const code=prompt('Nouveau code (2-5 lettres) :',p.code);if(!code||!code.trim())return;
+  paysList[idx]={nom:nom.trim(),code:code.trim().toUpperCase().substring(0,5)};
+  savePays();renderPaysList();toast('Pays modifié.');
+}
+
+function deletePays(idx){
+  const p=paysList[idx];
+  if(!confirm('Supprimer "'+p.nom+'" ?'))return;
+  paysList.splice(idx,1);
+  savePays();renderPaysList();toast('Pays supprimé.');
+}
+
+async function savePaysToGH(){
+  const pat=getPat();if(!pat||pat.length<10){toast('Configurez votre PAT.','err');return;}
+  const paysFile='data/pays.json';
+  toast('Sauvegarde pays…','ok');
+  try{
+    let sha=null;
+    const sr=await fetch(`https://api.github.com/repos/${REPO}/contents/${paysFile}`,{headers:{'Authorization':'token '+pat,'Accept':'application/vnd.github.v3+json'},cache:'no-store'});
+    if(sr.ok){const sd=await sr.json();sha=sd.sha||null;}
+    const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(paysList,null,2))));
+    const body={message:`update pays.json — ${paysList.length} pays`,content:encoded};if(sha)body.sha=sha;
+    const pr=await fetch(`https://api.github.com/repos/${REPO}/contents/${paysFile}`,{method:'PUT',headers:{'Authorization':'token '+pat,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(pr.ok)toast('Pays sauvegardés sur GitHub !','ok');
+    else{const ed=await pr.json();toast('Erreur: '+pr.status+' — '+(ed.message||''),'err');}
+  }catch(e){toast('Erreur: '+e.message,'err');}
+}
+
+function natCode(nat){
+  if(!nat)return paysList[0]?.code||'RUN';
+  const p=paysList.find(x=>x.nom===nat);
+  return p?p.code:(nat===paysList[0]?.nom?(paysList[0]?.code||'RUN'):'ETR');
+}
 function natCls(nat){return natCode(nat)==='RUN'?'nat-run':'nat-uda';}
 function renderAdminTable(){
   const tbody=document.getElementById('admin-tbody');if(!tbody)return;
@@ -1081,8 +1244,8 @@ function renderAdminTable(){
 }
 function openModal(idx=null){
   editIdx=idx;const ttl=document.getElementById('modal-ttl');
-  if(idx!==null){const c=companies[idx];if(ttl)ttl.textContent='Modifier — '+c.nom;document.getElementById('f-nom').value=c.nom;document.getElementById('f-nat').value=c.nat;document.getElementById('f-cat').value=c.cat||'';['eq','sa','tr','inn','ec','fi'].forEach(k=>{const el=document.getElementById('f-'+k);if(el)el.value=c[k];});}
-  else{if(ttl)ttl.textContent='Ajouter une societe';document.getElementById('f-nom').value='';document.getElementById('f-nat').value='Royaume-Uni du Nil';document.getElementById('f-cat').value='Énergie';['eq','sa','tr','inn','ec','fi'].forEach(k=>{const el=document.getElementById('f-'+k);if(el)el.value=5;});}
+  if(idx!==null){const c=companies[idx];if(ttl)ttl.textContent='Modifier — '+c.nom;document.getElementById('f-nom').value=c.nom;populateNatSelect(c.nat);document.getElementById('f-cat').value=c.cat||'';['eq','sa','tr','inn','ec','fi'].forEach(k=>{const el=document.getElementById('f-'+k);if(el)el.value=c[k];});}
+  else{if(ttl)ttl.textContent='Ajouter une societe';document.getElementById('f-nom').value='';populateNatSelect(paysList[0]?.nom||'');document.getElementById('f-cat').value='Énergie';['eq','sa','tr','inn','ec','fi'].forEach(k=>{const el=document.getElementById('f-'+k);if(el)el.value=5;});}
   calcScore();document.getElementById('modal-ov').classList.add('open');
 }
 function closeModal(){document.getElementById('modal-ov').classList.remove('open');}
@@ -1179,6 +1342,7 @@ const DEFAULT_FACTORIES=[
   {id:'aerospatiale',nom:'Usine Aérospatiale',categorie:'Aerospatiale',niveau:7},
 ];
 const SLOT_CAP={1:15000,2:22500,3:33000,4:48000,5:69000,6:102000,7:150000};
+const NIV_BOOST={1:1,2:1.16,3:1.34,4:1.55,5:1.8,6:2.08,7:2.41,8:2.78,9:3.22,10:3.73,11:4.32,12:5};
 const CAT_COL={Terrestre:'#22B89A',Maritime:'#4A9EFF',Aerospatiale:'#E85C0D'};
 let fanBats=[], fanEquip=[], fanFactories=[], editEquipIdx=null;
 let customEquipFields=[], editCfIdx=null;
@@ -1333,6 +1497,16 @@ const TECH_MAP={1:"1910-1919",2:"1920-1929",3:"1930-1939",4:"1940-1949",5:"1950-
 function nivLabel(n){const d=TECH_MAP[n];return d?'NIV '+n+' · '+d:'NIV '+n;}
 function renderProdAdmin(){
   // Factory levels
+  // Update boost totals display
+  const boostNiv=parseInt(document.getElementById('niv-boost-select')?.value||1)||1;
+  const boostCoef=NIV_BOOST[boostNiv]||1;
+  const baseTotal=fanFactories.reduce((s,f)=>{return s+(SLOT_CAP[f.niveau]||150000);},0);
+  const boostedTotal=Math.round(baseTotal*boostCoef);
+  const bBase=document.getElementById('boost-slots-base');
+  const bBoost=document.getElementById('boost-slots-boosted');
+  if(bBase) bBase.textContent=baseTotal.toLocaleString('fr')+' slots';
+  if(bBoost)bBoost.textContent=boostedTotal.toLocaleString('fr')+' slots';
+
   const fg=document.getElementById('fact-grid');
   if(fg)fg.innerHTML=fanFactories.map(f=>{
     const cap=(SLOT_CAP[f.niveau]||150000);
@@ -1346,6 +1520,7 @@ function renderProdAdmin(){
         </select>
         <span class="fact-slots" style="color:${col};">${cap.toLocaleString('fr')}</span>
         <span style="font-family:monospace;font-size:8px;color:var(--text3);">slots</span>
+        ${boostCoef>1?`<span style="font-family:monospace;font-size:8px;color:var(--spice);margin-left:4px;">→ ${Math.round(cap*boostCoef).toLocaleString('fr')}</span>`:''}
       </div>
     </div>`;
   }).join('');
@@ -1369,6 +1544,23 @@ function renderProdAdmin(){
   </tr>`).join('');
 }
 function setFactLvl(id,lvl){const f=fanFactories.find(x=>x.id===id);if(f){f.niveau=parseInt(lvl);saveFanState();renderProdAdmin();}}
+
+function applyNivBoost(){
+  const sel=document.getElementById('niv-boost-select');
+  const niv=parseInt(sel?.value||1)||1;
+  const coef=NIV_BOOST[niv]||1;
+  const valEl=document.getElementById('niv-boost-val');
+  if(valEl)valEl.textContent='×'+coef.toLocaleString('fr',{minimumFractionDigits:0,maximumFractionDigits:2});
+  renderProdAdmin();
+}
+
+function resetNivBoost(){
+  const sel=document.getElementById('niv-boost-select');
+  if(sel)sel.value='1';
+  const valEl=document.getElementById('niv-boost-val');
+  if(valEl)valEl.textContent='×1';
+  renderProdAdmin();
+}
 function openEquipModal(idx=null){
   editEquipIdx=idx;const ttl=document.getElementById('equip-ttl');
   if(idx!==null){const e=fanEquip[idx];if(ttl)ttl.textContent='Modifier — '+e.nom;document.getElementById('eq-nom').value=e.nom;document.getElementById('eq-cat').value=e.categorie;document.getElementById('eq-niv').value=e.niveau_requis;document.getElementById('eq-slots').value=e.cout_slots;document.getElementById('eq-prod').value=e.cout_prod;document.getElementById('eq-vente').value=e.cout_vente;}
@@ -2624,6 +2816,7 @@ function ecImportJSON(input){
 //  AUTH
 // ════════════════════════════════════════════════
 function showAdmin(user){
+  loadPays();
   document.getElementById('access-wall').style.display='none';
   document.getElementById('sidebar').style.display='flex';
   document.getElementById('admin-main').style.display='block';
